@@ -1,0 +1,36 @@
+﻿
+@model IEnumerable<Pharmacy.DB.Item>
+@using Pharmacy.DB
+@using Kendo.Mvc.UI
+
+@{
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+
+@(Html.Kendo().Grid<Item>
+    ().Name("Items").Columns(c =>
+    {
+        c.Bound(p => p.ID);
+        c.Bound(p => p.Name).Title("Name");
+        c.Bound(p => p.CategoryID).Title("Category ID");
+        c.Bound(p => p.Description).Title("Description");
+        c.Bound(p => p.Manufacturer).Title("Manufacturer");
+        c.Bound(p => p.Shelf).Title("Shelf");
+        c.Bound(p => p.PurchasePrice).Title("Purchase Price");
+        c.Bound(p => p.SalePrice).Title("Sale Price");
+        c.Bound(p => p.TabletsPerPack).Title("Tablets Per Pack");
+        c.Bound(p => p.SalePricePerTablet).Title("Sale Price");
+
+    })
+    .DataSource(d => d
+    .Ajax()
+    .Read(r => r.Action("Get", "Home"))
+    .PageSize(2)
+    )
+    .Pageable()
+    .Sortable()
+    .Filterable()
+    .Groupable()
+)
+
+

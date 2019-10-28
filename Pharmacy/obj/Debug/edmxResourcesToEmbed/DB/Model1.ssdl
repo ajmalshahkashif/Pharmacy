@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="PharmacyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Item">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="200" />
+    <Property Name="CategoryID" Type="int" />
+    <Property Name="Description" Type="nvarchar" MaxLength="400" />
+    <Property Name="Manufacturer" Type="nvarchar" MaxLength="300" />
+    <Property Name="Shelf" Type="nvarchar" MaxLength="50" />
+    <Property Name="PurchasePrice" Type="float" />
+    <Property Name="SalePrice" Type="float" />
+    <Property Name="TabletsPerPack" Type="int" />
+    <Property Name="SalePricePerTablet" Type="decimal" Precision="18" Scale="0" />
+  </EntityType>
+  <EntityType Name="Testing">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Mobile" Type="int" />
+    <Property Name="birthdate_datetime" Type="datetime" />
+    <Property Name="birthdate_date" Type="date" />
+  </EntityType>
+  <EntityContainer Name="PharmacyModelStoreContainer">
+    <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Testing" EntityType="Self.Testing" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>
