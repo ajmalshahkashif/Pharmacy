@@ -27,5 +27,7 @@ namespace Pharmacy.DB
     
         public virtual DbSet<Testing> Testings { get; set; }
         public virtual DbSet<Item> Items { get; set; }
+
+        public System.Data.Entity.DbSet<Pharmacy.Models.Product> Products { get; set; }
     }
 }
