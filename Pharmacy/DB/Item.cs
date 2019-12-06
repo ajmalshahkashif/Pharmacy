@@ -24,5 +24,6 @@ namespace Pharmacy.DB
         public Nullable<double> SalePrice { get; set; }
         public Nullable<int> TabletsPerPack { get; set; }
         public Nullable<decimal> SalePricePerTablet { get; set; }
+        public Nullable<decimal> Discount { get; set; }
     }
 }

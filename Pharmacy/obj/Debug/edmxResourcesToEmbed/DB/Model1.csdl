@@ -28,5 +28,6 @@
     <Property Name="SalePrice" Type="Double" />
     <Property Name="TabletsPerPack" Type="Int32" />
     <Property Name="SalePricePerTablet" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Discount" Type="Decimal" Precision="18" Scale="0" />
   </EntityType>
 </Schema>

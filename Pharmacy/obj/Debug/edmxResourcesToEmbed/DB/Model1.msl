@@ -15,6 +15,7 @@
     <EntitySetMapping Name="Items">
       <EntityTypeMapping TypeName="PharmacyModel.Item">
         <MappingFragment StoreEntitySet="Item">
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
           <ScalarProperty Name="SalePricePerTablet" ColumnName="SalePricePerTablet" />
           <ScalarProperty Name="TabletsPerPack" ColumnName="TabletsPerPack" />
           <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />

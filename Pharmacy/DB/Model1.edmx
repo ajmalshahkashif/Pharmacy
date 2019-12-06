@@ -19,6 +19,7 @@
           <Property Name="SalePrice" Type="float" />
           <Property Name="TabletsPerPack" Type="int" />
           <Property Name="SalePricePerTablet" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Discount" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="Testing">
           <Key>
@@ -66,6 +67,7 @@
           <Property Name="SalePrice" Type="Double" />
           <Property Name="TabletsPerPack" Type="Int32" />
           <Property Name="SalePricePerTablet" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="0" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -87,6 +89,7 @@
           <EntitySetMapping Name="Items">
             <EntityTypeMapping TypeName="PharmacyModel.Item">
               <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
                 <ScalarProperty Name="SalePricePerTablet" ColumnName="SalePricePerTablet" />
                 <ScalarProperty Name="TabletsPerPack" ColumnName="TabletsPerPack" />
                 <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
