@@ -15,14 +15,14 @@ namespace Pharmacy.Controllers
        
         public ActionResult Index()
         {
-            var products = _context.Items.ToList();
+            var products = context.Items.ToList();
 
             return View(products);
         }
 
         public JsonResult Get([DataSourceRequest]DataSourceRequest request)
         {
-            var products = _context.Items.ToList();
+            var products = context.Items.ToList();
             return this.Json(products.ToDataSourceResult(request));
         }
     }

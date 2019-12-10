@@ -1,29 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="PharmacyModelStoreContainer" CdmEntityContainer="PharmacyEntities">
+    <EntitySetMapping Name="Companies">
+      <EntityTypeMapping TypeName="PharmacyModel.Company">
+        <MappingFragment StoreEntitySet="Company">
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Logo" ColumnName="Logo" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ItemTypes">
+      <EntityTypeMapping TypeName="PharmacyModel.ItemType">
+        <MappingFragment StoreEntitySet="ItemType">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Testings">
       <EntityTypeMapping TypeName="PharmacyModel.Testing">
         <MappingFragment StoreEntitySet="Testing">
           <ScalarProperty Name="birthdate_date" ColumnName="birthdate_date" />
           <ScalarProperty Name="birthdate_datetime" ColumnName="birthdate_datetime" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Items">
       <EntityTypeMapping TypeName="PharmacyModel.Item">
         <MappingFragment StoreEntitySet="Item">
+          <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
+          <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
           <ScalarProperty Name="Discount" ColumnName="Discount" />
           <ScalarProperty Name="SalePricePerTablet" ColumnName="SalePricePerTablet" />
           <ScalarProperty Name="TabletsPerPack" ColumnName="TabletsPerPack" />
           <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
           <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
           <ScalarProperty Name="Shelf" ColumnName="Shelf" />
-          <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
           <ScalarProperty Name="Description" ColumnName="Description" />
-          <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>

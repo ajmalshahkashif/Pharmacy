@@ -5,21 +5,41 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="PharmacyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Logo" Type="image" />
+          <Property Name="Address" Type="nvarchar" MaxLength="200" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="isActive" Type="bit" />
+        </EntityType>
         <EntityType Name="Item">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="200" />
-          <Property Name="CategoryID" Type="int" />
           <Property Name="Description" Type="nvarchar" MaxLength="400" />
-          <Property Name="Manufacturer" Type="nvarchar" MaxLength="300" />
           <Property Name="Shelf" Type="nvarchar" MaxLength="50" />
           <Property Name="PurchasePrice" Type="float" />
           <Property Name="SalePrice" Type="float" />
           <Property Name="TabletsPerPack" Type="int" />
           <Property Name="SalePricePerTablet" Type="decimal" Precision="18" Scale="0" />
           <Property Name="Discount" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Manufacturer" Type="int" />
+          <Property Name="ItemTypeID" Type="int" />
+        </EntityType>
+        <EntityType Name="ItemType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="Testing">
           <Key>
@@ -31,14 +51,84 @@
           <Property Name="birthdate_datetime" Type="datetime" />
           <Property Name="birthdate_date" Type="date" />
         </EntityType>
+        <Association Name="FK_Item_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="Manufacturer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemType">
+          <End Role="ItemType" Type="Self.ItemType" Multiplicity="0..1" />
+          <End Role="Item" Type="Self.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="ItemTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="PharmacyModelStoreContainer">
+          <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Testing" EntityType="Self.Testing" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Item_Company" Association="Self.FK_Item_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemType" Association="Self.FK_Item_ItemType">
+            <End Role="ItemType" EntitySet="ItemType" />
+            <End Role="Item" EntitySet="Item" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="PharmacyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="PharmacyEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Companies" EntityType="PharmacyModel.Company" />
+          <EntitySet Name="ItemTypes" EntityType="PharmacyModel.ItemType" />
+          <EntitySet Name="Testings" EntityType="PharmacyModel.Testing" />
+          <EntitySet Name="Items" EntityType="PharmacyModel.Item" />
+          <AssociationSet Name="FK_Item_Company" Association="PharmacyModel.FK_Item_Company">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Item_ItemType" Association="PharmacyModel.FK_Item_ItemType">
+            <End Role="ItemType" EntitySet="ItemTypes" />
+            <End Role="Item" EntitySet="Items" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="isActive" Type="Boolean" />
+          <NavigationProperty Name="Items" Relationship="PharmacyModel.FK_Item_Company" FromRole="Company" ToRole="Item" />
+        </EntityType>
+        <EntityType Name="ItemType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Items" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="ItemType" ToRole="Item" />
+        </EntityType>
         <EntityType Name="Testing">
           <Key>
             <PropertyRef Name="ID" />
@@ -49,55 +139,99 @@
           <Property Name="birthdate_datetime" Type="DateTime" Precision="3" />
           <Property Name="birthdate_date" Type="DateTime" Precision="0" />
         </EntityType>
-        <EntityContainer Name="PharmacyEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Testings" EntityType="Self.Testing" />
-          <EntitySet Name="Items" EntityType="PharmacyModel.Item" />
-        </EntityContainer>
         <EntityType Name="Item">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="CategoryID" Type="Int32" />
           <Property Name="Description" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
-          <Property Name="Manufacturer" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="Shelf" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PurchasePrice" Type="Double" />
           <Property Name="SalePrice" Type="Double" />
           <Property Name="TabletsPerPack" Type="Int32" />
           <Property Name="SalePricePerTablet" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="Discount" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Manufacturer" Type="Int32" />
+          <Property Name="ItemTypeID" Type="Int32" />
+          <NavigationProperty Name="Company" Relationship="PharmacyModel.FK_Item_Company" FromRole="Item" ToRole="Company" />
+          <NavigationProperty Name="ItemType" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="Item" ToRole="ItemType" />
         </EntityType>
-      </Schema>
+        <Association Name="FK_Item_Company">
+          <End Type="PharmacyModel.Company" Role="Company" Multiplicity="0..1" />
+          <End Type="PharmacyModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="Manufacturer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Item_ItemType">
+          <End Type="PharmacyModel.ItemType" Role="ItemType" Multiplicity="0..1" />
+          <End Type="PharmacyModel.Item" Role="Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ItemType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Item">
+              <PropertyRef Name="ItemTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="PharmacyModelStoreContainer" CdmEntityContainer="PharmacyEntities">
+          <EntitySetMapping Name="Companies">
+            <EntityTypeMapping TypeName="PharmacyModel.Company">
+              <MappingFragment StoreEntitySet="Company">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ItemTypes">
+            <EntityTypeMapping TypeName="PharmacyModel.ItemType">
+              <MappingFragment StoreEntitySet="ItemType">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Testings">
             <EntityTypeMapping TypeName="PharmacyModel.Testing">
               <MappingFragment StoreEntitySet="Testing">
                 <ScalarProperty Name="birthdate_date" ColumnName="birthdate_date" />
                 <ScalarProperty Name="birthdate_datetime" ColumnName="birthdate_datetime" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Items">
             <EntityTypeMapping TypeName="PharmacyModel.Item">
               <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
+                <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
                 <ScalarProperty Name="Discount" ColumnName="Discount" />
                 <ScalarProperty Name="SalePricePerTablet" ColumnName="SalePricePerTablet" />
                 <ScalarProperty Name="TabletsPerPack" ColumnName="TabletsPerPack" />
                 <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
                 <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
                 <ScalarProperty Name="Shelf" ColumnName="Shelf" />
-                <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>

@@ -9,7 +9,7 @@ namespace Pharmacy.Controllers
 {
     public class BaseController : Controller
     {
-       public PharmacyEntities _context = new PharmacyEntities();
+       public PharmacyEntities context = new PharmacyEntities();
 
     }
 }

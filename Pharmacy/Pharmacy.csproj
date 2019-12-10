@@ -166,10 +166,17 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DB\Company.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="DB\Item.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\ItemType.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="DB\Model1.Context.cs">
@@ -193,7 +200,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\CompanyValidation.cs" />
+    <Compile Include="Models\Helper\DataAnnotationMetaDataHelper.cs" />
+    <Compile Include="Models\ItemValidation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +238,8 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Common\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\Common\jquery.validate.js" />
     <Content Include="Scripts\AdminLTE\adminlte.min.js" />
     <Content Include="Scripts\AdminLTE\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\AdminLTE\bootstrap.min.js" />
@@ -308,6 +319,8 @@
     <Content Include="Views\Shared\_LayoutLeftMenu.cshtml" />
     <Content Include="Views\Item\AllItems.cshtml" />
     <Content Include="Views\Item\AddItem.cshtml" />
+    <Content Include="Views\Company\AllCompanies.cshtml" />
+    <Content Include="Views\Company\AddCompany.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

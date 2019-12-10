@@ -12,7 +12,7 @@
     {
         c.Bound(p => p.ID);
         c.Bound(p => p.Name).Title("Name");
-        c.Bound(p => p.CategoryID).Title("Category ID");
+        c.Bound(p => p.ItemTypeID).Title("Item Category ID");
         c.Bound(p => p.Description).Title("Description");
         c.Bound(p => p.Manufacturer).Title("Manufacturer");
         c.Bound(p => p.Shelf).Title("Shelf");
@@ -24,8 +24,8 @@
     })
     .DataSource(d => d
     .Ajax()
-    .Read(r => r.Action("Get", "Home"))
-    .PageSize(2)
+    .Read(r => r.Action("Get", "Item"))
+    .PageSize(10)
     )
     .Pageable()
     .Sortable()

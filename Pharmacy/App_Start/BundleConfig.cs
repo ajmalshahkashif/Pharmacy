@@ -40,6 +40,8 @@ namespace Pharmacy
                        //"~/Scripts/AdminLTE/jquery-ui.min.js",
                        "~/Scripts/Kendo/kendo.all.min.js",
                        "~/Scripts/Kendo/kendo.aspnetmvc.js",
+                       "~/Scripts/Common/jquery.validate.js",
+                       "~/Scripts/Common/jquery.validate.unobtrusive.js",
                       "~/Scripts/AdminLTE/bootstrap.min.js",
                       "~/Scripts/AdminLTE/jquery.sparkline.min.js",
                       "~/Scripts/AdminLTE/jquery.knob.min.js",

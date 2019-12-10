@@ -1,0 +1,30 @@
+﻿
+@model IEnumerable<Pharmacy.DB.Company>
+@using Pharmacy.DB
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "AllItems";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+
+@(Html.Kendo().Grid<Company>
+    ().Name("Companies").Columns(c =>
+    {
+        c.Bound(p => p.ID);
+        c.Bound(p => p.Name).Title("Name");
+        c.Bound(p => p.Logo).Title("Logo");
+        c.Bound(p => p.Address).Title("Address");
+        c.Bound(p => p.Description).Title("Description");
+        c.Bound(p => p.isActive).Title("Is Active");
+    })
+    .DataSource(d => d
+    .Ajax()
+    .Read(r => r.Action("Get", "Company"))
+    .PageSize(10)
+    )
+    .Pageable()
+    .Sortable()
+    .Filterable()
+    .Groupable()
+)

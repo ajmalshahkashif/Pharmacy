@@ -8,8 +8,9 @@
 
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     @Scripts.Render("~/AdminLTE/js")
-    @*Below script is added just b/c Kendo Filterable was not working with the jquery version 3.3.1*@
-
+    
+    
+    @*Note: Below script is added just b/c Kendo Filterable was not working with the jquery version 3.3.1*@
     <script src="~/Scripts/Kendo/jquery-migrate-3.0.0.min.js"></script>
 
     @Styles.Render("~/AdminLTE/css")
@@ -169,8 +170,21 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index","Home")"><i class="fa fa-circle-o"></i> All Items</a></li>
+                            <li><a href="@Url.Action("AllItems","Item")"><i class="fa fa-circle-o"></i> All Items</a></li>
                             <li><a href="@Url.Action("AddItem","Item")"><i class="fa fa-circle-o"></i> Add New Item</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-folder"></i> <span>Companies/Brands</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("AllCompanies","Company")"><i class="fa fa-circle-o"></i> All Companies</a></li>
+                            <li><a href="@Url.Action("AddCompany","Company")"><i class="fa fa-circle-o"></i> Add New Company</a></li>
                         </ul>
                     </li>
                 </ul>

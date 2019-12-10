@@ -1,5 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="PharmacyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="PharmacyEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Companies" EntityType="PharmacyModel.Company" />
+    <EntitySet Name="ItemTypes" EntityType="PharmacyModel.ItemType" />
+    <EntitySet Name="Testings" EntityType="PharmacyModel.Testing" />
+    <EntitySet Name="Items" EntityType="PharmacyModel.Item" />
+    <AssociationSet Name="FK_Item_Company" Association="PharmacyModel.FK_Item_Company">
+      <End Role="Company" EntitySet="Companies" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Item_ItemType" Association="PharmacyModel.FK_Item_ItemType">
+      <End Role="ItemType" EntitySet="ItemTypes" />
+      <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="isActive" Type="Boolean" />
+    <NavigationProperty Name="Items" Relationship="PharmacyModel.FK_Item_Company" FromRole="Company" ToRole="Item" />
+  </EntityType>
+  <EntityType Name="ItemType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="isActive" Type="Boolean" />
+    <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Items" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="ItemType" ToRole="Item" />
+  </EntityType>
   <EntityType Name="Testing">
     <Key>
       <PropertyRef Name="ID" />
@@ -10,24 +46,46 @@
     <Property Name="birthdate_datetime" Type="DateTime" Precision="3" />
     <Property Name="birthdate_date" Type="DateTime" Precision="0" />
   </EntityType>
-  <EntityContainer Name="PharmacyEntities" annotation:LazyLoadingEnabled="true">
-    <EntitySet Name="Testings" EntityType="Self.Testing" />
-    <EntitySet Name="Items" EntityType="PharmacyModel.Item" />
-  </EntityContainer>
   <EntityType Name="Item">
     <Key>
       <PropertyRef Name="ID" />
     </Key>
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="CategoryID" Type="Int32" />
     <Property Name="Description" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
-    <Property Name="Manufacturer" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
     <Property Name="Shelf" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="PurchasePrice" Type="Double" />
     <Property Name="SalePrice" Type="Double" />
     <Property Name="TabletsPerPack" Type="Int32" />
     <Property Name="SalePricePerTablet" Type="Decimal" Precision="18" Scale="0" />
     <Property Name="Discount" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Manufacturer" Type="Int32" />
+    <Property Name="ItemTypeID" Type="Int32" />
+    <NavigationProperty Name="Company" Relationship="PharmacyModel.FK_Item_Company" FromRole="Item" ToRole="Company" />
+    <NavigationProperty Name="ItemType" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="Item" ToRole="ItemType" />
   </EntityType>
+  <Association Name="FK_Item_Company">
+    <End Type="PharmacyModel.Company" Role="Company" Multiplicity="0..1" />
+    <End Type="PharmacyModel.Item" Role="Item" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="Manufacturer" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Item_ItemType">
+    <End Type="PharmacyModel.ItemType" Role="ItemType" Multiplicity="0..1" />
+    <End Type="PharmacyModel.Item" Role="Item" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemType">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="ItemTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

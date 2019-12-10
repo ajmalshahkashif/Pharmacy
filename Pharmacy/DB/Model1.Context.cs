@@ -25,6 +25,8 @@ namespace Pharmacy.DB
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Company> Companies { get; set; }
+        public virtual DbSet<ItemType> ItemTypes { get; set; }
         public virtual DbSet<Testing> Testings { get; set; }
         public virtual DbSet<Item> Items { get; set; }
     }

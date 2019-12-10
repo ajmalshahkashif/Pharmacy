@@ -12,21 +12,22 @@ namespace Pharmacy.DB
     using System;
     using System.Collections.Generic;
     
-    public partial class Item
+    public partial class Company
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Company()
+        {
+            this.Items = new HashSet<Item>();
+        }
+    
         public int ID { get; set; }
         public string Name { get; set; }
+        public byte[] Logo { get; set; }
+        public string Address { get; set; }
         public string Description { get; set; }
-        public string Shelf { get; set; }
-        public Nullable<double> PurchasePrice { get; set; }
-        public Nullable<double> SalePrice { get; set; }
-        public Nullable<int> TabletsPerPack { get; set; }
-        public Nullable<decimal> SalePricePerTablet { get; set; }
-        public Nullable<decimal> Discount { get; set; }
-        public Nullable<int> Manufacturer { get; set; }
-        public Nullable<int> ItemTypeID { get; set; }
+        public Nullable<bool> isActive { get; set; }
     
-        public virtual Company Company { get; set; }
-        public virtual ItemType ItemType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Item> Items { get; set; }
     }
 }

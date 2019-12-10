@@ -1,20 +1,40 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="PharmacyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Company">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Logo" Type="image" />
+    <Property Name="Address" Type="nvarchar" MaxLength="200" />
+    <Property Name="Description" Type="nvarchar" MaxLength="200" />
+    <Property Name="isActive" Type="bit" />
+  </EntityType>
   <EntityType Name="Item">
     <Key>
       <PropertyRef Name="ID" />
     </Key>
     <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="200" />
-    <Property Name="CategoryID" Type="int" />
     <Property Name="Description" Type="nvarchar" MaxLength="400" />
-    <Property Name="Manufacturer" Type="nvarchar" MaxLength="300" />
     <Property Name="Shelf" Type="nvarchar" MaxLength="50" />
     <Property Name="PurchasePrice" Type="float" />
     <Property Name="SalePrice" Type="float" />
     <Property Name="TabletsPerPack" Type="int" />
     <Property Name="SalePricePerTablet" Type="decimal" Precision="18" Scale="0" />
     <Property Name="Discount" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="Manufacturer" Type="int" />
+    <Property Name="ItemTypeID" Type="int" />
+  </EntityType>
+  <EntityType Name="ItemType">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="isActive" Type="bit" />
+    <Property Name="Description" Type="nvarchar" MaxLength="200" />
   </EntityType>
   <EntityType Name="Testing">
     <Key>
@@ -26,8 +46,42 @@
     <Property Name="birthdate_datetime" Type="datetime" />
     <Property Name="birthdate_date" Type="date" />
   </EntityType>
+  <Association Name="FK_Item_Company">
+    <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+    <End Role="Item" Type="Self.Item" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Company">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="Manufacturer" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Item_ItemType">
+    <End Role="ItemType" Type="Self.ItemType" Multiplicity="0..1" />
+    <End Role="Item" Type="Self.Item" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ItemType">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Item">
+        <PropertyRef Name="ItemTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="PharmacyModelStoreContainer">
+    <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Testing" EntityType="Self.Testing" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Item_Company" Association="Self.FK_Item_Company">
+      <End Role="Company" EntitySet="Company" />
+      <End Role="Item" EntitySet="Item" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Item_ItemType" Association="Self.FK_Item_ItemType">
+      <End Role="ItemType" EntitySet="ItemType" />
+      <End Role="Item" EntitySet="Item" />
+    </AssociationSet>
   </EntityContainer>
 </Schema>
