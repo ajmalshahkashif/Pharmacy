@@ -20,10 +20,10 @@ namespace Pharmacy.DB
         public string Shelf { get; set; }
         public Nullable<double> PurchasePrice { get; set; }
         public Nullable<double> SalePrice { get; set; }
-        public Nullable<int> TabletsPerPack { get; set; }
-        public Nullable<decimal> SalePricePerTablet { get; set; }
+        public Nullable<int> PiecesPerPack { get; set; }
+        public Nullable<decimal> SalePricePerPiece { get; set; }
         public Nullable<decimal> Discount { get; set; }
-        public Nullable<int> Manufacturer { get; set; }
+        public Nullable<int> ManufacturerID { get; set; }
         public Nullable<int> ItemTypeID { get; set; }
     
         public virtual Company Company { get; set; }

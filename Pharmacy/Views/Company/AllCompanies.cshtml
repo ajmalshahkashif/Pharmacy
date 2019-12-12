@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<Pharmacy.DB.Company>
+﻿@model IEnumerable<Pharmacy.DB.Company>
 @using Pharmacy.DB
 @using Kendo.Mvc.UI
 
@@ -7,24 +6,27 @@
     ViewBag.Title = "AllItems";
     Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
 }
-
+@Model.Count()
 @(Html.Kendo().Grid<Company>
     ().Name("Companies").Columns(c =>
     {
         c.Bound(p => p.ID);
-        c.Bound(p => p.Name).Title("Name");
-        c.Bound(p => p.Logo).Title("Logo");
-        c.Bound(p => p.Address).Title("Address");
-        c.Bound(p => p.Description).Title("Description");
-        c.Bound(p => p.isActive).Title("Is Active");
+        c.Bound(p => p.Name).Title("Name").Width(150);;
+        c.Bound(p => p.Logo).Title("Logo").Width(150);;
+        c.Bound(p => p.Address).Title("Address").Width(150);;
+        c.Bound(p => p.Description).Title("Description").Width(150);;
+        c.Bound(p => p.isActive).Title("Is Active").Width(150);;
     })
     .DataSource(d => d
     .Ajax()
     .Read(r => r.Action("Get", "Company"))
+    
     .PageSize(10)
     )
     .Pageable()
     .Sortable()
     .Filterable()
     .Groupable()
+    .Scrollable()
+    .Resizable(resize => resize.Columns(true))
 )

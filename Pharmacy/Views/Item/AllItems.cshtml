@@ -10,25 +10,29 @@
 @(Html.Kendo().Grid<Item>
     ().Name("Items").Columns(c =>
     {
-        c.Bound(p => p.ID);
-        c.Bound(p => p.Name).Title("Name");
-        c.Bound(p => p.ItemTypeID).Title("Item Category ID");
-        c.Bound(p => p.Description).Title("Description");
-        c.Bound(p => p.Manufacturer).Title("Manufacturer");
-        c.Bound(p => p.Shelf).Title("Shelf");
-        c.Bound(p => p.PurchasePrice).Title("Purchase Price");
-        c.Bound(p => p.SalePrice).Title("Sale Price");
-        c.Bound(p => p.TabletsPerPack).Title("Tablets Per Pack");
-        c.Bound(p => p.SalePricePerTablet).Title("Sale Price");
+        //c.Bound(p => p.ID);
+        c.Bound(p => p.Name).Title("Name").Width(150);
+        c.Bound(p => p.ItemTypeID).Title("Item Category").Width(130);
+        c.Bound(p => p.ManufacturerID).Title("Manufacturer").Width(130);
+        c.Bound(p => p.Shelf).Title("Shelf").Width(70);
+        c.Bound(p => p.PurchasePrice).Title("Purchase Price").Width(123);
+        c.Bound(p => p.SalePrice).Title("Sale Price").Width(90);
+        c.Bound(p => p.PiecesPerPack).Title("Pieces Per Pack").Width(128);
+        c.Bound(p => p.SalePricePerPiece).Title("Sale Price/Pack").Width(125);
+        c.Bound(p => p.Description).Title("Description").Width(100);
 
     })
     .DataSource(d => d
     .Ajax()
-    .Read(r => r.Action("Get", "Item"))
+    .Read(r => r.Action("Getttt", "Item"))
     .PageSize(10)
     )
     .Pageable()
     .Sortable()
     .Filterable()
     .Groupable()
+    .Scrollable()
+    .Resizable(resize => resize.Columns(true))
+
+
 )

@@ -38,10 +38,10 @@
       <EntityTypeMapping TypeName="PharmacyModel.Item">
         <MappingFragment StoreEntitySet="Item">
           <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
-          <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
+          <ScalarProperty Name="ManufacturerID" ColumnName="ManufacturerID" />
           <ScalarProperty Name="Discount" ColumnName="Discount" />
-          <ScalarProperty Name="SalePricePerTablet" ColumnName="SalePricePerTablet" />
-          <ScalarProperty Name="TabletsPerPack" ColumnName="TabletsPerPack" />
+          <ScalarProperty Name="SalePricePerPiece" ColumnName="SalePricePerPiece" />
+          <ScalarProperty Name="PiecesPerPack" ColumnName="PiecesPerPack" />
           <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
           <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
           <ScalarProperty Name="Shelf" ColumnName="Shelf" />

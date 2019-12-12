@@ -26,10 +26,10 @@
           <Property Name="Shelf" Type="nvarchar" MaxLength="50" />
           <Property Name="PurchasePrice" Type="float" />
           <Property Name="SalePrice" Type="float" />
-          <Property Name="TabletsPerPack" Type="int" />
-          <Property Name="SalePricePerTablet" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="Discount" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="Manufacturer" Type="int" />
+          <Property Name="PiecesPerPack" Type="int" />
+          <Property Name="SalePricePerPiece" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Discount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="ManufacturerID" Type="int" />
           <Property Name="ItemTypeID" Type="int" />
         </EntityType>
         <EntityType Name="ItemType">
@@ -59,7 +59,7 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Item">
-              <PropertyRef Name="Manufacturer" />
+              <PropertyRef Name="ManufacturerID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -149,10 +149,10 @@
           <Property Name="Shelf" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PurchasePrice" Type="Double" />
           <Property Name="SalePrice" Type="Double" />
-          <Property Name="TabletsPerPack" Type="Int32" />
-          <Property Name="SalePricePerTablet" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Discount" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Manufacturer" Type="Int32" />
+          <Property Name="PiecesPerPack" Type="Int32" />
+          <Property Name="SalePricePerPiece" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ManufacturerID" Type="Int32" />
           <Property Name="ItemTypeID" Type="Int32" />
           <NavigationProperty Name="Company" Relationship="PharmacyModel.FK_Item_Company" FromRole="Item" ToRole="Company" />
           <NavigationProperty Name="ItemType" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="Item" ToRole="ItemType" />
@@ -165,7 +165,7 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Item">
-              <PropertyRef Name="Manufacturer" />
+              <PropertyRef Name="ManufacturerID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -224,10 +224,10 @@
             <EntityTypeMapping TypeName="PharmacyModel.Item">
               <MappingFragment StoreEntitySet="Item">
                 <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
-                <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
+                <ScalarProperty Name="ManufacturerID" ColumnName="ManufacturerID" />
                 <ScalarProperty Name="Discount" ColumnName="Discount" />
-                <ScalarProperty Name="SalePricePerTablet" ColumnName="SalePricePerTablet" />
-                <ScalarProperty Name="TabletsPerPack" ColumnName="TabletsPerPack" />
+                <ScalarProperty Name="SalePricePerPiece" ColumnName="SalePricePerPiece" />
+                <ScalarProperty Name="PiecesPerPack" ColumnName="PiecesPerPack" />
                 <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
                 <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
                 <ScalarProperty Name="Shelf" ColumnName="Shelf" />

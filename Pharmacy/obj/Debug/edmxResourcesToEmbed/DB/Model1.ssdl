@@ -21,10 +21,10 @@
     <Property Name="Shelf" Type="nvarchar" MaxLength="50" />
     <Property Name="PurchasePrice" Type="float" />
     <Property Name="SalePrice" Type="float" />
-    <Property Name="TabletsPerPack" Type="int" />
-    <Property Name="SalePricePerTablet" Type="decimal" Precision="18" Scale="0" />
-    <Property Name="Discount" Type="decimal" Precision="18" Scale="0" />
-    <Property Name="Manufacturer" Type="int" />
+    <Property Name="PiecesPerPack" Type="int" />
+    <Property Name="SalePricePerPiece" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="Discount" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="ManufacturerID" Type="int" />
     <Property Name="ItemTypeID" Type="int" />
   </EntityType>
   <EntityType Name="ItemType">
@@ -54,7 +54,7 @@
         <PropertyRef Name="ID" />
       </Principal>
       <Dependent Role="Item">
-        <PropertyRef Name="Manufacturer" />
+        <PropertyRef Name="ManufacturerID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

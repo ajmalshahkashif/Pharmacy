@@ -31,7 +31,6 @@
             @Html.LabelFor(model => model.ItemTypeID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
                 @Html.DropDownListFor(model => model.ItemTypeID, new SelectList(Enumerable.Empty<SelectListItem>()), "Please Select", new { @class = "form-control" })
-
                 @Html.ValidationMessageFor(model => model.ItemTypeID, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-2">
@@ -39,10 +38,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Manufacturer, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.ManufacturerID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                @Html.EditorFor(model => model.Manufacturer, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Manufacturer, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.ManufacturerID, new SelectList(Enumerable.Empty<SelectListItem>()), "Please Select", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ManufacturerID, "", new { @class = "text-danger" })
             </div>
 
             @Html.LabelFor(model => model.Shelf, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -71,16 +70,16 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.TabletsPerPack, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.PiecesPerPack, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                @Html.EditorFor(model => model.TabletsPerPack, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TabletsPerPack, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(model => model.PiecesPerPack, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PiecesPerPack, "", new { @class = "text-danger" })
             </div>
 
-            @Html.LabelFor(model => model.SalePricePerTablet, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.SalePricePerPiece, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                @Html.EditorFor(model => model.SalePricePerTablet, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SalePricePerTablet, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.SalePricePerPiece, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.SalePricePerPiece, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-2">
             </div>
@@ -92,14 +91,6 @@
                 @Html.EditorFor(model => model.Discount, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Discount, "", new { @class = "text-danger" })
             </div>
-
-            @*@Html.LabelFor(model => model.SalePricePerTablet, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-3">
-                    @Html.EditorFor(model => model.SalePricePerTablet, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.SalePricePerTablet, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-2">
-                </div>*@
         </div>
 
         <div class="form-group">
@@ -119,18 +110,49 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+
+        $("#PiecesPerPack").focusout(function(){
+            
+            //Check if PiecesPerPack validation has no error. No text means no validation error => data is valid
+            if($('#SalePrice').val() != "" && $('#PiecesPerPack-error').text() == "" ){
+                var SalePrice = $('#SalePrice').val();
+                var PiecesPerPack = $('#PiecesPerPack').val();
+                var SalePricePerPiece = SalePrice/PiecesPerPack;
+                $('#SalePricePerPiece').val(SalePricePerPiece);
+            }
+        });
+
+            //Item Types/Categories ddl populated
+            $.ajax({
+                url: "ddlItemType",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                datatype: JSON,
+                success: function (result) {
+                    $(result).each(function () {
+                        $("#ItemTypeID").append($("<option></option>").val(this.ID).html(this.Name));
+                    });
+                //$("#target").prop("selectedIndex", 0);
+                },
+                error: function (data) {
+                }
+            });
+
+        //Companies ddl populated
         $.ajax({
-            url: "ReturnJSONDataToAJax",
+            url: "ddlCompanies",
             type: "GET",
             contentType: "application/json; charset=utf-8",
             datatype: JSON,
             success: function (result) {
                 $(result).each(function () {
-                    $("#ItemTypeID").append($("<option></option>").val(this.ID).html(this.Name));
+                    $("#ManufacturerID").append($("<option></option>").val(this.ID).html(this.Name));
                 });
                 //$("#target").prop("selectedIndex", 0);
             },
-            error: function (data) { }
+            error: function (data) { 
+            }
         });
     });
+
 </script>
