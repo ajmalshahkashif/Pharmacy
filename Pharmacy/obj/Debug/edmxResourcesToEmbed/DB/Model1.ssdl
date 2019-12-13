@@ -22,10 +22,14 @@
     <Property Name="PurchasePrice" Type="float" />
     <Property Name="SalePrice" Type="float" />
     <Property Name="PiecesPerPack" Type="int" />
-    <Property Name="SalePricePerPiece" Type="decimal" Precision="18" Scale="2" />
-    <Property Name="Discount" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="SalePricePerPiece" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="OtherBonus" Type="decimal" Precision="18" Scale="0" />
     <Property Name="ManufacturerID" Type="int" />
     <Property Name="ItemTypeID" Type="int" />
+    <Property Name="Packing" Type="nvarchar" MaxLength="50" />
+    <Property Name="GenericName" Type="nvarchar" MaxLength="60" />
+    <Property Name="PurchasePercentage" Type="int" />
+    <Property Name="SalePercentage" Type="int" />
   </EntityType>
   <EntityType Name="ItemType">
     <Key>
@@ -35,6 +39,15 @@
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="isActive" Type="bit" />
     <Property Name="Description" Type="nvarchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="Supplier">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar" MaxLength="200" />
+    <Property Name="isActive" Type="bit" />
   </EntityType>
   <EntityType Name="Testing">
     <Key>
@@ -74,6 +87,7 @@
     <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Testing" EntityType="Self.Testing" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_Item_Company" Association="Self.FK_Item_Company">
       <End Role="Company" EntitySet="Company" />

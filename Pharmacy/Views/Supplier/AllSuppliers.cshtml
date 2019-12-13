@@ -3,12 +3,12 @@
 @using Kendo.Mvc.UI
 
 @{
-    ViewBag.Title = "All Item Types";
+    ViewBag.Title = "All Suppliers";
     Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
 }
 
-@(Html.Kendo().Grid<ItemType>
-    ().Name("ItemTypeGrid").Columns(c =>
+@(Html.Kendo().Grid<Supplier>
+    ().Name("SupplierGrid").Columns(c =>
     {
         //c.Bound(p => p.ID).Title("Id").Width(30) ;
         c.Bound(p => p.Name).Title("Name").Width(150);
@@ -17,7 +17,7 @@
     })
     .DataSource(d => d
     .Ajax()
-    .Read(r => r.Action("GetTypeList", "ItemType"))
+    .Read(r => r.Action("GetSupplierList", "Supplier"))
     .PageSize(10)
     )
     .Pageable()

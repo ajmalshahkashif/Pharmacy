@@ -33,8 +33,6 @@ namespace Pharmacy.Models
         [Display(Name = "Sale Price/piece")]
         public Nullable<decimal> SalePricePerPiece { get; set; }
 
-        public Nullable<decimal> Discount { get; set; }
-
 
         [Display(Name = "Manufacturer")]
         [Required(ErrorMessage = "Please provide Company name")]
@@ -44,6 +42,22 @@ namespace Pharmacy.Models
         [Display(Name= "Item Type")]
         [Required(ErrorMessage = "Please provide Item Type")]
         public Nullable<int> ItemTypeID { get; set; }
+
+        public string Packing { get; set; }
+
+        [Display(Name = "Purchase %(u get)")]
+        [Required(ErrorMessage ="Provide % you'll get")]
+        public Nullable<int> PurchasePercentage { get; set; }
+
+        [Display(Name = "Sale % (u give)")]
+        [Required(ErrorMessage = "Provide % you'll give")]
+        public Nullable<int> SalePercentage { get; set; }
+
+        [Display(Name = "Other Bonus (u get)")]
+        public Nullable<decimal> OtherBonus { get; set; }
+
+
+        public string GenericName { get; set; }
 
     }
 }

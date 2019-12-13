@@ -51,7 +51,7 @@ namespace Pharmacy.Controllers
             obj.SalePrice = item.SalePrice;
             obj.PiecesPerPack = item.PiecesPerPack;
             obj.SalePricePerPiece = item.SalePricePerPiece;
-            obj.Discount = item.Discount;
+            obj.OtherBonus = item.OtherBonus;
             obj.ManufacturerID = item.ManufacturerID;
             obj.ItemTypeID = item.ItemTypeID;
 

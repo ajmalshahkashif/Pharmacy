@@ -12,12 +12,11 @@ namespace Pharmacy.DB
     using System;
     using System.Collections.Generic;
     
-    public partial class Testing
+    public partial class Supplier
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public Nullable<int> Mobile { get; set; }
-        public Nullable<System.DateTime> birthdate_datetime { get; set; }
-        public Nullable<System.DateTime> birthdate_date { get; set; }
+        public string Description { get; set; }
+        public Nullable<bool> isActive { get; set; }
     }
 }

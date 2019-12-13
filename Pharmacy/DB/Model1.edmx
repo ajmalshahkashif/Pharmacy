@@ -27,10 +27,14 @@
           <Property Name="PurchasePrice" Type="float" />
           <Property Name="SalePrice" Type="float" />
           <Property Name="PiecesPerPack" Type="int" />
-          <Property Name="SalePricePerPiece" Type="decimal" Precision="18" Scale="2" />
-          <Property Name="Discount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SalePricePerPiece" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="OtherBonus" Type="decimal" Precision="18" Scale="0" />
           <Property Name="ManufacturerID" Type="int" />
           <Property Name="ItemTypeID" Type="int" />
+          <Property Name="Packing" Type="nvarchar" MaxLength="50" />
+          <Property Name="GenericName" Type="nvarchar" MaxLength="60" />
+          <Property Name="PurchasePercentage" Type="int" />
+          <Property Name="SalePercentage" Type="int" />
         </EntityType>
         <EntityType Name="ItemType">
           <Key>
@@ -40,6 +44,15 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="isActive" Type="bit" />
           <Property Name="Description" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="isActive" Type="bit" />
         </EntityType>
         <EntityType Name="Testing">
           <Key>
@@ -79,6 +92,7 @@
           <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Testing" EntityType="Self.Testing" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Item_Company" Association="Self.FK_Item_Company">
             <End Role="Company" EntitySet="Company" />
@@ -106,6 +120,7 @@
             <End Role="ItemType" EntitySet="ItemTypes" />
             <End Role="Item" EntitySet="Items" />
           </AssociationSet>
+          <EntitySet Name="Suppliers" EntityType="PharmacyModel.Supplier" />
           </EntityContainer>
         <EntityType Name="Company">
           <Key>
@@ -150,10 +165,14 @@
           <Property Name="PurchasePrice" Type="Double" />
           <Property Name="SalePrice" Type="Double" />
           <Property Name="PiecesPerPack" Type="Int32" />
-          <Property Name="SalePricePerPiece" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SalePricePerPiece" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="OtherBonus" Type="Decimal" Precision="18" Scale="0" />
           <Property Name="ManufacturerID" Type="Int32" />
           <Property Name="ItemTypeID" Type="Int32" />
+          <Property Name="Packing" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GenericName" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="PurchasePercentage" Type="Int32" />
+          <Property Name="SalePercentage" Type="Int32" />
           <NavigationProperty Name="Company" Relationship="PharmacyModel.FK_Item_Company" FromRole="Item" ToRole="Company" />
           <NavigationProperty Name="ItemType" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="Item" ToRole="ItemType" />
         </EntityType>
@@ -181,6 +200,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="isActive" Type="Boolean" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -223,14 +251,28 @@
           <EntitySetMapping Name="Items">
             <EntityTypeMapping TypeName="PharmacyModel.Item">
               <MappingFragment StoreEntitySet="Item">
+                <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
+                <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
+                <ScalarProperty Name="GenericName" ColumnName="GenericName" />
+                <ScalarProperty Name="Packing" ColumnName="Packing" />
                 <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
                 <ScalarProperty Name="ManufacturerID" ColumnName="ManufacturerID" />
-                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="OtherBonus" ColumnName="OtherBonus" />
                 <ScalarProperty Name="SalePricePerPiece" ColumnName="SalePricePerPiece" />
                 <ScalarProperty Name="PiecesPerPack" ColumnName="PiecesPerPack" />
                 <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
                 <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
                 <ScalarProperty Name="Shelf" ColumnName="Shelf" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="PharmacyModel.Supplier">
+              <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />

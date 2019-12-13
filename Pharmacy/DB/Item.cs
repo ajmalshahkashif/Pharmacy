@@ -22,9 +22,13 @@ namespace Pharmacy.DB
         public Nullable<double> SalePrice { get; set; }
         public Nullable<int> PiecesPerPack { get; set; }
         public Nullable<decimal> SalePricePerPiece { get; set; }
-        public Nullable<decimal> Discount { get; set; }
+        public Nullable<decimal> OtherBonus { get; set; }
         public Nullable<int> ManufacturerID { get; set; }
         public Nullable<int> ItemTypeID { get; set; }
+        public string Packing { get; set; }
+        public string GenericName { get; set; }
+        public Nullable<int> PurchasePercentage { get; set; }
+        public Nullable<int> SalePercentage { get; set; }
     
         public virtual Company Company { get; set; }
         public virtual ItemType ItemType { get; set; }

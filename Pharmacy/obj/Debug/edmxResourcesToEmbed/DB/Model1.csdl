@@ -13,6 +13,7 @@
       <End Role="ItemType" EntitySet="ItemTypes" />
       <End Role="Item" EntitySet="Items" />
     </AssociationSet>
+    <EntitySet Name="Suppliers" EntityType="PharmacyModel.Supplier" />
   </EntityContainer>
   <EntityType Name="Company">
     <Key>
@@ -57,10 +58,14 @@
     <Property Name="PurchasePrice" Type="Double" />
     <Property Name="SalePrice" Type="Double" />
     <Property Name="PiecesPerPack" Type="Int32" />
-    <Property Name="SalePricePerPiece" Type="Decimal" Precision="18" Scale="2" />
-    <Property Name="Discount" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="SalePricePerPiece" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="OtherBonus" Type="Decimal" Precision="18" Scale="0" />
     <Property Name="ManufacturerID" Type="Int32" />
     <Property Name="ItemTypeID" Type="Int32" />
+    <Property Name="Packing" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="GenericName" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+    <Property Name="PurchasePercentage" Type="Int32" />
+    <Property Name="SalePercentage" Type="Int32" />
     <NavigationProperty Name="Company" Relationship="PharmacyModel.FK_Item_Company" FromRole="Item" ToRole="Company" />
     <NavigationProperty Name="ItemType" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="Item" ToRole="ItemType" />
   </EntityType>
@@ -88,4 +93,13 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="Supplier">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="isActive" Type="Boolean" />
+  </EntityType>
 </Schema>
