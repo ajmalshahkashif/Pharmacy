@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Pharmacy.DB.Item>
+﻿
 @using Pharmacy.DB
 @using Kendo.Mvc.UI
 
@@ -7,8 +7,12 @@
     Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
 }
 
+@*@using Pharmacy.Models*@
+@*TODO: Two options (1)Take Model Class  (2)Take original Class i.e. from DB
+    Which approach is best*@
+@*@(Html.Kendo().Grid<ItemValidation>*@
 @(Html.Kendo().Grid<Item>
-    ().Name("Items").Columns(c =>
+    ().Name("GridName").Columns(c =>
     {
         //c.Bound(p => p.ID);
         c.Bound(p => p.Name).Title("Name").Width(150);
@@ -24,7 +28,7 @@
     })
     .DataSource(d => d
     .Ajax()
-    .Read(r => r.Action("Getttt", "Item"))
+    .Read(r => r.Action("GetItemList", "Item"))
     .PageSize(10)
     )
     .Pageable()

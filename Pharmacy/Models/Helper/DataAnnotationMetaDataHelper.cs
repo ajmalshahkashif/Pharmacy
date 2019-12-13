@@ -13,8 +13,8 @@ namespace Pharmacy.Models.Helper
 
 
 
-    [MetadataType(typeof(ItemValidation))]
-    public partial class Item
-    {
-    }
+    //[MetadataType(typeof(ItemValidation))]
+    //public partial class Item
+    //{
+    //}
 }

@@ -169,6 +169,7 @@
     <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Controllers\ItemTypeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DB\Company.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -202,6 +203,7 @@
     </Compile>
     <Compile Include="Models\CompanyValidation.cs" />
     <Compile Include="Models\Helper\DataAnnotationMetaDataHelper.cs" />
+    <Compile Include="Models\ItemTypeValidation.cs" />
     <Compile Include="Models\ItemValidation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -321,6 +323,8 @@
     <Content Include="Views\Item\AddItem.cshtml" />
     <Content Include="Views\Company\AllCompanies.cshtml" />
     <Content Include="Views\Company\AddCompany.cshtml" />
+    <Content Include="Views\ItemType\AllTypes.cshtml" />
+    <Content Include="Views\ItemType\AddType.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

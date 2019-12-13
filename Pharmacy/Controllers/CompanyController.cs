@@ -1,5 +1,7 @@
 ﻿using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using Pharmacy.Models;
+using Pharmacy.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +15,7 @@ namespace Pharmacy.Controllers
         // GET: Company
         public ActionResult AllCompanies()
         {
-            var Companies = context.Companies.ToList();
-
-            return View(Companies);
+            return View();
         }
 
         public JsonResult Get([DataSourceRequest]DataSourceRequest request)
@@ -38,19 +38,31 @@ namespace Pharmacy.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //public ActionResult AddCompany(ItemValidation item)
-        //{
+        [HttpPost]
+        public ActionResult AddCompany(CompanyValidation company)
+        {
 
-        //    Item obj = new Item();
+            Company obj = new Company();
 
-        //    obj.Name = item.Name;
-        //    obj.Shelf = item.Shelf;
+            obj.Name = company.Name;
+            obj.Logo = company.Logo;
+            obj.Address = company.Address;
+            obj.Description = company.Description;
+            obj.isActive = company.isActive;
 
-        //    context.Items.Add(obj);
-        //    context.SaveChanges();
-        //    return View();
-        //}
+            context.Companies.Add(obj);
+            context.SaveChanges();
+            ModelState.Clear();
+            return View();
+        }
 
+
+
+        #region DDL population
+
+
+
+
+        #endregion
     }
 }

@@ -1,0 +1,29 @@
+﻿
+@using Pharmacy.DB
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "All Item Types";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+
+@(Html.Kendo().Grid<Company>
+    ().Name("ItemTypeGrid").Columns(c =>
+    {
+        //c.Bound(p => p.ID).Title("Id").Width(30) ;
+        c.Bound(p => p.Name).Title("Name").Width(150);
+        c.Bound(p => p.isActive).Title("Is Active").Width(150);
+        c.Bound(p => p.Description).Title("Description").Width(150);
+    })
+    .DataSource(d => d
+    .Ajax()
+    .Read(r => r.Action("GetTypeList", "ItemType"))
+    .PageSize(10)
+    )
+    .Pageable()
+    .Sortable()
+    .Filterable()
+    .Groupable()
+    .Scrollable()
+    .Resizable(resize => resize.Columns(true))
+)

@@ -14,12 +14,10 @@ namespace Pharmacy.Controllers
     {
         public ActionResult AllItems()
         {
-            var products = context.Items.ToList();
-
-            return View(products);
+            return View();
         }
 
-        public JsonResult Getttt([DataSourceRequest]DataSourceRequest request)
+        public JsonResult GetItemList([DataSourceRequest]DataSourceRequest request)
         {
             var products = context.Items.Select(x => new
             {
@@ -62,6 +60,8 @@ namespace Pharmacy.Controllers
             ModelState.Clear();
             return View();
         }
+
+
 
 
         #region DDL population

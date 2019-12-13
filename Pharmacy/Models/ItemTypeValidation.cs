@@ -6,17 +6,16 @@ using System.Web;
 
 namespace Pharmacy.Models
 {
-    public class CompanyValidation
+    public class ItemTypeValidation
     {
+
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Please name")]
+        [Required(ErrorMessage = "Please type name")]
         public string Name { get; set; }
-        public byte[] Logo { get; set; }
-        public string Address { get; set; }
-        public string Description { get; set; }
 
         [Display(Name = "Active")]
         public bool isActive { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Pharmacy.DB.Company>
+﻿
 @using Pharmacy.DB
 @using Kendo.Mvc.UI
 
@@ -6,7 +6,7 @@
     ViewBag.Title = "AllItems";
     Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
 }
-@Model.Count()
+
 @(Html.Kendo().Grid<Company>
     ().Name("Companies").Columns(c =>
     {
