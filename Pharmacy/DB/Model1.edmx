@@ -32,6 +32,7 @@
           <Property Name="ManufacturerID" Type="int" />
           <Property Name="ItemTypeID" Type="int" />
           <Property Name="Packing" Type="nvarchar" MaxLength="50" />
+          <Property Name="PackSize" Type="int" />
           <Property Name="GenericName" Type="nvarchar" MaxLength="60" />
           <Property Name="PurchasePercentage" Type="int" />
           <Property Name="SalePercentage" Type="int" />
@@ -53,16 +54,6 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Description" Type="nvarchar" MaxLength="200" />
           <Property Name="isActive" Type="bit" />
-        </EntityType>
-        <EntityType Name="Testing">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" />
-          <Property Name="Mobile" Type="int" />
-          <Property Name="birthdate_datetime" Type="datetime" />
-          <Property Name="birthdate_date" Type="date" />
         </EntityType>
         <Association Name="FK_Item_Company">
           <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
@@ -93,7 +84,6 @@
           <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Testing" EntityType="Self.Testing" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Item_Company" Association="Self.FK_Item_Company">
             <End Role="Company" EntitySet="Company" />
             <End Role="Item" EntitySet="Item" />
@@ -110,7 +100,7 @@
         <EntityContainer Name="PharmacyEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Companies" EntityType="PharmacyModel.Company" />
           <EntitySet Name="ItemTypes" EntityType="PharmacyModel.ItemType" />
-          <EntitySet Name="Testings" EntityType="PharmacyModel.Testing" />
+          <EntitySet Name="Suppliers" EntityType="PharmacyModel.Supplier" />
           <EntitySet Name="Items" EntityType="PharmacyModel.Item" />
           <AssociationSet Name="FK_Item_Company" Association="PharmacyModel.FK_Item_Company">
             <End Role="Company" EntitySet="Companies" />
@@ -120,7 +110,6 @@
             <End Role="ItemType" EntitySet="ItemTypes" />
             <End Role="Item" EntitySet="Items" />
           </AssociationSet>
-          <EntitySet Name="Suppliers" EntityType="PharmacyModel.Supplier" />
           </EntityContainer>
         <EntityType Name="Company">
           <Key>
@@ -144,15 +133,14 @@
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Items" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="ItemType" ToRole="Item" />
         </EntityType>
-        <EntityType Name="Testing">
+        <EntityType Name="Supplier">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Mobile" Type="Int32" />
-          <Property Name="birthdate_datetime" Type="DateTime" Precision="3" />
-          <Property Name="birthdate_date" Type="DateTime" Precision="0" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="isActive" Type="Boolean" />
         </EntityType>
         <EntityType Name="Item">
           <Key>
@@ -170,6 +158,7 @@
           <Property Name="ManufacturerID" Type="Int32" />
           <Property Name="ItemTypeID" Type="Int32" />
           <Property Name="Packing" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PackSize" Type="Int32" />
           <Property Name="GenericName" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
           <Property Name="PurchasePercentage" Type="Int32" />
           <Property Name="SalePercentage" Type="Int32" />
@@ -200,15 +189,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Supplier">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="isActive" Type="Boolean" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -237,12 +217,11 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Testings">
-            <EntityTypeMapping TypeName="PharmacyModel.Testing">
-              <MappingFragment StoreEntitySet="Testing">
-                <ScalarProperty Name="birthdate_date" ColumnName="birthdate_date" />
-                <ScalarProperty Name="birthdate_datetime" ColumnName="birthdate_datetime" />
-                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="PharmacyModel.Supplier">
+              <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
@@ -254,6 +233,7 @@
                 <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
                 <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
                 <ScalarProperty Name="GenericName" ColumnName="GenericName" />
+                <ScalarProperty Name="PackSize" ColumnName="PackSize" />
                 <ScalarProperty Name="Packing" ColumnName="Packing" />
                 <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
                 <ScalarProperty Name="ManufacturerID" ColumnName="ManufacturerID" />
@@ -263,16 +243,6 @@
                 <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
                 <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
                 <ScalarProperty Name="Shelf" ColumnName="Shelf" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Suppliers">
-            <EntityTypeMapping TypeName="PharmacyModel.Supplier">
-              <MappingFragment StoreEntitySet="Supplier">
-                <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />

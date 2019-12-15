@@ -55,6 +55,10 @@
       <HintPath>..\Kendo.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Omu.AwesomeMvc, Version=6.3.5.0, Culture=neutral, PublicKeyToken=9c6fbba722ea1caf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Content\Omu.AwesomeMvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -170,6 +174,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="Controllers\ItemTypeController.cs" />
+    <Compile Include="Controllers\SaleController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DB\Company.cs">
@@ -226,6 +231,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\kendo.common.min.css" />
     <Content Include="Content\kendo.default.css" />
     <Content Include="Content\themeTest.css" />
@@ -329,6 +335,7 @@
     <Content Include="Views\ItemType\AddType.cshtml" />
     <Content Include="Views\Supplier\AllSuppliers.cshtml" />
     <Content Include="Views\Supplier\AddSupplier.cshtml" />
+    <Content Include="Views\Sale\AddSale.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

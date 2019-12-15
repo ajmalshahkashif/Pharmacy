@@ -23,12 +23,11 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Testings">
-      <EntityTypeMapping TypeName="PharmacyModel.Testing">
-        <MappingFragment StoreEntitySet="Testing">
-          <ScalarProperty Name="birthdate_date" ColumnName="birthdate_date" />
-          <ScalarProperty Name="birthdate_datetime" ColumnName="birthdate_datetime" />
-          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+    <EntitySetMapping Name="Suppliers">
+      <EntityTypeMapping TypeName="PharmacyModel.Supplier">
+        <MappingFragment StoreEntitySet="Supplier">
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
@@ -40,6 +39,7 @@
           <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
           <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
           <ScalarProperty Name="GenericName" ColumnName="GenericName" />
+          <ScalarProperty Name="PackSize" ColumnName="PackSize" />
           <ScalarProperty Name="Packing" ColumnName="Packing" />
           <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
           <ScalarProperty Name="ManufacturerID" ColumnName="ManufacturerID" />
@@ -49,16 +49,6 @@
           <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
           <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
           <ScalarProperty Name="Shelf" ColumnName="Shelf" />
-          <ScalarProperty Name="Description" ColumnName="Description" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Suppliers">
-      <EntityTypeMapping TypeName="PharmacyModel.Supplier">
-        <MappingFragment StoreEntitySet="Supplier">
-          <ScalarProperty Name="isActive" ColumnName="isActive" />
           <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="ID" ColumnName="ID" />

@@ -259,3 +259,4 @@ F:\Pharmacy\Pharmacy\obj\Debug\Pharmacy.csproj.CopyComplete
 F:\Pharmacy\Pharmacy\obj\Debug\Pharmacy.dll
 F:\Pharmacy\Pharmacy\obj\Debug\Pharmacy.pdb
 F:\Pharmacy\Pharmacy\obj\Debug\Pharmacy.csprojAssemblyReference.cache
+F:\Pharmacy\Pharmacy\bin\Omu.AwesomeMvc.xml

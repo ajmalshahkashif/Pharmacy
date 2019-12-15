@@ -27,6 +27,7 @@
     <Property Name="ManufacturerID" Type="int" />
     <Property Name="ItemTypeID" Type="int" />
     <Property Name="Packing" Type="nvarchar" MaxLength="50" />
+    <Property Name="PackSize" Type="int" />
     <Property Name="GenericName" Type="nvarchar" MaxLength="60" />
     <Property Name="PurchasePercentage" Type="int" />
     <Property Name="SalePercentage" Type="int" />
@@ -48,16 +49,6 @@
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="Description" Type="nvarchar" MaxLength="200" />
     <Property Name="isActive" Type="bit" />
-  </EntityType>
-  <EntityType Name="Testing">
-    <Key>
-      <PropertyRef Name="ID" />
-    </Key>
-    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Name" Type="nvarchar" MaxLength="50" />
-    <Property Name="Mobile" Type="int" />
-    <Property Name="birthdate_datetime" Type="datetime" />
-    <Property Name="birthdate_date" Type="date" />
   </EntityType>
   <Association Name="FK_Item_Company">
     <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
@@ -88,7 +79,6 @@
     <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="Testing" EntityType="Self.Testing" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_Item_Company" Association="Self.FK_Item_Company">
       <End Role="Company" EntitySet="Company" />
       <End Role="Item" EntitySet="Item" />

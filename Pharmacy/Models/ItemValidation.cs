@@ -44,6 +44,7 @@ namespace Pharmacy.Models
         public Nullable<int> ItemTypeID { get; set; }
 
         public string Packing { get; set; }
+        public Nullable<int> PackSize { get; set; }
 
         [Display(Name = "Purchase %(u get)")]
         [Required(ErrorMessage ="Provide % you'll get")]

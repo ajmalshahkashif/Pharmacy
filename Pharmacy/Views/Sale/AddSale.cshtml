@@ -1,0 +1,67 @@
+﻿@model Pharmacy.Models.ItemValidation
+@{
+    ViewBag.Title = "AddSale";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+<style type="text/css">
+    
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <hr />
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-4">Item Name</div>
+        <div class="col-md-1">Pack Size</div>
+        <div class="col-md-1">P/L</div>
+        <div class="col-md-1">Price</div>
+        <div class="col-md-1">Qty</div>
+        <div class="col-md-1">Total</div>
+        <div class="col-md-1">Stock</div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <div class="row">
+        @Html.TextBoxFor(model => model.Name)
+        @Html.TextBoxFor(model => model.PackSize)
+        @Html.TextBox("P/L")
+        @Html.TextBoxFor(model => model.SalePrice)
+        @Html.TextBox("Qty")
+        @Html.TextBox("Total")
+        @Html.TextBox("InStock")
+        <button type="button" value=" hi"></button>
+    </div>
+
+}
+
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            $("#Name").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Sale/AddSale",
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return { label: item.Name, value: item.Name };
+                            }))
+
+                        },
+                        error: function (err) {
+                            debugger;
+                            var x = 3
+                        }
+
+                    })
+                },
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+        })
+    </script>*@

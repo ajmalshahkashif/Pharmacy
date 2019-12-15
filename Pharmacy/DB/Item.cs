@@ -26,6 +26,7 @@ namespace Pharmacy.DB
         public Nullable<int> ManufacturerID { get; set; }
         public Nullable<int> ItemTypeID { get; set; }
         public string Packing { get; set; }
+        public Nullable<int> PackSize { get; set; }
         public string GenericName { get; set; }
         public Nullable<int> PurchasePercentage { get; set; }
         public Nullable<int> SalePercentage { get; set; }

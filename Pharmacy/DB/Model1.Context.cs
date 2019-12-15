@@ -27,7 +27,7 @@ namespace Pharmacy.DB
     
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<ItemType> ItemTypes { get; set; }
-        public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
+        public virtual DbSet<Item> Items { get; set; }
     }
 }

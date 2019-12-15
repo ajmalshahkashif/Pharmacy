@@ -25,18 +25,20 @@ namespace Pharmacy
 
 
             bundles.Add(new StyleBundle("~/AdminLTE/css").Include(
-                      "~/Content/AdminLTE/bootstrap.min.css",
-                     "~/Content/AdminLTE/font-awesome.min.css",
-                     "~/Content/AdminLTE/ionicons.min.css",
-                     "~/Content/AdminLTE/AdminLTE.min.css",
-                     "~/Content/AdminLTE/_all-skins.min.css",
-                     "~/Content/kendo.common.min.css",
-                     "~/Content/kendo.default.css"
-                     ));
+                "~/Content/jquery-ui.min.css",
+                "~/Content/AdminLTE/bootstrap.min.css",
+                "~/Content/AdminLTE/font-awesome.min.css",
+                "~/Content/AdminLTE/ionicons.min.css",
+                "~/Content/AdminLTE/AdminLTE.min.css",
+                "~/Content/AdminLTE/_all-skins.min.css",
+                "~/Content/kendo.common.min.css",
+                "~/Content/kendo.default.css"
+                ));
 
 
             bundles.Add(new ScriptBundle("~/AdminLTE/js").Include(
                       "~/Scripts/AdminLTE/jquery-3.3.1.min.js",
+                      "~/Scripts/AdminLTE/jquery-ui.min.js",
                        //"~/Scripts/AdminLTE/jquery-ui.min.js",
                        "~/Scripts/Kendo/kendo.all.min.js",
                        "~/Scripts/Kendo/kendo.aspnetmvc.js",
