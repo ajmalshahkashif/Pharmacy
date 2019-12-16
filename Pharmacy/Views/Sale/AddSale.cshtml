@@ -1,10 +1,12 @@
-﻿@model Pharmacy.Models.ItemValidation
+﻿
+@model Pharmacy.Models.ItemValidation
+
 @{
     ViewBag.Title = "AddSale";
     Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
 }
+
 <style type="text/css">
-    
 </style>
 
 @using (Html.BeginForm())
@@ -13,55 +15,85 @@
 
     <hr />
     <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-4">Item Name</div>
-        <div class="col-md-1">Pack Size</div>
-        <div class="col-md-1">P/L</div>
-        <div class="col-md-1">Price</div>
-        <div class="col-md-1">Qty</div>
-        <div class="col-md-1">Total</div>
-        <div class="col-md-1">Stock</div>
-        <div class="col-md-1"></div>
+
+        <div class="col-md-5 col-lg-5 col-md-5">
+            <span>Item name</span>
+            <span>@Html.TextBoxFor(model => model.Name, new { @class = "form-control" })</span>
+            <input type="hidden" id="hiddenTest" value="" name="" />
+        </div>
+
+        <div class="col-md-1 col-lg-1 col-md-1">
+            <span>Pack Size</span>
+            <span>@Html.TextBoxFor(model => model.PackSize, new { @class = "form-control" })</span>
+        </div>
+
+        <div class="col-md-1 col-lg-1 col-md-1">
+            <span>P/L</span>
+            <span>@Html.TextBox("P/L", null, new { @class = "form-control" })</span>
+        </div>
+
+        <div class="col-md-1 col-lg-1 col-md-1">
+            <span>Price</span>
+            <span>@Html.TextBoxFor(model => model.SalePrice, new { @class = "form-control" })</span>
+        </div>
+
+        <div class="col-md-1 col-lg-1 col-md-1">
+            <span>Qty</span>
+            <span>@Html.TextBox("Qty", null, new { @class = "form-control" })</span>
+        </div>
+
+        <div class="col-md-1 col-lg-1 col-md-1">
+            <span>Total</span>
+            <span>@Html.TextBox("Total", null, new { @class = "form-control" })</span>
+        </div>
+
+        <div class="col-md-1 col-lg-1 col-md-1">
+            <span>Stock</span>
+            <span>@Html.TextBox("InStock", null, new { @class = "form-control" })</span>
+        </div>
+
+        <div class="col-md-1 col-lg-1 col-md-1">
+            <span></span><br />
+            <span><button type="button" class="btn btn-bitbucket">Add</button></span>
+        </div>
+
     </div>
 
-    <div class="row">
-        @Html.TextBoxFor(model => model.Name)
-        @Html.TextBoxFor(model => model.PackSize)
-        @Html.TextBox("P/L")
-        @Html.TextBoxFor(model => model.SalePrice)
-        @Html.TextBox("Qty")
-        @Html.TextBox("Total")
-        @Html.TextBox("InStock")
-        <button type="button" value=" hi"></button>
-    </div>
 
 }
 
-@*<script type="text/javascript">
-        $(document).ready(function () {
-            $("#Name").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "/Sale/AddSale",
-                        type: "POST",
-                        dataType: "json",
-                        data: { Prefix: request.term },
-                        success: function (data) {
-                            response($.map(data, function (item) {
-                                return { label: item.Name, value: item.Name };
-                            }))
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Name").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Sale/MedicineList",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Name, value: item.ID };
+                        }))
+                    },
+                    select: function (event, ui) {
+                        var tttt = 3;
+                        // pass back to controller here
+                    },
+                    error: function (err) {
+                    }
+                })
+            }
 
-                        },
-                        error: function (err) {
-                            debugger;
-                            var x = 3
-                        }
+            //, classes: {
+            //    "ui-autocomplete": "highlight"
+            //}
+        });
 
-                    })
-                },
-                messages: {
-                    noResults: "", results: ""
-                }
-            });
-        })
-    </script>*@
+        $("#Name").autocomplete({
+            select: function (event, ui) {
+                $('#hiddenTest').val(ui.item.value);
+            }
+        });
+    })
+</script>

@@ -17,7 +17,13 @@ namespace Pharmacy.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddSale(string Prefix)
+        public ActionResult AddSale(string Prefix)
+        {
+
+            return View();
+        }
+
+        public JsonResult MedicineList(string Prefix)
         {
             //Note : you can bind same list from database
             var ItemList = context.Items.Select(x => new { ID = x.ID, Name = x.Name }).ToList();
