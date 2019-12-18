@@ -25,14 +25,19 @@ namespace Pharmacy.Controllers
 
         public JsonResult MedicineList(string Prefix)
         {
-            //Note : you can bind same list from database
             var ItemList = context.Items.Select(x => new { ID = x.ID, Name = x.Name }).ToList();
 
-            //Searching records from list using LINQ query  
-            //var CityList1 = ItemList.Where(x => x.Name.StartsWith(Prefix)).Select(x => x.Name).ToList();
-            var CityList = ItemList.Where(x => x.Name.StartsWith(Prefix)).Select(x => new { Name = x.Name, ID = x.ID });
+
+            var CityList = ItemList.Where(x => x.Name.StartsWith(Prefix)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
 
             return Json(CityList, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public JsonResult GetItemByID(int? itemID)
+        {
+            var item = context.Items.Where(x => x.ID == itemID).FirstOrDefault();
+            return Json(item, JsonRequestBehavior.AllowGet);
         }
     }
 }
