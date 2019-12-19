@@ -37,9 +37,9 @@ namespace Pharmacy.Models
         [Display(Name = "Manufacturer")]
         [Required(ErrorMessage = "Please provide Company name")]
         public Nullable<int> ManufacturerID { get; set; }
-        
 
-        [Display(Name= "Item Type")]
+
+        [Display(Name = "Item Type")]
         [Required(ErrorMessage = "Please provide Item Type")]
         public Nullable<int> ItemTypeID { get; set; }
 
@@ -47,18 +47,35 @@ namespace Pharmacy.Models
         public Nullable<int> PackSize { get; set; }
 
         [Display(Name = "Purchase %(u get)")]
-        [Required(ErrorMessage ="Provide % you'll get")]
+        [Required(ErrorMessage = "Provide % you'll get")]
         public Nullable<int> PurchasePercentage { get; set; }
 
         [Display(Name = "Sale % (u give)")]
         [Required(ErrorMessage = "Provide % you'll give")]
         public Nullable<int> SalePercentage { get; set; }
 
+        [Display(Name = "In Stock")]
+        public Nullable<int> TotalStock { get; set; }
+
+
         [Display(Name = "Other Bonus (u get)")]
         public Nullable<decimal> OtherBonus { get; set; }
 
 
         public string GenericName { get; set; }
+
+
+
+
+        #region Not related to DB just for Specific UI
+
+
+        public int Quantity { get; set; }
+
+
+        #endregion
+
+
 
     }
 }

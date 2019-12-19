@@ -34,12 +34,16 @@
 
         <div class="col-md-1 col-lg-1 col-md-1">
             <span>Price</span>
-            <span>@Html.TextBoxFor(model => model.SalePrice, new { @class = "form-control" })</span>
+            <span>@Html.TextBoxFor(model => model.SalePrice, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })</span>
+
         </div>
 
         <div class="col-md-1 col-lg-1 col-md-1">
             <span>Qty</span>
-            <span>@Html.TextBox("Qty", null, new { @class = "form-control" })</span>
+            <span>
+                @*@Html.TextBoxFor(model => model.Quantity, null, new { @class = "form-control", disabled = "true", onblur = "return TotalAmt(this.value)" })*@
+                @Html.TextBoxFor(model => model.Quantity, null, new { @class = "form-control", disabled = "true", onblur = "TotalAmt()" })
+            </span>
         </div>
 
         <div class="col-md-1 col-lg-1 col-md-1">
@@ -49,12 +53,12 @@
 
         <div class="col-md-1 col-lg-1 col-md-1">
             <span>Stock</span>
-            <span>@Html.TextBox("InStock", null, new { @class = "form-control" })</span>
+            <span>@Html.TextBoxFor(model => model.TotalStock, null, new { @class = "form-control" })</span>
         </div>
 
         <div class="col-md-1 col-lg-1 col-md-1">
             <span></span><br />
-            <span><button type="button" class="btn btn-bitbucket">Add</button></span>
+            <span><input type="submit" value="Add" class="btn btn-primary" /></span>
         </div>
 
     </div>
@@ -64,6 +68,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
         $("#Name").autocomplete({
             source: function (request, response) {
                 $.ajax({
@@ -86,16 +91,28 @@
                             dataType: "json",
                             data: {itemID: itemID},
                             success:function(data){
-                                var xxxx =3;
+                                $("#PackSize").val(data.PackSize);
+                                $("#SalePrice").val(data.SalePrice);
+                                $("#TotalStock").val(data.TotalStock);
+                                $("#Quantity").prop('disabled', false);
+
                             }
                         })
             }
         });
 
+}
+
+
+
+
     })
 
-
-
+    function TotalAmt(qunatity){
+    debugger;
+    var tet=3;
+    var addd = 3;
+}
 </script>
 
 

@@ -36,6 +36,7 @@
     <EntitySetMapping Name="Items">
       <EntityTypeMapping TypeName="PharmacyModel.Item">
         <MappingFragment StoreEntitySet="Item">
+          <ScalarProperty Name="TotalStock" ColumnName="TotalStock" />
           <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
           <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
           <ScalarProperty Name="GenericName" ColumnName="GenericName" />

@@ -30,6 +30,7 @@ namespace Pharmacy.DB
         public string GenericName { get; set; }
         public Nullable<int> PurchasePercentage { get; set; }
         public Nullable<int> SalePercentage { get; set; }
+        public Nullable<int> TotalStock { get; set; }
     
         public virtual Company Company { get; set; }
         public virtual ItemType ItemType { get; set; }

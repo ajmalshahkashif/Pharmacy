@@ -65,6 +65,7 @@
     <Property Name="GenericName" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
     <Property Name="PurchasePercentage" Type="Int32" />
     <Property Name="SalePercentage" Type="Int32" />
+    <Property Name="TotalStock" Type="Int32" />
     <NavigationProperty Name="Company" Relationship="PharmacyModel.FK_Item_Company" FromRole="Item" ToRole="Company" />
     <NavigationProperty Name="ItemType" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="Item" ToRole="ItemType" />
   </EntityType>
