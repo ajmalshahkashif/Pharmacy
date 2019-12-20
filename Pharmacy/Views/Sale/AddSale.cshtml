@@ -15,31 +15,31 @@
     @Html.AntiForgeryToken()
 
     <hr />
-    <div class="row">
+    <div class="row" id="divItemAdd">
 
+        @Html.HiddenFor(model => model.ID)
         <div class="col-md-5 col-lg-5 col-md-5">
             <span>Item name</span>
             <span>@Html.TextBoxFor(model => model.Name, new { @class = "form-control" })</span>
-            <input type="hidden" id="hiddenTest" value="" name="" />
         </div>
 
-        <div class="col-md-1 col-lg-1 col-md-1">
+        <div class="col-lg-1 col-md-1 col-sm-1">
             <span>Pack Size</span>
             <span>@Html.TextBoxFor(model => model.PackSize, new { @class = "form-control" })</span>
         </div>
 
-        <div class="col-md-1 col-lg-1 col-md-1">
+        <div class="col-lg-1 col-md-1 col-sm-1">
             <span>P/L</span>
-            <span>@Html.TextBox("P/L", null, new { @class = "form-control" })</span>
+            <span>@Html.TextBox("PackLoose", null, new { @class = "form-control" })</span>
         </div>
 
-        <div class="col-md-1 col-lg-1 col-md-1">
+        <div class="col-lg-1 col-md-1 col-sm-1">
             <span>Price</span>
             <span>@Html.TextBoxFor(model => model.SalePrice, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })</span>
-
+            @Html.HiddenFor(model => model.SalePercentage)
         </div>
 
-        <div class="col-md-1 col-lg-1 col-md-1">
+        <div class="col-lg-1 col-md-1 col-sm-1">
             <span>Qty</span>
             <span>
                 @*@Html.TextBoxFor(model => model.Quantity, null, new { @class = "form-control", disabled = "true", onblur = "return TotalAmt(this.value)" })*@
@@ -47,17 +47,17 @@
             </span>
         </div>
 
-        <div class="col-md-1 col-lg-1 col-md-1">
+        <div class="col-lg-1 col-md-1 col-sm-1">
             <span>Total</span>
             <span>@Html.TextBox("TotalAmount", null, new { @class = "form-control" })</span>
         </div>
 
-        <div class="col-md-1 col-lg-1 col-md-1">
+        <div class="col-lg-1 col-md-1 col-sm-1">
             <span>Stock</span>
             <span>@Html.TextBoxFor(model => model.TotalStock, null, new { @class = "form-control" })</span>
         </div>
 
-        <div class="col-md-1 col-lg-1 col-md-1">
+        <div class="col-lg-1 col-md-1 col-sm-1">
             <span></span><br />
             <span><input type="button" value="Add" class="btn btn-primary" onclick="updateItemTable()" /></span>
         </div>
@@ -66,22 +66,17 @@
 
     <div class="row">
         <div class="col-md-8">
-            <table id="tblItem" class="display">
-                <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Net Total</th>
-                        <th>Stock</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <table id="tblItem" class="display"></table>
         </div>
 
-        <div class="col-md-4"></div>
+        <div class="col-md-4" style="bbackground-color:yellow">
+
+            <div>Total Amount: <label id="sumTotalAmt">678</label></div>
+            <div>Special Discount: <input type="text" id="sumTotalAmt" /></div>
+            <div>After Discount: <label id="sumTotalAmtAfterDiscount" title="Total Amount - Percentage - Special Discount">650</label></div>
+            <div>Amount Paid: <input type="text" id="AmtPaid" /></div>
+            <div>Arears: <label id="sumTotalAmtAfterDiscount">650</label></div>
+        </div>
 
     </div>
 }
@@ -89,6 +84,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        EnabledisableControl(true);
 
         $("#Name").autocomplete({
             source: function (request, response) {
@@ -114,46 +110,131 @@
                     success: function (data) {
                         $("#PackSize").val(data.PackSize);
                         $("#SalePrice").val(data.SalePrice);
+                        $("#SalePercentage").val(data.SalePercentage);
                         $("#TotalStock").val(data.TotalStock);
-                        $("#Quantity").prop('disabled', false);
+                        $("#ID").val(itemID);
+                        EnabledisableControl(false);
                     }
                 })
             }
         });
+
     })
 
     function TotalAmt(quantity) {
-
         var salePrice = $("#SalePrice").val();
         var totalAmt = salePrice * quantity;
         $("#TotalAmount").val(totalAmt);
-
     }
 
     function updateItemTable() {
 
+        var existingRowDue2DataTable = $("#tblItem").find("tr:gt(0)");
+
+        var ItemID = $("#ID").val();
         var itemName = $("#Name").val();
-        var quantity = $("#Quantity").val();
         var price = $("#SalePrice").val();
+        var Percentage = $("#SalePercentage").val();
+        var quantity = $("#Quantity").val();
         var totalAmt = $("#TotalAmount").val();
         var inStock = $("#TotalStock").val();
 
         var tr = '';
-        tr = '<tr><td>' + itemName + '</td>';
-        tr = tr + '<td>' + quantity + '</td>';
+
+    if (existingRowDue2DataTable.length == 0) {
+
+        tr = '<thead><tr><th>Item Name </th>';
+        tr = tr + '<th> Price </th>';
+        tr = tr + '<th> Percentage </th>';
+        tr = tr + '<th> Quantity </th>';
+        tr = tr + '<th> Net Total </th>';
+        tr = tr + '<th> Stock </th> </thead>';
+    }
+
+        tr = tr + '<tbody><tr id = "' + ItemID + '"><td>' + itemName + '</td>';
         tr = tr + '<td>' + price + '</td>';
+        tr = tr + '<td>' + Percentage + '%</td>';
+        tr = tr + '<td>' + quantity + '</td>';
         tr = tr + '<td>' + totalAmt + '</td>';
-        tr = tr + '<td>' + inStock + '</td></tr>';
+        tr = tr + '<td>' + inStock + '</td></tr></tbody>';
         $("#tblItem").append(tr);
 
-        $('#tblItem').DataTable({
-            "paging": false,
-            "searching": false
+    if ( ! $.fn.DataTable.isDataTable( '#tblItem' ) ) {
+            $('#tblItem').dataTable({
+                "select": {
+                    style: 'single'
+                },
+                "paging": false,
+                "searching": false,
+                "lengthChange": true, 
+                "ordering": false
+            });
+}
+        //if (existingRowDue2DataTable.length == 0) {
+        //    var table = $('#tblItem').DataTable({
+        //        "select": {
+        //            style: 'single'
+        //        },
+        //        "paging": false,
+        //        "searching": false,
+        //        "lengthChange": true, 
+        //        "ordering": false
+        //    });
+   
 
-        });
-
+    $('#Name').val('');
+    $('#PackSize').val('');
+    $('#PackLoose').val('');
+    $('#SalePrice').val('');
+    $('#Quantity').val('');
+    $('#TotalAmount').val('');
+    $('#TotalStock').val('');
+    EnabledisableControl(true);
 
     }
+
+    function EnabledisableControl(value){
+    $('#PackSize').prop("disabled", value);
+    $('#PackLoose').prop("disabled", value);
+    $('#SalePrice').prop("disabled", value);
+    $('#Quantity').prop("disabled", value);
+    $('#TotalAmount').prop("disabled", value);
+    $('#TotalStock').prop("disabled", value);
+    }
+
+
+
+
+   // $('#tblItem').on( 'click', 'tr', function () {
+   //     if ( $(this).hasClass('selected') ) {
+     //       $(this).removeClass('selected');
+     //   }
+     //   else {
+     //       $('#tblItem').DataTable().$('tr.selected').removeClass('selected');
+     //       $(this).addClass('selected');
+     //   }
+    //} );
+
+    //$('#button').click( function () {
+    //    $('#tblItem').DataTable().row('.selected').remove().draw( false );
+    //} );
+
+
+
+    $('#tblItem').on('click', 'tbody tr', function() {
+        var rowData = $('#tblItem').DataTable().row(this).innerText;
+
+        for(var i = 0; i<rowData.length; i++){
+        $("#Name").val(rowData[0]);
+        $("#SalePrice").val(rowData[1]);
+        $("#Quantity").val(rowData[3]);
+        $("#TotalAmount").val(rowData[4]);
+        $("#TotalStock").val(rowData[5]);
+        EnabledisableControl(false);
+}
+
+
+    })
 
 </script>
 
