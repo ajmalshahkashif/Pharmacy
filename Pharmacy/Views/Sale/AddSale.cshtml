@@ -12,6 +12,28 @@
     .highlight {
         background-color: #0094ff;
     }
+
+    .tblBorder {
+        border: 2px solid #cbdde6;
+    }
+
+    .myTable {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+        .myTable > thead > tr > th,
+        .myTable > tbody > tr > td {
+            border-left: 1px solid #cbdde6;
+            padding-left: 2px;
+            padding-right: 2px;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            line-height: 1.42857143;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+        }
 </style>
 
 @using (Html.BeginForm())
@@ -22,6 +44,7 @@
     <div class="row" id="divItemAdd">
 
         @Html.HiddenFor(model => model.ID)
+        @Html.Hidden("EditItemRowToBRemoved")
         <div class="col-md-5 col-lg-5 col-md-5">
             <span>Item name</span>
             <span>@Html.TextBoxFor(model => model.Name, new { @class = "form-control" })</span>
@@ -67,22 +90,24 @@
         </div>
 
     </div>
+    <br />
+    <br />
 
-    <div class="row">
-        <div class="col-md-8">
-            <table id="tblItem" class="table">
+    <div class="row" style="background-color:rred">
+        <div class="clol-lg-8 col-md-8 col-sm-8" style="bbackground-color:red">
+            <table id="tblItem" class="myTable tblBorder">
                 <thead></thead>
                 <tbody></tbody>
             </table>
         </div>
 
-        <div class="col-md-4" style="bbackground-color:yellow">
+        <div class="clol-lg-4 col-md-4 col-sm-4" style="bbackground-color:yellow">
 
-            <div>Total Amount: <label id="sumTotalAmt">678</label></div>
-            <div>Special Discount: <input type="text" id="sumTotalAmt" /></div>
-            <div>After Discount: <label id="sumTotalAmtAfterDiscount" title="Total Amount - Percentage - Special Discount">650</label></div>
-            <div>Amount Paid: <input type="text" id="AmtPaid" /></div>
-            <div>Arears: <label id="sumTotalAmtAfterDiscount">650</label></div>
+            <div>Total Amount:<label id="sumTotalAmtBeforeDiscount" style="margin-left:10px;"> 0</label></div><br />
+            <div>After Discount:<label id="sumTotalAmtAfterDiscount" title="Total Amount - Percentage - Special Discount" style="margin-left:10px;">0</label></div><br />
+            <div>Special Discount:<input type="text" id="sumTotalAmt" style="float:right;width:120px" /></div><br />
+            <div>Amount Paid:<input type="text" id="AmtPaid" style="float:right;width:120px;"></div><br />
+            <div>Arears:<label id="sumTotalAmtAfterDiscount" style="margin-left:10px;">0</label></div>
         </div>
 
     </div>
@@ -92,6 +117,7 @@
 
     $(document).ready(function () {
         EnabledisableControl(true);
+        $("#Name").focus();
 
         $("#Name").autocomplete({
             source: function (request, response) {
@@ -121,6 +147,8 @@
                         $("#TotalStock").val(data.TotalStock);
                         $("#ID").val(itemID);
                         EnabledisableControl(false);
+                        $('#btnAddItem').prop("disabled", true);
+                        $("#Quantity").val('');
                     }
                 })
             }
@@ -132,6 +160,11 @@
         var salePrice = $("#SalePrice").val();
         var totalAmt = salePrice * quantity;
         $("#TotalAmount").val(totalAmt);
+        var qu = $("#Quantity").val();
+        if ($("#Quantity").val() != "")
+            $('#btnAddItem').prop("disabled", false);
+        else
+            $('#btnAddItem').prop("disabled", true);
     }
 
     function updateItemTable() {
@@ -139,6 +172,12 @@
         var checkHeaderRow = $("#tblItem").find("tr:gt(0)");
 
         var ItemID = $("#ID").val();
+        //If row is selected for the edit, but instead of editing the old item, a new item is selected from autocompletebox.
+        //In such case our hidden ID got updated with the new one. So we have to find the old item id to get removed before adding a new one
+        //Summary: A whole new item is added => old item is not edited => so intentions are to replace old with the new
+        // => delete old one
+        var EditItemRowToBRemoved = $("#EditItemRowToBRemoved").val();
+
         var itemName = $("#Name").val();
         var price = $("#SalePrice").val();
         var Percentage = $("#SalePercentage").val();
@@ -150,21 +189,25 @@
         if (checkHeaderRow.length == 0) {
             tr = '<tr><th>Item Name </th>';
             tr = tr + '<th> Price </th>';
-            tr = tr + '<th> Percentage </th>';
+            tr = tr + '<th> Percentage(%)</th>';
             tr = tr + '<th> Quantity </th>';
             tr = tr + '<th> Net Total </th>';
             tr = tr + '<th> Stock </th></tr>';
             $("#tblItem thead").append(tr);
         }
+        debugger;
 
         $("#" + ItemID).remove();
+        $("#" + EditItemRowToBRemoved).remove();
+
         tr = '<tr id = "' + ItemID + '"><td>' + itemName + '</td>';
         tr = tr + '<td>' + price + '</td>';
-        tr = tr + '<td>' + Percentage + '%</td>';
+        tr = tr + '<td>' + Percentage + '</td>';
         tr = tr + '<td>' + quantity + '</td>';
         tr = tr + '<td>' + totalAmt + '</td>';
         tr = tr + '<td>' + inStock + '</td></tr>';
         $("#tblItem").append(tr);
+        updateBillCalculations();
 
         $('#Name').val('');
         $('#PackSize').val('');
@@ -174,7 +217,6 @@
         $('#TotalAmount').val('');
         $('#TotalStock').val('');
         EnabledisableControl(true);
-
     }
 
     function EnabledisableControl(value) {
@@ -183,7 +225,7 @@
         $('#SalePrice').prop("disabled", value);
         $('#Quantity').prop("disabled", value);
         $('#TotalAmount').prop("disabled", value);
-        $('#TotalStock').prop("disabled", value); 
+        $('#TotalStock').prop("disabled", value);
         $('#btnAddItem').prop("disabled", value);
     }
 
@@ -198,8 +240,12 @@
                 $("#Quantity").val(this.cells[3].textContent);
                 $("#TotalAmount").val(this.cells[4].textContent);
                 $("#TotalStock").val(this.cells[5].textContent);
+                debugger;
                 $("#ID").val(this.id);
+                $("#EditItemRowToBRemoved").val(this.id);
+                //$("#EditItemRowToBRemoved").prop('id', this.id);
                 EnabledisableControl(false);
+                $("#Name").focus();
             }
             else {
                 $("#Name").val('');
@@ -222,8 +268,25 @@
         var getHighlightRow = function () {
             return $('table > tbody > tr.highlight');
         }
-    });
+    })
 
+    function updateBillCalculations() {
+
+        var TotalBillAmtBeforePercentage = 0;
+        var TotalBillAmtAfterPercentage = 0;
+        $('#tblItem tbody tr').each(function (i, row) {
+            var itemTotalBeforePerc = parseInt(row.cells[4].textContent);
+            var itemPercentage = parseInt(row.cells[2].textContent);
+            var itemTotalAfterPerc = itemTotalBeforePerc - (itemPercentage / 100 * itemTotalBeforePerc);
+
+            TotalBillAmtBeforePercentage = TotalBillAmtBeforePercentage + itemTotalBeforePerc;
+            TotalBillAmtAfterPercentage = TotalBillAmtAfterPercentage + itemTotalAfterPerc;
+
+        });
+        $("#sumTotalAmtBeforeDiscount").text(TotalBillAmtBeforePercentage);
+        $("#sumTotalAmtAfterDiscount").text(TotalBillAmtAfterPercentage);
+        $("#Name").focus();
+    }
 </script>
 
 

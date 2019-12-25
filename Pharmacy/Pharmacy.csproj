@@ -249,6 +249,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Pharma image\pharma1.jpg" />
     <Content Include="Scripts\Common\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\Common\jquery.validate.js" />
     <Content Include="Scripts\AdminLTE\adminlte.min.js" />
