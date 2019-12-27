@@ -7,6 +7,7 @@
 }
 <link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
 <style type="text/css">
 
     .highlight {
@@ -17,23 +18,34 @@
         border: 2px solid #cbdde6;
     }
 
+
     .myTable {
         width: 100%;
         max-width: 100%;
         margin-bottom: 20px;
     }
 
-        .myTable > thead > tr > th,
-        .myTable > tbody > tr > td {
-            border-left: 1px solid #cbdde6;
-            padding-left: 2px;
-            padding-right: 2px;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            line-height: 1.42857143;
-            vertical-align: top;
-            border-top: 1px solid #ddd;
+    .table-responsive table thead tr,
+    .table-responsive table tbody tr {
+        border: 1px solid #d8d4d4;
+    }
+
+        .table-responsive table thead tr th,
+        .table-responsive table tbody tr td {
+            border-left: 1px solid #d8d4d4;
         }
+
+    .myTable > thead > tr > th,
+    .myTable > tbody > tr > td {
+        border-left: 1px solid #cbdde6;
+        padding-left: 2px;
+        padding-right: 2px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
 </style>
 
 @using (Html.BeginForm())
@@ -45,46 +57,48 @@
 
         @Html.HiddenFor(model => model.ID)
         @Html.Hidden("EditItemRowToBRemoved")
-        <div class="col-md-5 col-lg-5 col-md-5">
+
+        <div class="col-md-5 col-lg-5 col-md-5 col-xs-5">
             <span>Item name</span>
-            <span>@Html.TextBoxFor(model => model.Name, new { @class = "form-control" })</span>
+            <span>
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", onblur = "return EnabledisableControl(this.value, 1)" })
+            </span>
         </div>
 
-        <div class="col-lg-1 col-md-1 col-sm-1">
-            <span>Pack Size</span>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <div class="divvvv" style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap">Pack Size</div>
             <span>@Html.TextBoxFor(model => model.PackSize, new { @class = "form-control" })</span>
         </div>
 
-        <div class="col-lg-1 col-md-1 col-sm-1">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>P/L</span>
             <span>@Html.TextBox("PackLoose", null, new { @class = "form-control" })</span>
         </div>
 
-        <div class="col-lg-1 col-md-1 col-sm-1">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Price</span>
             <span>@Html.TextBoxFor(model => model.SalePrice, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })</span>
             @Html.HiddenFor(model => model.SalePercentage)
         </div>
 
-        <div class="col-lg-1 col-md-1 col-sm-1">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Qty</span>
             <span>
-                @*@Html.TextBoxFor(model => model.Quantity, null, new { @class = "form-control", disabled = "true", onblur = "return TotalAmt(this.value)" })*@
                 @Html.TextBoxFor(model => model.Quantity, null, new { @class = "form-control", disabled = "true", onblur = "return TotalAmt(this.value)" })
             </span>
         </div>
 
-        <div class="col-lg-1 col-md-1 col-sm-1">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Total</span>
             <span>@Html.TextBox("TotalAmount", null, new { @class = "form-control" })</span>
         </div>
 
-        <div class="col-lg-1 col-md-1 col-sm-1">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Stock</span>
             <span>@Html.TextBoxFor(model => model.TotalStock, null, new { @class = "form-control" })</span>
         </div>
 
-        <div class="col-lg-1 col-md-1 col-sm-1">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span></span><br />
             <span><input type="button" value="Add" id="btnAddItem" class="btn btn-primary" onclick="updateItemTable()" /></span>
         </div>
@@ -93,23 +107,41 @@
     <br />
     <br />
 
-    <div class="row" style="background-color:rred">
-        <div class="clol-lg-8 col-md-8 col-sm-8" style="bbackground-color:red">
-            <table id="tblItem" class="myTable tblBorder">
-                <thead></thead>
-                <tbody></tbody>
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 table-responsive" style="overflow-y:auto; height:350px;">
+            <table id="tblItem" class="table">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
             </table>
         </div>
 
-        <div class="clol-lg-4 col-md-4 col-sm-4" style="bbackground-color:yellow">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
 
-            <div>Total Amount:<label id="sumTotalAmtBeforeDiscount" style="margin-left:10px;"> 0</label></div><br />
-            <div>After Discount:<label id="sumTotalAmtAfterDiscount" title="Total Amount - Percentage - Special Discount" style="margin-left:10px;">0</label></div><br />
-            <div>Special Discount:<input type="text" id="sumTotalAmt" style="float:right;width:120px" /></div><br />
-            <div>Amount Paid:<input type="text" id="AmtPaid" style="float:right;width:120px;"></div><br />
-            <div>Arears:<label id="sumTotalAmtAfterDiscount" style="margin-left:10px;">0</label></div>
+        <div class="row">
+            <div class="clol-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                <div>Total Amount:<label id="sumTotalAmtBeforeDiscount" style="margin-left:10px;"> 0</label></div><br />
+                <div>After Discount:<label id="sumTotalAmtAfterDiscount" title="Total Amount - Percentage - Special Discount" style="margin-left:10px;">0</label></div><br />
+                <div>Special Discount:<input type="text" id="sumTotalAmt" style="float:right;width:130px" /></div><br />
+                <div>Amount Paid:<input type="text" id="AmtPaid" style="float:right;width:130px;"></div><br />
+                <div>Arears:<label id="sumTotalAmtAfterDiscount" style="margin-left:10px;">0</label></div>
+            </div>
         </div>
 
+    </div>
+
+    <div class="row">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <input type="button" class="btn btn-primary" value="Save" style="margin:10px;" />
+            <input type="button" class="btn btn-primary" value="Print" style="margin:10px;" />
+            <input type="button" class="btn btn-primary" value="Save & Print" style="margin:10px;" />
+            <input type="button" class="btn btn-primary" value="Cancel" style="margin:10px;" />
+            <input type="button" class="btn btn-primary" value="New Item" style="margin:10px;" />
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
     </div>
 }
 
@@ -117,6 +149,7 @@
 
     $(document).ready(function () {
         EnabledisableControl(true);
+        $('#btnAddItem').prop("disabled", true);
         $("#Name").focus();
 
         $("#Name").autocomplete({
@@ -146,6 +179,7 @@
                         $("#SalePercentage").val(data.SalePercentage);
                         $("#TotalStock").val(data.TotalStock);
                         $("#ID").val(itemID);
+                        debugger;
                         EnabledisableControl(false);
                         $('#btnAddItem').prop("disabled", true);
                         $("#Quantity").val('');
@@ -195,7 +229,6 @@
             tr = tr + '<th> Stock </th></tr>';
             $("#tblItem thead").append(tr);
         }
-        debugger;
 
         $("#" + ItemID).remove();
         $("#" + EditItemRowToBRemoved).remove();
@@ -215,18 +248,30 @@
         $('#SalePrice').val('');
         $('#Quantity').val('');
         $('#TotalAmount').val('');
-        $('#TotalStock').val('');
+        $('#TotalStock').val(''); debugger;
         EnabledisableControl(true);
+        $('#btnAddItem').prop("disabled", true);
     }
 
-    function EnabledisableControl(value) {
+    function EnabledisableControl(value, no) {
+        debugger;
+        if (no == 1) {
+            if (value != "") {
+                value = false;
+                no = 0;
+            }
+            else
+                value = true;
+        }
+
         $('#PackSize').prop("disabled", value);
         $('#PackLoose').prop("disabled", value);
         $('#SalePrice').prop("disabled", value);
         $('#Quantity').prop("disabled", value);
         $('#TotalAmount').prop("disabled", value);
         $('#TotalStock').prop("disabled", value);
-        $('#btnAddItem').prop("disabled", value);
+        if (no == 1)
+            $('#btnAddItem').prop("disabled", true);
     }
 
     $(function () {
@@ -240,11 +285,13 @@
                 $("#Quantity").val(this.cells[3].textContent);
                 $("#TotalAmount").val(this.cells[4].textContent);
                 $("#TotalStock").val(this.cells[5].textContent);
-                debugger;
+
                 $("#ID").val(this.id);
                 $("#EditItemRowToBRemoved").val(this.id);
                 //$("#EditItemRowToBRemoved").prop('id', this.id);
+                debugger;
                 EnabledisableControl(false);
+                $('#btnAddItem').prop("disabled", false);
                 $("#Name").focus();
             }
             else {
@@ -253,7 +300,9 @@
                 $("#Quantity").val('');
                 $("#TotalAmount").val('');
                 $("#TotalStock").val('');
+                debugger;
                 EnabledisableControl(true);
+                $('#btnAddItem').prop("disabled", true);
             }
 
         });
@@ -287,6 +336,7 @@
         $("#sumTotalAmtAfterDiscount").text(TotalBillAmtAfterPercentage);
         $("#Name").focus();
     }
+
 </script>
 
 
