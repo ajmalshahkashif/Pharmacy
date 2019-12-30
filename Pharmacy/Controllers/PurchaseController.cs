@@ -1,5 +1,4 @@
-﻿using Pharmacy.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,19 +6,15 @@ using System.Web.Mvc;
 
 namespace Pharmacy.Controllers
 {
-    public class SaleController : BaseController
+    public class PurchaseController : BaseController
     {
-
-        [HttpGet]
-        public ActionResult AddSale()
+        public ActionResult AllPurchases()
         {
             return View();
         }
 
-        [HttpPost]
-        public ActionResult AddSale(string Prefix)
+        public ActionResult AddPurchase()
         {
-
             return View();
         }
 

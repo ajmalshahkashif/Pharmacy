@@ -1,0 +1,293 @@
+﻿@model Pharmacy.Models.ItemValidation
+
+@{
+    ViewBag.Title = "Add Purchase";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <hr />
+    <div class="row" id="divItemAdd">
+
+        @Html.HiddenFor(model => model.ID)
+        @Html.Hidden("EditItemRowToBRemoved")
+
+        <div class="col-md-5 col-lg-5 col-md-5 col-xs-5">
+            <span>Item name</span>
+            <span>
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", onblur = "return EnabledisableControl(this.value, 1)" })
+            </span>
+        </div>
+
+      
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <span>P/L</span>
+            <span>@Html.TextBox("PackLoose", null, new { @class = "form-control" })</span>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <span>Price</span>
+            <span>@Html.TextBoxFor(model => model.PurchasePrice, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })</span>
+            @Html.HiddenFor(model => model.SalePercentage)
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <span>Qty</span>
+            <span>
+                @Html.TextBoxFor(model => model.Quantity, null, new { @class = "form-control", disabled = "true", onblur = "return TotalAmt(this.value)" })
+            </span>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <span>Total</span>
+            <span>@Html.TextBox("TotalAmount", null, new { @class = "form-control" })</span>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <span>Stock</span>
+            <span>@Html.TextBoxFor(model => model.TotalStock, null, new { @class = "form-control" })</span>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <span></span><br />
+            <span><input type="button" value="Add" id="btnAddItem" class="btn btn-primary" onclick="updateItemTable()" /></span>
+        </div>
+
+    </div>
+    <br />
+    <br />
+
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 table-responsive" style="overflow-y:auto; height:350px;">
+            <table id="tblItem" class="table">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+
+        <div class="row">
+            <div class="clol-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                <div>Total Amount:<label id="sumTotalAmtBeforeDiscount" style="margin-left:10px;"> 0</label></div><br />
+                <div>After Discount:<label id="sumTotalAmtAfterDiscount" title="Total Amount - Percentage - Special Discount" style="margin-left:10px;">0</label></div><br />
+                <div>Special Discount:<input type="text" id="sumTotalAmt" style="float:right;width:130px" /></div><br />
+                <div>Amount Paid:<input type="text" id="AmtPaid" style="float:right;width:130px;"></div><br />
+                <div>Arears:<label id="sumTotalAmtAfterDiscount" style="margin-left:10px;">0</label></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <input type="button" class="btn btn-primary" value="Save" style="margin:10px;" />
+            <input type="button" class="btn btn-primary" value="Print" style="margin:10px;" />
+            <input type="button" class="btn btn-primary" value="Save & Print" style="margin:10px;" />
+            <input type="button" class="btn btn-primary" value="Cancel" style="margin:10px;" />
+            <input type="button" class="btn btn-primary" value="New Item" style="margin:10px;" />
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        EnabledisableControl(true);
+        $('#btnAddItem').prop("disabled", true);
+        $("#Name").focus();
+
+        $("#Name").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Purchase/MedicineList",
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item.Name, value: item.Name, id: item.ID };
+                        }))
+                    }
+                })
+            },
+            select: function (event, ui) {
+                var itemID = ui.item.id;
+                $.ajax({
+                    url: "/Purchase/GetItemByID",
+                    type: "POST",
+                    dataType: "json",
+                    data: { itemID: itemID },
+                    success: function (data) {
+                        $("#PurchasePrice").val(data.PurchasePrice);
+                        $("#SalePercentage").val(data.SalePercentage);
+                        $("#TotalStock").val(data.TotalStock);
+                        $("#ID").val(itemID);
+                        debugger;
+                        EnabledisableControl(false);
+                        $('#btnAddItem').prop("disabled", true);
+                        $("#Quantity").val('');
+                    }
+                })
+            }
+        });
+
+    })
+
+    function TotalAmt(quantity) {
+        var salePrice = $("#PurchasePrice").val();
+        var totalAmt = salePrice * quantity;
+        $("#TotalAmount").val(totalAmt);
+        var qu = $("#Quantity").val();
+        if ($("#Quantity").val() != "")
+            $('#btnAddItem').prop("disabled", false);
+        else
+            $('#btnAddItem').prop("disabled", true);
+    }
+
+    function updateItemTable() {
+
+        var checkHeaderRow = $("#tblItem").find("tr:gt(0)");
+
+        var ItemID = $("#ID").val();
+        //If row is selected for the edit, but instead of editing the old item, a new item is selected from autocompletebox.
+        //In such case our hidden ID got updated with the new one. So we have to find the old item id to get removed before adding a new one
+        //Summary: A whole new item is added => old item is not edited => so intentions are to replace old with the new
+        // => delete old one
+        var EditItemRowToBRemoved = $("#EditItemRowToBRemoved").val();
+
+        var itemName = $("#Name").val();
+        var price = $("#PurchasePrice").val();
+        var Percentage = $("#SalePercentage").val();
+        var quantity = $("#Quantity").val();
+        var totalAmt = $("#TotalAmount").val();
+        var inStock = $("#TotalStock").val();
+
+        var tr = '';
+        if (checkHeaderRow.length == 0) {
+            tr = '<tr><th>Item Name </th>';
+            tr = tr + '<th> Price </th>';
+            tr = tr + '<th> Percentage(%)</th>';
+            tr = tr + '<th> Quantity </th>';
+            tr = tr + '<th> Net Total </th>';
+            tr = tr + '<th> Stock </th></tr>';
+            $("#tblItem thead").append(tr);
+        }
+
+        $("#" + ItemID).remove();
+        $("#" + EditItemRowToBRemoved).remove();
+
+        tr = '<tr id = "' + ItemID + '"><td>' + itemName + '</td>';
+        tr = tr + '<td>' + price + '</td>';
+        tr = tr + '<td>' + Percentage + '</td>';
+        tr = tr + '<td>' + quantity + '</td>';
+        tr = tr + '<td>' + totalAmt + '</td>';
+        tr = tr + '<td>' + inStock + '</td></tr>';
+        $("#tblItem").append(tr);
+        updateBillCalculations();
+
+        $('#Name').val('');
+        $('#PackLoose').val('');
+        $('#PurchasePrice').val('');
+        $('#Quantity').val('');
+        $('#TotalAmount').val('');
+        $('#TotalStock').val(''); debugger;
+        EnabledisableControl(true);
+        $('#btnAddItem').prop("disabled", true);
+    }
+
+    function EnabledisableControl(value, no) {
+      
+        if (no == 1) {
+            if (value != "") {
+                value = false;
+                no = 0;
+            }
+            else
+                value = true;
+        }
+
+        $('#PackLoose').prop("disabled", value);
+        $('#PurchasePrice').prop("disabled", value);
+        $('#Quantity').prop("disabled", value);
+        $('#TotalAmount').prop("disabled", value);
+        $('#TotalStock').prop("disabled", value);
+        if (no == 1)
+            $('#btnAddItem').prop("disabled", true);
+    }
+
+    $(function () {
+        $('#tblItem').on('click', 'tbody tr', function (event) {
+            var selected = $(this).hasClass("highlight");
+            $("#tblItem tr").removeClass("highlight");
+            if (!selected) {
+                $(this).addClass("highlight")/*.siblings().removeClass('    highlight')*/;
+                $("#Name").val(this.cells[0].textContent);
+                $("#PurchasePrice").val(this.cells[1].textContent);
+                $("#Quantity").val(this.cells[3].textContent);
+                $("#TotalAmount").val(this.cells[4].textContent);
+                $("#TotalStock").val(this.cells[5].textContent);
+
+                $("#ID").val(this.id);
+                $("#EditItemRowToBRemoved").val(this.id);
+                //$("#EditItemRowToBRemoved").prop('id', this.id);
+                debugger;
+                EnabledisableControl(false);
+                $('#btnAddItem').prop("disabled", false);
+                $("#Name").focus();
+            }
+            else {
+                $("#Name").val('');
+                $("#PurchasePrice").val('');
+                $("#Quantity").val('');
+                $("#TotalAmount").val('');
+                $("#TotalStock").val('');
+                debugger;
+                EnabledisableControl(true);
+                $('#btnAddItem').prop("disabled", true);
+            }
+
+        });
+
+        $('#btnRowClick').click(function (e) {
+            var rows = getHighlightRow();
+            if (rows != undefined) {
+                alert(rows.attr('id'));
+            }
+        });
+
+        var getHighlightRow = function () {
+            return $('table > tbody > tr.highlight');
+        }
+    })
+
+    function updateBillCalculations() {
+
+        var TotalBillAmtBeforePercentage = 0;
+        var TotalBillAmtAfterPercentage = 0;
+        $('#tblItem tbody tr').each(function (i, row) {
+            var itemTotalBeforePerc = parseInt(row.cells[4].textContent);
+            var itemPercentage = parseInt(row.cells[2].textContent);
+            var itemTotalAfterPerc = itemTotalBeforePerc - (itemPercentage / 100 * itemTotalBeforePerc);
+
+            TotalBillAmtBeforePercentage = TotalBillAmtBeforePercentage + itemTotalBeforePerc;
+            TotalBillAmtAfterPercentage = TotalBillAmtAfterPercentage + itemTotalAfterPerc;
+
+        });
+        $("#sumTotalAmtBeforeDiscount").text(TotalBillAmtBeforePercentage);
+        $("#sumTotalAmtAfterDiscount").text(TotalBillAmtAfterPercentage);
+        $("#Name").focus();
+    }
+
+</script>

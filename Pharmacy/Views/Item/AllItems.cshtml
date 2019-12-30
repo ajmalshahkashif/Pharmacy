@@ -1,5 +1,4 @@
-﻿
-@using Pharmacy.DB
+﻿@*@using Pharmacy.DB*@
 @using Kendo.Mvc.UI
 
 @{
@@ -7,36 +6,58 @@
     Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
 }
 
-@*@using Pharmacy.Models*@
-@*TODO: Two options (1)Take Model Class  (2)Take original Class i.e. from DB
-    Which approach is best*@
-@*@(Html.Kendo().Grid<ItemValidation>*@
-@(Html.Kendo().Grid<Item>
-    ().Name("GridName").Columns(c =>
-    {
-        //c.Bound(p => p.ID);
-        c.Bound(p => p.Name).Title("Name").Width(150);
-        c.Bound(p => p.ItemTypeID).Title("Item Category").Width(130);
-        c.Bound(p => p.ManufacturerID).Title("Manufacturer").Width(130);
-        c.Bound(p => p.Shelf).Title("Shelf").Width(70);
-        c.Bound(p => p.PurchasePrice).Title("Purchase Price").Width(123);
-        c.Bound(p => p.SalePrice).Title("Sale Price").Width(90);
-        c.Bound(p => p.PiecesPerPack).Title("Pieces Per Pack").Width(128);
-        c.Bound(p => p.SalePricePerPiece).Title("Sale Price/Pack").Width(125);
-        c.Bound(p => p.Description).Title("Description").Width(100);
+<style>
+    .k-grid .k-state-selected {
+        background-color: #77a496 !important;
+        border: #000000;
+        color: #000000;
+    }
+</style>
+@using Pharmacy.Models
+@*TODO: Two options (1)Take Model Class  (2)Take original Class i.e. from DB Which approach is best*@
+@*@(Html.Kendo().Grid<Item>*@
+@(Html.Kendo().Grid<ItemValidation>().Name("GridName").Columns(c =>
+{
+    //c.Bound(p => p.ID).Visible(false);
+    c.Bound(p => p.Name).Title("Name").Width(150);
+    c.Bound(p => p.PurchasePrice).Title("Purchase Price").Width(135);
+    c.Bound(p => p.SalePrice).Title("Sale Price").Width(135);
+    c.Bound(p => p.SalePercentage).Title("Sale %age").Width(135);
+    c.Bound(p => p.PurchasePercentage).Title("Purchase %age").Width(135);
+    c.Bound(p => p.Shelf).Title("Shelf").Width(70);
+    c.Bound(p => p.TotalStock).Title("Stock").Width(70);
+    //c.Bound(p => p.Description).Title("Description").Width(100);
+    //c.Command(commands => commands.Custom("Edit")).Width(150);
+    c.Command(command => { command.Edit(); command.Destroy(); }).Width(182);
+    //c.Bound(p => p.ItemTypeID).Title("Item Category").Width(130).ClientTemplate(@"<button>hi</button>");
 
-    })
-    .DataSource(d => d
-    .Ajax()
-    .Read(r => r.Action("GetItemList", "Item"))
-    .PageSize(10)
-    )
-    .Pageable()
-    .Sortable()
-    .Filterable()
-    .Groupable()
-    .Scrollable()
-    .Resizable(resize => resize.Columns(true))
+})
+.DataSource(d => d
+.Ajax()
 
+.Read(r => r.Action("GetItemList", "Item"))
+.Update(r => r.Action("UpdateItem", "Item"))
+.Destroy(r => r.Action("DeleteItem", "Item"))
+
+.PageSize(10)
+//.Events(events => events.Error("error_handler"))
+.Model(model => model.Id(p => p.ID))
+)
+.Pageable()
+.Sortable()
+.Filterable()
+.Groupable()
+.Scrollable()
+.Selectable()
+.Resizable(resize => resize.Columns(true))
 
 )
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('GridName').dblclick(function () {
+            alert('dblclick');
+        });
+    });
+</script>

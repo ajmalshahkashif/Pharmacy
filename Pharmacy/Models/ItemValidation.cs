@@ -11,21 +11,21 @@ namespace Pharmacy.Models
     {
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "Please provide name")]
+        [Required(ErrorMessage = "provide name")]
         public string Name { get; set; }
 
         public string Description { get; set; }
         public string Shelf { get; set; }
 
-        [Required(ErrorMessage = "Please provide purchase price")]
+        [Required(ErrorMessage = "provide purchase price")]
         public Nullable<double> PurchasePrice { get; set; }
 
 
-        [Required(ErrorMessage = "Please provide sale price")]
+        [Required(ErrorMessage = "provide sale price")]
         public Nullable<double> SalePrice { get; set; }
 
 
-        [Required(ErrorMessage = "Please provide pieces per pack")]
+        [Required(ErrorMessage = "provide pieces per pack")]
         [Display(Name = "Pieces/pack")]
         public Nullable<int> PiecesPerPack { get; set; }
 
@@ -35,12 +35,12 @@ namespace Pharmacy.Models
 
 
         [Display(Name = "Manufacturer")]
-        [Required(ErrorMessage = "Please provide Company name")]
+        [Required(ErrorMessage = "provide Company name")]
         public Nullable<int> ManufacturerID { get; set; }
 
 
         [Display(Name = "Item Type")]
-        [Required(ErrorMessage = "Please provide Item Type")]
+        [Required(ErrorMessage = "provide Item Type")]
         public Nullable<int> ItemTypeID { get; set; }
 
         public string Packing { get; set; }
