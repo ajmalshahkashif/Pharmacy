@@ -1,4 +1,4 @@
-﻿@model Pharmacy.Models.ItemValidation
+﻿@model Pharmacy.Models.PurchaseValidation
 
 @{
     ViewBag.Title = "Add Purchase";
@@ -6,6 +6,46 @@
 }
 <link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.dataTables.min.js"></script>
+
+<style type="text/css">
+
+    .highlight {
+        background-color: #0094ff;
+    }
+
+    .tblBorder {
+        border: 2px solid #cbdde6;
+    }
+
+
+    .myTable {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .table-responsive table thead tr,
+    .table-responsive table tbody tr {
+        border: 1px solid #d8d4d4;
+    }
+
+        .table-responsive table thead tr th,
+        .table-responsive table tbody tr td {
+            border-left: 1px solid #d8d4d4;
+        }
+
+    .myTable > thead > tr > th,
+    .myTable > tbody > tr > td {
+        border-left: 1px solid #cbdde6;
+        padding-left: 2px;
+        padding-right: 2px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
+</style>
 
 
 @using (Html.BeginForm())
@@ -25,22 +65,36 @@
             </span>
         </div>
 
-      
+
+        @*<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                <span>P/L</span>
+                <span>@Html.TextBox("PackLoose", null, new { @class = "form-control" })</span>
+            </div>*@
+
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <span>P/L</span>
-            <span>@Html.TextBox("PackLoose", null, new { @class = "form-control" })</span>
+            <span>Pur Price</span>
+            <span>
+                @Html.TextBoxFor(model => model.PurchasePrice, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
+            </span>
+            @Html.HiddenFor(model => model.PurchasePrice)
         </div>
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <span>Price</span>
-            <span>@Html.TextBoxFor(model => model.PurchasePrice, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })</span>
-            @Html.HiddenFor(model => model.SalePercentage)
+            <span>% age</span>
+            <span>
+                @Html.TextBoxFor(model => model.PurchasePercentage, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PurchasePercentage, "", new { @class = "text-danger" })
+            </span>
+            @Html.HiddenFor(model => model.PurchasePercentage)
         </div>
+
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Qty</span>
             <span>
                 @Html.TextBoxFor(model => model.Quantity, null, new { @class = "form-control", disabled = "true", onblur = "return TotalAmt(this.value)" })
+                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
             </span>
         </div>
 
@@ -71,6 +125,7 @@
                 <tbody>
                 </tbody>
             </table>
+
         </div>
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
@@ -91,7 +146,7 @@
     <div class="row">
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-            <input type="button" class="btn btn-primary" value="Save" style="margin:10px;" />
+            <input type="button" class="btn btn-primary" value="Save" onclick="savePurchase()" style="margin:10px;" />
             <input type="button" class="btn btn-primary" value="Print" style="margin:10px;" />
             <input type="button" class="btn btn-primary" value="Save & Print" style="margin:10px;" />
             <input type="button" class="btn btn-primary" value="Cancel" style="margin:10px;" />
@@ -119,6 +174,9 @@
                         response($.map(data, function (item) {
                             return { label: item.Name, value: item.Name, id: item.ID };
                         }))
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
                     }
                 })
             },
@@ -131,14 +189,17 @@
                     data: { itemID: itemID },
                     success: function (data) {
                         $("#PurchasePrice").val(data.PurchasePrice);
-                        $("#SalePercentage").val(data.SalePercentage);
+                        $("#PurchasePercentage").val(data.PurchasePercentage);
                         $("#TotalStock").val(data.TotalStock);
                         $("#ID").val(itemID);
-                        debugger;
                         EnabledisableControl(false);
                         $('#btnAddItem').prop("disabled", true);
                         $("#Quantity").val('');
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
                     }
+
                 })
             }
         });
@@ -146,14 +207,24 @@
     })
 
     function TotalAmt(quantity) {
-        var salePrice = $("#PurchasePrice").val();
-        var totalAmt = salePrice * quantity;
-        $("#TotalAmount").val(totalAmt);
-        var qu = $("#Quantity").val();
-        if ($("#Quantity").val() != "")
-            $('#btnAddItem').prop("disabled", false);
-        else
+        var QuantityValidationError = '';
+        if ($("#Quantity-error").length == 1) {
+            QuantityValidationError = $("#Quantity-error")[0].innerHTML;
+            $("#TotalAmount").val('');
             $('#btnAddItem').prop("disabled", true);
+        }
+        else {
+            if (QuantityValidationError == '') {
+                var purchasePrice = $("#PurchasePrice").val();
+                var totalAmt = purchasePrice * quantity;
+                $("#TotalAmount").val(totalAmt);
+
+                if ($("#Quantity").val() != "")
+                    $('#btnAddItem').prop("disabled", false);
+                else
+                    $('#btnAddItem').prop("disabled", true);
+            }
+        }
     }
 
     function updateItemTable() {
@@ -169,7 +240,7 @@
 
         var itemName = $("#Name").val();
         var price = $("#PurchasePrice").val();
-        var Percentage = $("#SalePercentage").val();
+        var Percentage = $("#PurchasePercentage").val();
         var quantity = $("#Quantity").val();
         var totalAmt = $("#TotalAmount").val();
         var inStock = $("#TotalStock").val();
@@ -198,17 +269,16 @@
         updateBillCalculations();
 
         $('#Name').val('');
-        $('#PackLoose').val('');
         $('#PurchasePrice').val('');
+        $('#PurchasePercentage').val('');
         $('#Quantity').val('');
         $('#TotalAmount').val('');
-        $('#TotalStock').val(''); debugger;
+        $('#TotalStock').val('');
         EnabledisableControl(true);
         $('#btnAddItem').prop("disabled", true);
     }
 
     function EnabledisableControl(value, no) {
-      
         if (no == 1) {
             if (value != "") {
                 value = false;
@@ -218,8 +288,8 @@
                 value = true;
         }
 
-        $('#PackLoose').prop("disabled", value);
         $('#PurchasePrice').prop("disabled", value);
+        $('#PurchasePercentage').prop("disabled", value);
         $('#Quantity').prop("disabled", value);
         $('#TotalAmount').prop("disabled", value);
         $('#TotalStock').prop("disabled", value);
@@ -235,6 +305,7 @@
                 $(this).addClass("highlight")/*.siblings().removeClass('    highlight')*/;
                 $("#Name").val(this.cells[0].textContent);
                 $("#PurchasePrice").val(this.cells[1].textContent);
+                $("#PurchasePercentage").val(this.cells[2].textContent);
                 $("#Quantity").val(this.cells[3].textContent);
                 $("#TotalAmount").val(this.cells[4].textContent);
                 $("#TotalStock").val(this.cells[5].textContent);
@@ -250,6 +321,7 @@
             else {
                 $("#Name").val('');
                 $("#PurchasePrice").val('');
+                $("#PurchasePercentage").val('');
                 $("#Quantity").val('');
                 $("#TotalAmount").val('');
                 $("#TotalStock").val('');
@@ -290,4 +362,15 @@
         $("#Name").focus();
     }
 
+    function savePurchase() {
+        debugger;
+        $('#tblItem tr').each(function (i, row) {
+            var eachrow = $(row);
+
+            $(this).find('td').each(function () {
+                var eachcell = this;
+            });
+        });
+
+    }
 </script>

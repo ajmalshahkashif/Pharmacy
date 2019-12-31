@@ -168,7 +168,8 @@
                 });
                 //$("#target").prop("selectedIndex", 0);
             },
-            error: function (data) {
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
             }
         });
 
@@ -184,7 +185,8 @@
                 });
                 //$("#target").prop("selectedIndex", 0);
             },
-            error: function (data) {
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
             }
         });
     });

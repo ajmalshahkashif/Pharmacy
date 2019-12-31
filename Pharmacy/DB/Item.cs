@@ -14,12 +14,18 @@ namespace Pharmacy.DB
     
     public partial class Item
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Item()
+        {
+            this.PurchaseItems = new HashSet<PurchaseItem>();
+        }
+    
         public int ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Shelf { get; set; }
-        public Nullable<double> PurchasePrice { get; set; }
-        public Nullable<double> SalePrice { get; set; }
+        public Nullable<decimal> PurchasePrice { get; set; }
+        public Nullable<decimal> SalePrice { get; set; }
         public Nullable<int> PiecesPerPack { get; set; }
         public Nullable<decimal> SalePricePerPiece { get; set; }
         public Nullable<decimal> OtherBonus { get; set; }
@@ -34,5 +40,7 @@ namespace Pharmacy.DB
     
         public virtual Company Company { get; set; }
         public virtual ItemType ItemType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
     }
 }

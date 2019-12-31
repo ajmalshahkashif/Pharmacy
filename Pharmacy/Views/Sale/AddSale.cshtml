@@ -85,6 +85,7 @@
             <span>Qty</span>
             <span>
                 @Html.TextBoxFor(model => model.Quantity, null, new { @class = "form-control", disabled = "true", onblur = "return TotalAmt(this.value)" })
+                @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
             </span>
         </div>
 
@@ -163,6 +164,9 @@
                         response($.map(data, function (item) {
                             return { label: item.Name, value: item.Name, id: item.ID };
                         }))
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
                     }
                 })
             },
@@ -183,6 +187,9 @@
                         EnabledisableControl(false);
                         $('#btnAddItem').prop("disabled", true);
                         $("#Quantity").val('');
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
                     }
                 })
             }
@@ -191,14 +198,24 @@
     })
 
     function TotalAmt(quantity) {
-        var salePrice = $("#SalePrice").val();
-        var totalAmt = salePrice * quantity;
-        $("#TotalAmount").val(totalAmt);
-        var qu = $("#Quantity").val();
-        if ($("#Quantity").val() != "")
-            $('#btnAddItem').prop("disabled", false);
-        else
+        var QuantityValidationError = '';
+        if ($("#Quantity-error").length == 1) {
+            QuantityValidationError = $("#Quantity-error")[0].innerHTML;
+            $("#TotalAmount").val('');
             $('#btnAddItem').prop("disabled", true);
+        }
+        else {
+            if (QuantityValidationError == '') {
+                var salePrice = $("#SalePrice").val();
+                var totalAmt = salePrice * quantity;
+                $("#TotalAmount").val(totalAmt);
+
+                if ($("#Quantity").val() != "")
+                    $('#btnAddItem').prop("disabled", false);
+                else
+                    $('#btnAddItem').prop("disabled", true);
+            }
+        }
     }
 
     function updateItemTable() {

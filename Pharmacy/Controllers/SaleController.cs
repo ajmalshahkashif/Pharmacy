@@ -35,7 +35,14 @@ namespace Pharmacy.Controllers
 
         public JsonResult GetItemByID(int? itemID)
         {
-            var item = context.Items.Where(x => x.ID == itemID).FirstOrDefault();
+            var item = context.Items.Where(x => x.ID == itemID).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name,
+                SalePrice = x.SalePrice,
+                SalePercentage = x.SalePercentage,
+                TotalStock = x.TotalStock
+            }).FirstOrDefault();
             return Json(item, JsonRequestBehavior.AllowGet);
         }
     }

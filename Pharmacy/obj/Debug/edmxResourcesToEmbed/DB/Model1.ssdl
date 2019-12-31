@@ -19,8 +19,8 @@
     <Property Name="Name" Type="nvarchar" MaxLength="200" />
     <Property Name="Description" Type="nvarchar" MaxLength="400" />
     <Property Name="Shelf" Type="nvarchar" MaxLength="50" />
-    <Property Name="PurchasePrice" Type="float" />
-    <Property Name="SalePrice" Type="float" />
+    <Property Name="PurchasePrice" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="SalePrice" Type="decimal" Precision="18" Scale="0" />
     <Property Name="PiecesPerPack" Type="int" />
     <Property Name="SalePricePerPiece" Type="decimal" Precision="18" Scale="0" />
     <Property Name="OtherBonus" Type="decimal" Precision="18" Scale="0" />
@@ -41,6 +41,26 @@
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="isActive" Type="bit" />
     <Property Name="Description" Type="nvarchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="Purchase">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SupplierID" Type="int" />
+    <Property Name="DateOfSupply" Type="datetime" />
+    <Property Name="NetTotal" Type="decimal" Precision="18" Scale="0" />
+  </EntityType>
+  <EntityType Name="PurchaseItems">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PurchaseID" Type="int" />
+    <Property Name="ItemID" Type="int" />
+    <Property Name="PurchasePrice" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="Percentage" Type="int" />
+    <Property Name="Quantity" Type="int" />
   </EntityType>
   <EntityType Name="Supplier">
     <Key>
@@ -75,10 +95,36 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Purchase_Item">
+    <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+    <End Role="PurchaseItems" Type="Self.PurchaseItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PurchaseItems">
+        <PropertyRef Name="ItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PurchaseItems_Purchase">
+    <End Role="Purchase" Type="Self.Purchase" Multiplicity="0..1" />
+    <End Role="PurchaseItems" Type="Self.PurchaseItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Purchase">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PurchaseItems">
+        <PropertyRef Name="PurchaseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="PharmacyModelStoreContainer">
     <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Purchase" EntityType="Self.Purchase" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PurchaseItems" EntityType="Self.PurchaseItems" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_Item_Company" Association="Self.FK_Item_Company">
       <End Role="Company" EntitySet="Company" />
@@ -87,6 +133,14 @@
     <AssociationSet Name="FK_Item_ItemType" Association="Self.FK_Item_ItemType">
       <End Role="ItemType" EntitySet="ItemType" />
       <End Role="Item" EntitySet="Item" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Purchase_Item" Association="Self.FK_Purchase_Item">
+      <End Role="Item" EntitySet="Item" />
+      <End Role="PurchaseItems" EntitySet="PurchaseItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PurchaseItems_Purchase" Association="Self.FK_PurchaseItems_Purchase">
+      <End Role="Purchase" EntitySet="Purchase" />
+      <End Role="PurchaseItems" EntitySet="PurchaseItems" />
     </AssociationSet>
   </EntityContainer>
 </Schema>

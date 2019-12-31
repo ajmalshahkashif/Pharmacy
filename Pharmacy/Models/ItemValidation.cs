@@ -11,18 +11,22 @@ namespace Pharmacy.Models
     {
         public int ID { get; set; }
 
+
         [Required(ErrorMessage = "provide name")]
         public string Name { get; set; }
 
+
         public string Description { get; set; }
+
         public string Shelf { get; set; }
 
+
         [Required(ErrorMessage = "provide purchase price")]
-        public Nullable<double> PurchasePrice { get; set; }
+        public Nullable<decimal> PurchasePrice { get; set; }
 
 
         [Required(ErrorMessage = "provide sale price")]
-        public Nullable<double> SalePrice { get; set; }
+        public Nullable<decimal> SalePrice { get; set; }
 
 
         [Required(ErrorMessage = "provide pieces per pack")]
@@ -46,13 +50,16 @@ namespace Pharmacy.Models
         public string Packing { get; set; }
         public Nullable<int> PackSize { get; set; }
 
+
         [Display(Name = "Purchase %(u get)")]
         [Required(ErrorMessage = "Provide % you'll get")]
         public Nullable<int> PurchasePercentage { get; set; }
 
+
         [Display(Name = "Sale % (u give)")]
         [Required(ErrorMessage = "Provide % you'll give")]
         public Nullable<int> SalePercentage { get; set; }
+
 
         [Display(Name = "In Stock")]
         public Nullable<int> TotalStock { get; set; }
@@ -70,6 +77,8 @@ namespace Pharmacy.Models
         #region Not related to DB just for Specific UI
 
 
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Only Natural No")]
+        [Required(ErrorMessage = "Provide integer")]
         public int Quantity { get; set; }
 
 

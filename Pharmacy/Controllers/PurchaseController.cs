@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pharmacy.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,6 +19,13 @@ namespace Pharmacy.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult AddPurchase(PurchaseValidation purchaseAdd)
+        {
+
+            return View();
+        }
+
         public JsonResult MedicineList(string Prefix)
         {
             var ItemList = context.Items.Select(x => new { ID = x.ID, Name = x.Name }).ToList();
@@ -30,8 +38,16 @@ namespace Pharmacy.Controllers
 
         public JsonResult GetItemByID(int? itemID)
         {
-            var item = context.Items.Where(x => x.ID == itemID).FirstOrDefault();
+            var item = context.Items.Where(x => x.ID == itemID).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name,
+                PurchasePrice = x.PurchasePrice,
+                PurchasePercentage = x.PurchasePercentage,
+                TotalStock = x.TotalStock
+            }).FirstOrDefault();
             return Json(item, JsonRequestBehavior.AllowGet);
         }
+
     }
 }
