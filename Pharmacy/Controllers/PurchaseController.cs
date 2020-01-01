@@ -19,12 +19,7 @@ namespace Pharmacy.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult AddPurchase(PurchaseValidation purchaseAdd)
-        {
 
-            return View();
-        }
 
         public JsonResult MedicineList(string Prefix)
         {
@@ -48,6 +43,15 @@ namespace Pharmacy.Controllers
             }).FirstOrDefault();
             return Json(item, JsonRequestBehavior.AllowGet);
         }
+
+
+
+        public RedirectResult SavePurchasedItems(List<List<string>> purchaseArray)
+        {
+
+            return Redirect("AllPurchases");
+        }
+
 
     }
 }

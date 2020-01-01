@@ -363,14 +363,43 @@
     }
 
     function savePurchase() {
+        var purchaseArray = [];
+        var purchaseArr = {};
         debugger;
-        $('#tblItem tr').each(function (i, row) {
+        $('#tblItem tbody tr').each(function (i, row) {
             var eachrow = $(row);
-
-            $(this).find('td').each(function () {
+            var arr = [{ ItemName: "", PurchasePrice: "", Percentage: "" }];
+            //purchaseArray.push(arr);
+            purchaseArray.push([]);
+            $(this).find('td').each(function (j) {
                 var eachcell = this;
+                purchaseArray[i][j] = this.innerHTML;
+                //purchaseArray[i][j].PurchasePrice = this.innerHTML;
+                //purchaseArray[i].push = { ItemName: this.innerHTML };
             });
         });
 
+
+        $.ajax({
+            url: "/Purchase/SavePurchasedItems",
+            type: "GET",
+            //contentType: "application/json; charset=utf-8",
+            datatype: JSON,
+            //data: JSON.stringify(purchaseArray),
+            data: { purchaseArray: purchaseArray },
+            success: function (result) {
+                $(result).each(function () {
+                    $("#ManufacturerID").append($("<option></option>").val(this.ID).html(this.Name));
+                });
+                //$("#target").prop("selectedIndex", 0);
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        })
+
+
+
     }
+
 </script>
