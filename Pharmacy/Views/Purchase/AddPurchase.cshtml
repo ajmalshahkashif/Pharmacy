@@ -313,7 +313,6 @@
                 $("#ID").val(this.id);
                 $("#EditItemRowToBRemoved").val(this.id);
                 //$("#EditItemRowToBRemoved").prop('id', this.id);
-                debugger;
                 EnabledisableControl(false);
                 $('#btnAddItem').prop("disabled", false);
                 $("#Name").focus();
@@ -325,7 +324,6 @@
                 $("#Quantity").val('');
                 $("#TotalAmount").val('');
                 $("#TotalStock").val('');
-                debugger;
                 EnabledisableControl(true);
                 $('#btnAddItem').prop("disabled", true);
             }
@@ -364,34 +362,33 @@
 
     function savePurchase() {
         var purchaseArray = [];
-        var purchaseArr = {};
         debugger;
         $('#tblItem tbody tr').each(function (i, row) {
-            var eachrow = $(row);
-            var arr = [{ ItemName: "", PurchasePrice: "", Percentage: "" }];
-            //purchaseArray.push(arr);
-            purchaseArray.push([]);
-            $(this).find('td').each(function (j) {
-                var eachcell = this;
-                purchaseArray[i][j] = this.innerHTML;
-                //purchaseArray[i][j].PurchasePrice = this.innerHTML;
-                //purchaseArray[i].push = { ItemName: this.innerHTML };
+
+            purchaseArray.push({
+                Name: $(row).find('td').eq(0).text(),
+                PurchasePrice: $(row).find('td').eq(1).text(),
+                PurchasePercentage: $(row).find('td').eq(2).text(),
+                Quantity: $(row).find('td').eq(3).text(),
+                NetTotal: $(row).find('td').eq(4).text(),
+                TotalStock: $(row).find('td').eq(5).text()
             });
+
+
         });
 
-
         $.ajax({
-            url: "/Purchase/SavePurchasedItems",
-            type: "GET",
-            //contentType: "application/json; charset=utf-8",
-            datatype: JSON,
+            type: "POST",
+            //data: { purchaseArray: purchaseArray },
             //data: JSON.stringify(purchaseArray),
-            data: { purchaseArray: purchaseArray },
+            data: JSON.stringify({ purchaseArray: purchaseArray }),
+            //data: { 'purchaseArray': purchaseArray },
+            url: "/Purchase/SavePurchasedItems",
+            datatype: 'json',
+            contentType: "application/json",
             success: function (result) {
-                $(result).each(function () {
-                    $("#ManufacturerID").append($("<option></option>").val(this.ID).html(this.Name));
-                });
-                //$("#target").prop("selectedIndex", 0);
+                debugger;
+                var t = 4;
             },
             error: function (jqXhr, textStatus, errorThrown) {
                 console.log(errorThrown);

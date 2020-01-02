@@ -39,5 +39,7 @@ namespace Pharmacy.Models
         [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Only Natural No")]
         [Required(ErrorMessage = "Provide integer")]
         public int Quantity { get; set; }
+
+        public int TotalAmount { get; set; }
     }
 }

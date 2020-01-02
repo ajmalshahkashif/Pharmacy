@@ -19,8 +19,6 @@ namespace Pharmacy.Controllers
             return View();
         }
 
-
-
         public JsonResult MedicineList(string Prefix)
         {
             var ItemList = context.Items.Select(x => new { ID = x.ID, Name = x.Name }).ToList();
@@ -44,13 +42,14 @@ namespace Pharmacy.Controllers
             return Json(item, JsonRequestBehavior.AllowGet);
         }
 
-
-
-        public RedirectResult SavePurchasedItems(List<List<string>> purchaseArray)
+        [HttpPost]
+        //public RedirectResult SavePurchasedItems(List<PurchaseValidation> purchaseArray)
+        public RedirectResult SavePurchasedItems(List<PurchaseValidation> purchaseArray)
         {
-
             return Redirect("AllPurchases");
         }
+
+
 
 
     }
