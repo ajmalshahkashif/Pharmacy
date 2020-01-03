@@ -10,28 +10,25 @@ namespace Pharmacy.Models
     {
         public int ID { get; set; }
 
-        
+
         [Required(ErrorMessage = "provide name")]
         public string Name { get; set; }
 
-        
+
         [Display(Name = "Purchase %(u get)")]
         [Required(ErrorMessage = "Provide % you'll get")]
         public Nullable<int> PurchasePercentage { get; set; }
 
+        public Nullable<decimal> PurchasePrice { get; set; }
+
 
         [Display(Name = "In Stock")]
-        public Nullable<int> TotalStock { get; set; }
+        public int TotalStock { get; set; }
 
 
         public Nullable<int> SupplierID { get; set; }
 
-
         public Nullable<System.DateTime> DateOfSupply { get; set; }
-
-
-        public Nullable<decimal> PurchasePrice { get; set; }
-
 
         public Nullable<int> Percentage { get; set; }
 
@@ -40,6 +37,6 @@ namespace Pharmacy.Models
         [Required(ErrorMessage = "Provide integer")]
         public int Quantity { get; set; }
 
-        public int TotalAmount { get; set; }
+        public int NetTotal { get; set; }
     }
 }

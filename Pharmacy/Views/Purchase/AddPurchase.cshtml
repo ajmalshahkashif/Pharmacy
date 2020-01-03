@@ -105,7 +105,7 @@
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Stock</span>
-            <span>@Html.TextBoxFor(model => model.TotalStock, null, new { @class = "form-control" })</span>
+            <span>@Html.TextBoxFor(model => model.TotalStock, null, new { @class = "form-control", disabled = "true" })</span>
         </div>
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
@@ -292,7 +292,6 @@
         $('#PurchasePercentage').prop("disabled", value);
         $('#Quantity').prop("disabled", value);
         $('#TotalAmount').prop("disabled", value);
-        $('#TotalStock').prop("disabled", value);
         if (no == 1)
             $('#btnAddItem').prop("disabled", true);
     }
@@ -364,31 +363,33 @@
         var purchaseArray = [];
         debugger;
         $('#tblItem tbody tr').each(function (i, row) {
-
+            var perchPerc = parseInt($(row).find('td').eq(2).text());
+            var perchPerc1 = $(row).find('td').eq(2).text();
+            var perchPerc2 = $(row).find('td').eq(2).val();
+            var quant = $(row).find('td').eq(3).text();
             purchaseArray.push({
                 Name: $(row).find('td').eq(0).text(),
                 PurchasePrice: $(row).find('td').eq(1).text(),
-                PurchasePercentage: $(row).find('td').eq(2).text(),
+                PurchasePercentage: perchPerc,
+                TotalStock: $(row).find('td').eq(5).text(),
                 Quantity: $(row).find('td').eq(3).text(),
-                NetTotal: $(row).find('td').eq(4).text(),
-                TotalStock: $(row).find('td').eq(5).text()
+                NetTotal: $("#sumTotalAmtBeforeDiscount").text()
             });
-
 
         });
 
         $.ajax({
             type: "POST",
-            //data: { purchaseArray: purchaseArray },
+            data: { purchase: purchaseArray },
             //data: JSON.stringify(purchaseArray),
-            data: JSON.stringify({ purchaseArray: purchaseArray }),
-            //data: { 'purchaseArray': purchaseArray },
+            //data: JSON.stringify({ purchase: purchaseArray }),
+            //data: { 'purchase': purchaseArray },
             url: "/Purchase/SavePurchasedItems",
-            datatype: 'json',
-            contentType: "application/json",
+            //datatype: 'json',
+            //contentType: "application/json",
             success: function (result) {
                 debugger;
-                var t = 4;
+                window.location=  '@Url.Action("AllPurchases", "Purchase"@*, new { orderNo = 1 }*@)';
             },
             error: function (jqXhr, textStatus, errorThrown) {
                 console.log(errorThrown);

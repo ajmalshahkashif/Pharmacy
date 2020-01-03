@@ -25,6 +25,7 @@ namespace Pharmacy.DB
         public Nullable<System.DateTime> DateOfSupply { get; set; }
         public Nullable<decimal> NetTotal { get; set; }
     
+        public virtual Supplier Supplier { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
     }

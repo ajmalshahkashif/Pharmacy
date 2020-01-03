@@ -8,12 +8,13 @@
         <EntityTypeShape EntityType="PharmacyModel.Company" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="PharmacyModel.Item" Width="1.5" PointX="3" PointY="2.5" />
         <EntityTypeShape EntityType="PharmacyModel.ItemType" Width="1.5" PointX="0.75" PointY="4" />
-        <EntityTypeShape EntityType="PharmacyModel.Purchase" Width="1.5" PointX="3" PointY="9" />
+        <EntityTypeShape EntityType="PharmacyModel.Purchase" Width="1.5" PointX="3" PointY="8.875" />
         <EntityTypeShape EntityType="PharmacyModel.PurchaseItem" Width="1.5" PointX="5.25" PointY="3.625" />
-        <EntityTypeShape EntityType="PharmacyModel.Supplier" Width="1.5" PointX="5.75" PointY="7.125" />
+        <EntityTypeShape EntityType="PharmacyModel.Supplier" Width="1.5" PointX="0.75" PointY="9" />
         <AssociationConnector Association="PharmacyModel.FK_Item_Company" />
         <AssociationConnector Association="PharmacyModel.FK_Item_ItemType" />
         <AssociationConnector Association="PharmacyModel.FK_Purchase_Item" />
+        <AssociationConnector Association="PharmacyModel.FK_Purchase_Supplier" />
         <AssociationConnector Association="PharmacyModel.FK_PurchaseItems_Purchase" />
       </Diagram>
     </edmx:Diagrams>

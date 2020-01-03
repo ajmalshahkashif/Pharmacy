@@ -19,6 +19,10 @@
       <End Role="Item" EntitySet="Items" />
       <End Role="PurchaseItem" EntitySet="PurchaseItems" />
     </AssociationSet>
+    <AssociationSet Name="FK_Purchase_Supplier" Association="PharmacyModel.FK_Purchase_Supplier">
+      <End Role="Supplier" EntitySet="Suppliers" />
+      <End Role="Purchase" EntitySet="Purchases" />
+    </AssociationSet>
     <AssociationSet Name="FK_PurchaseItems_Purchase" Association="PharmacyModel.FK_PurchaseItems_Purchase">
       <End Role="Purchase" EntitySet="Purchases" />
       <End Role="PurchaseItem" EntitySet="PurchaseItems" />
@@ -79,6 +83,7 @@
     <Property Name="SupplierID" Type="Int32" />
     <Property Name="DateOfSupply" Type="DateTime" Precision="3" />
     <Property Name="NetTotal" Type="Decimal" Precision="18" Scale="0" />
+    <NavigationProperty Name="Supplier" Relationship="PharmacyModel.FK_Purchase_Supplier" FromRole="Purchase" ToRole="Supplier" />
     <NavigationProperty Name="PurchaseItems" Relationship="PharmacyModel.FK_PurchaseItems_Purchase" FromRole="Purchase" ToRole="PurchaseItem" />
   </EntityType>
   <EntityType Name="PurchaseItem">
@@ -102,6 +107,7 @@
     <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="isActive" Type="Boolean" />
+    <NavigationProperty Name="Purchases" Relationship="PharmacyModel.FK_Purchase_Supplier" FromRole="Supplier" ToRole="Purchase" />
   </EntityType>
   <Association Name="FK_Item_Company">
     <End Type="PharmacyModel.Company" Role="Company" Multiplicity="0..1" />
@@ -136,6 +142,18 @@
       </Principal>
       <Dependent Role="PurchaseItem">
         <PropertyRef Name="ItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Purchase_Supplier">
+    <End Type="PharmacyModel.Supplier" Role="Supplier" Multiplicity="0..1" />
+    <End Type="PharmacyModel.Purchase" Role="Purchase" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Supplier">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Purchase">
+        <PropertyRef Name="SupplierID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
