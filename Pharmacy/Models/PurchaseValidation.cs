@@ -19,6 +19,13 @@ namespace Pharmacy.Models
         [Required(ErrorMessage = "Provide % you'll get")]
         public Nullable<int> PurchasePercentage { get; set; }
 
+        [Display(Name = "Purchase %(u give)")]
+        [Required(ErrorMessage = "Provide % you'll give")]
+        public Nullable<int> SalePercentage { get; set; }
+
+
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Only Natural No")]
+        [Required(ErrorMessage = "Provide integer")]
         public Nullable<decimal> PurchasePrice { get; set; }
 
 
@@ -38,5 +45,14 @@ namespace Pharmacy.Models
         public int Quantity { get; set; }
 
         public int NetTotal { get; set; }
+
+
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Only No")]
+        [Required(ErrorMessage = "Provide integer")]
+        public Nullable<decimal> AmountPaid { get; set; }
+
+
+        public Nullable<decimal> Arears { get; set; }
+
     }
 }

@@ -50,6 +50,8 @@
     <Property Name="SupplierID" Type="int" />
     <Property Name="DateOfSupply" Type="datetime" />
     <Property Name="NetTotal" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="AmountPaid" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="Arears" Type="decimal" Precision="18" Scale="0" />
   </EntityType>
   <EntityType Name="PurchaseItems">
     <Key>
@@ -59,7 +61,8 @@
     <Property Name="PurchaseID" Type="int" />
     <Property Name="ItemID" Type="int" />
     <Property Name="PurchasePrice" Type="decimal" Precision="18" Scale="0" />
-    <Property Name="Percentage" Type="int" />
+    <Property Name="SalePercentage" Type="int" />
+    <Property Name="PurchasePercentage" Type="int" />
     <Property Name="Quantity" Type="int" />
   </EntityType>
   <EntityType Name="Supplier">

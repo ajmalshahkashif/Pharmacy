@@ -58,13 +58,12 @@
         @Html.HiddenFor(model => model.ID)
         @Html.Hidden("EditItemRowToBRemoved")
 
-        <div class="col-md-5 col-lg-5 col-md-5 col-xs-5">
+        <div class="col-md-4 col-lg-4 col-md-4 col-xs-4">
             <span>Item name</span>
             <span>
                 @Html.TextBoxFor(model => model.Name, new { @class = "form-control", onblur = "return EnabledisableControl(this.value, 1)" })
             </span>
         </div>
-
 
         @*<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                 <span>P/L</span>
@@ -74,19 +73,28 @@
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Pur Price</span>
             <span>
-                @Html.TextBoxFor(model => model.PurchasePrice, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.PurchasePrice, new { @class = "form-control", onblur = "return TotalAmt(this.value)" })
                 @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
             </span>
             @Html.HiddenFor(model => model.PurchasePrice)
         </div>
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <span>% age</span>
+            <span>P %age</span>
             <span>
                 @Html.TextBoxFor(model => model.PurchasePercentage, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.PurchasePercentage, "", new { @class = "text-danger" })
             </span>
             @Html.HiddenFor(model => model.PurchasePercentage)
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <span>S %age</span>
+            <span>
+                @Html.TextBoxFor(model => model.SalePercentage, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SalePercentage, "", new { @class = "text-danger" })
+            </span>
+            @Html.HiddenFor(model => model.SalePercentage)
         </div>
 
 
@@ -134,10 +142,11 @@
             <div class="clol-lg-3 col-md-3 col-sm-3 col-xs-3">
 
                 <div>Total Amount:<label id="sumTotalAmtBeforeDiscount" style="margin-left:10px;"> 0</label></div><br />
-                <div>After Discount:<label id="sumTotalAmtAfterDiscount" title="Total Amount - Percentage - Special Discount" style="margin-left:10px;">0</label></div><br />
-                <div>Special Discount:<input type="text" id="sumTotalAmt" style="float:right;width:130px" /></div><br />
-                <div>Amount Paid:<input type="text" id="AmtPaid" style="float:right;width:130px;"></div><br />
-                <div>Arears:<label id="sumTotalAmtAfterDiscount" style="margin-left:10px;">0</label></div>
+                <div>Special Discount: <input type="text" id="specialDiscount" style="ffloat:right;width:130px" /></div><br />
+                <div>
+                    Amount Paid: <input type="number" id="AmountPaid" name="AmountPaid" pattern="[0-9]{10}" style="width:120px" onblur="return OnPayment()" />
+                </div><br />
+                <div>Arears:<label id="Arears" style="margin-left:10px;">0</label></div>
             </div>
         </div>
 
@@ -189,6 +198,7 @@
                     data: { itemID: itemID },
                     success: function (data) {
                         $("#PurchasePrice").val(data.PurchasePrice);
+                        $("#SalePercentage").val(data.SalePercentage);
                         $("#PurchasePercentage").val(data.PurchasePercentage);
                         $("#TotalStock").val(data.TotalStock);
                         $("#ID").val(itemID);
@@ -207,24 +217,42 @@
     })
 
     function TotalAmt(quantity) {
-        var QuantityValidationError = '';
-        if ($("#Quantity-error").length == 1) {
+        var QuantityValidationError = '', purchasePriceValidationError = '';
+        if ($("#Quantity-error").length == 1 ) {
             QuantityValidationError = $("#Quantity-error")[0].innerHTML;
+            $("#TotalAmount").val('');
+            $('#btnAddItem').prop("disabled", true);
+        }
+        else if ($("#PurchasePrice-error").length == 1) {
+              purchasePriceValidationError = $("#PurchasePrice-error")[0].innerHTML;
             $("#TotalAmount").val('');
             $('#btnAddItem').prop("disabled", true);
         }
         else {
             if (QuantityValidationError == '') {
                 var purchasePrice = $("#PurchasePrice").val();
-                var totalAmt = purchasePrice * quantity;
+                quantity = $("#Quantity").val();
+                var totalAmt = "";
+                if (quantity != "") {
+                    totalAmt = purchasePrice * quantity;
+                }
+                  //totalAmt = purchasePrice * quantity;
                 $("#TotalAmount").val(totalAmt);
 
-                if ($("#Quantity").val() != "")
+                if (quantity != "")
                     $('#btnAddItem').prop("disabled", false);
                 else
                     $('#btnAddItem').prop("disabled", true);
             }
         }
+    }
+
+    function OnPayment() {
+        var totalAmount = $("#sumTotalAmtBeforeDiscount").text();
+        var amountPaid = $("#AmountPaid").val();
+        var arears = totalAmount - amountPaid;
+        $("#Arears").text(arears);
+
     }
 
     function updateItemTable() {
@@ -240,7 +268,8 @@
 
         var itemName = $("#Name").val();
         var price = $("#PurchasePrice").val();
-        var Percentage = $("#PurchasePercentage").val();
+        var salePercentage = $("#SalePercentage").val();
+        var purchasePercentage = $("#PurchasePercentage").val();
         var quantity = $("#Quantity").val();
         var totalAmt = $("#TotalAmount").val();
         var inStock = $("#TotalStock").val();
@@ -249,7 +278,8 @@
         if (checkHeaderRow.length == 0) {
             tr = '<tr><th>Item Name </th>';
             tr = tr + '<th> Price </th>';
-            tr = tr + '<th> Percentage(%)</th>';
+            tr = tr + '<th> S Percentage(%)</th>';
+             tr = tr + '<th> P Percentage(%)</th>';
             tr = tr + '<th> Quantity </th>';
             tr = tr + '<th> Net Total </th>';
             tr = tr + '<th> Stock </th></tr>';
@@ -261,7 +291,8 @@
 
         tr = '<tr id = "' + ItemID + '"><td>' + itemName + '</td>';
         tr = tr + '<td>' + price + '</td>';
-        tr = tr + '<td>' + Percentage + '</td>';
+        tr = tr + '<td>' + salePercentage + '</td>';
+        tr = tr + '<td>' + purchasePercentage + '</td>';
         tr = tr + '<td>' + quantity + '</td>';
         tr = tr + '<td>' + totalAmt + '</td>';
         tr = tr + '<td>' + inStock + '</td></tr>';
@@ -270,6 +301,7 @@
 
         $('#Name').val('');
         $('#PurchasePrice').val('');
+        $('#SalePercentage').val('');
         $('#PurchasePercentage').val('');
         $('#Quantity').val('');
         $('#TotalAmount').val('');
@@ -289,6 +321,7 @@
         }
 
         $('#PurchasePrice').prop("disabled", value);
+        $('#SalePercentage').prop("disabled", value);
         $('#PurchasePercentage').prop("disabled", value);
         $('#Quantity').prop("disabled", value);
         $('#TotalAmount').prop("disabled", value);
@@ -304,10 +337,11 @@
                 $(this).addClass("highlight")/*.siblings().removeClass('    highlight')*/;
                 $("#Name").val(this.cells[0].textContent);
                 $("#PurchasePrice").val(this.cells[1].textContent);
-                $("#PurchasePercentage").val(this.cells[2].textContent);
-                $("#Quantity").val(this.cells[3].textContent);
-                $("#TotalAmount").val(this.cells[4].textContent);
-                $("#TotalStock").val(this.cells[5].textContent);
+                $("#SalePercentage").val(this.cells[2].textContent);
+                 $("#PurchasePercentage").val(this.cells[3].textContent);
+                $("#Quantity").val(this.cells[4].textContent);
+                $("#TotalAmount").val(this.cells[5].textContent);
+                $("#TotalStock").val(this.cells[6].textContent);
 
                 $("#ID").val(this.id);
                 $("#EditItemRowToBRemoved").val(this.id);
@@ -319,10 +353,12 @@
             else {
                 $("#Name").val('');
                 $("#PurchasePrice").val('');
+                $("#SalePercentage").val('');
                 $("#PurchasePercentage").val('');
                 $("#Quantity").val('');
                 $("#TotalAmount").val('');
                 $("#TotalStock").val('');
+                $("#EditItemRowToBRemoved").val("");
                 EnabledisableControl(true);
                 $('#btnAddItem').prop("disabled", true);
             }
@@ -344,18 +380,14 @@
     function updateBillCalculations() {
 
         var TotalBillAmtBeforePercentage = 0;
-        var TotalBillAmtAfterPercentage = 0;
         $('#tblItem tbody tr').each(function (i, row) {
-            var itemTotalBeforePerc = parseInt(row.cells[4].textContent);
-            var itemPercentage = parseInt(row.cells[2].textContent);
-            var itemTotalAfterPerc = itemTotalBeforePerc - (itemPercentage / 100 * itemTotalBeforePerc);
+            var itemTotalBeforePerc = parseInt(row.cells[5].textContent);
 
             TotalBillAmtBeforePercentage = TotalBillAmtBeforePercentage + itemTotalBeforePerc;
-            TotalBillAmtAfterPercentage = TotalBillAmtAfterPercentage + itemTotalAfterPerc;
 
         });
         $("#sumTotalAmtBeforeDiscount").text(TotalBillAmtBeforePercentage);
-        $("#sumTotalAmtAfterDiscount").text(TotalBillAmtAfterPercentage);
+        OnPayment();
         $("#Name").focus();
     }
 
@@ -365,15 +397,16 @@
         $('#tblItem tbody tr').each(function (i, row) {
             var perchPerc = parseInt($(row).find('td').eq(2).text());
             var perchPerc1 = $(row).find('td').eq(2).text();
-            var perchPerc2 = $(row).find('td').eq(2).val();
-            var quant = $(row).find('td').eq(3).text();
+
             purchaseArray.push({
                 Name: $(row).find('td').eq(0).text(),
                 PurchasePrice: $(row).find('td').eq(1).text(),
-                PurchasePercentage: perchPerc,
-                TotalStock: $(row).find('td').eq(5).text(),
-                Quantity: $(row).find('td').eq(3).text(),
-                NetTotal: $("#sumTotalAmtBeforeDiscount").text()
+                SalePercentage: perchPerc,
+                PurchasePercentage: $(row).find('td').eq(3).text(),
+                Quantity: $(row).find('td').eq(4).text(),
+                NetTotal: $("#sumTotalAmtBeforeDiscount").text(),
+                AmountPaid: $("#AmountPaid").val(),
+                Arears: $("#Arears").text()
             });
 
         });

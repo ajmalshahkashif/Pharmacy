@@ -18,7 +18,8 @@ namespace Pharmacy.DB
         public Nullable<int> PurchaseID { get; set; }
         public Nullable<int> ItemID { get; set; }
         public Nullable<decimal> PurchasePrice { get; set; }
-        public Nullable<int> Percentage { get; set; }
+        public Nullable<int> SalePercentage { get; set; }
+        public Nullable<int> PurchasePercentage { get; set; }
         public Nullable<int> Quantity { get; set; }
     
         public virtual Item Item { get; set; }

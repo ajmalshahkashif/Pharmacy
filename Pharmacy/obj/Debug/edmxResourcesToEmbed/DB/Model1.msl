@@ -49,21 +49,11 @@
     <EntitySetMapping Name="Purchases">
       <EntityTypeMapping TypeName="PharmacyModel.Purchase">
         <MappingFragment StoreEntitySet="Purchase">
+          <ScalarProperty Name="Arears" ColumnName="Arears" />
+          <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
           <ScalarProperty Name="NetTotal" ColumnName="NetTotal" />
           <ScalarProperty Name="DateOfSupply" ColumnName="DateOfSupply" />
           <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="PurchaseItems">
-      <EntityTypeMapping TypeName="PharmacyModel.PurchaseItem">
-        <MappingFragment StoreEntitySet="PurchaseItems">
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="Percentage" ColumnName="Percentage" />
-          <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-          <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
           <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -74,6 +64,19 @@
           <ScalarProperty Name="isActive" ColumnName="isActive" />
           <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseItems">
+      <EntityTypeMapping TypeName="PharmacyModel.PurchaseItem">
+        <MappingFragment StoreEntitySet="PurchaseItems">
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
+          <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
+          <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
           <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>

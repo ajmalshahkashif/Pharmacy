@@ -41,6 +41,7 @@ namespace Pharmacy.Controllers
                 ID = x.ID,
                 Name = x.Name,
                 PurchasePrice = x.PurchasePrice,
+                SalePercentage = x.SalePercentage,
                 PurchasePercentage = x.PurchasePercentage,
                 TotalStock = x.TotalStock
             }).FirstOrDefault();
@@ -49,10 +50,13 @@ namespace Pharmacy.Controllers
 
         [HttpPost]
         public JsonResult SavePurchasedItems(List<PurchaseValidation> purchase)
-
         {
             Purchase newPurchase = new Purchase();
+
             newPurchase.NetTotal = purchase.Select(x => x.NetTotal).FirstOrDefault();
+            newPurchase.AmountPaid = purchase.Select(x => x.AmountPaid).FirstOrDefault();
+            newPurchase.Arears = purchase.Select(x => x.Arears).FirstOrDefault();
+
             context.Purchases.Add(newPurchase);
             context.SaveChanges();
 
@@ -65,11 +69,24 @@ namespace Pharmacy.Controllers
                 purchaseItem.PurchaseID = newPurchase.ID;
                 purchaseItem.ItemID = itemID;
                 purchaseItem.PurchasePrice = n.PurchasePrice;
-                purchaseItem.Percentage = n.PurchasePercentage;
+                purchaseItem.PurchasePercentage = n.PurchasePercentage;
+                purchaseItem.SalePercentage = n.SalePercentage;
                 purchaseItem.Quantity = n.Quantity;
 
                 context.PurchaseItems.Add(purchaseItem);
                 context.SaveChanges();
+
+                var Item = context.Items.Where(x => x.ID == itemID).FirstOrDefault();
+
+                var RetailPrice = n.PurchasePrice + (n.PurchasePercentage * n.PurchasePrice / 100);
+
+                Item.PurchasePrice = n.PurchasePrice;
+                Item.PurchasePercentage = n.PurchasePercentage;
+                Item.SalePercentage = n.SalePercentage;
+                Item.SalePrice = RetailPrice;
+                Item.TotalStock += n.Quantity;
+                context.SaveChanges();
+
             }
 
             return Json(true);

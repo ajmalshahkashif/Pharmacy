@@ -55,6 +55,8 @@
           <Property Name="SupplierID" Type="int" />
           <Property Name="DateOfSupply" Type="datetime" />
           <Property Name="NetTotal" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="AmountPaid" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="Arears" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="PurchaseItems">
           <Key>
@@ -64,7 +66,8 @@
           <Property Name="PurchaseID" Type="int" />
           <Property Name="ItemID" Type="int" />
           <Property Name="PurchasePrice" Type="decimal" Precision="18" Scale="0" />
-          <Property Name="Percentage" Type="int" />
+          <Property Name="SalePercentage" Type="int" />
+          <Property Name="PurchasePercentage" Type="int" />
           <Property Name="Quantity" Type="int" />
         </EntityType>
         <EntityType Name="Supplier">
@@ -173,7 +176,6 @@
           <EntitySet Name="Items" EntityType="PharmacyModel.Item" />
           <EntitySet Name="ItemTypes" EntityType="PharmacyModel.ItemType" />
           <EntitySet Name="Purchases" EntityType="PharmacyModel.Purchase" />
-          <EntitySet Name="PurchaseItems" EntityType="PharmacyModel.PurchaseItem" />
           <EntitySet Name="Suppliers" EntityType="PharmacyModel.Supplier" />
           <AssociationSet Name="FK_Item_Company" Association="PharmacyModel.FK_Item_Company">
             <End Role="Company" EntitySet="Companies" />
@@ -183,13 +185,14 @@
             <End Role="ItemType" EntitySet="ItemTypes" />
             <End Role="Item" EntitySet="Items" />
           </AssociationSet>
-          <AssociationSet Name="FK_Purchase_Item" Association="PharmacyModel.FK_Purchase_Item">
-            <End Role="Item" EntitySet="Items" />
-            <End Role="PurchaseItem" EntitySet="PurchaseItems" />
-          </AssociationSet>
           <AssociationSet Name="FK_Purchase_Supplier" Association="PharmacyModel.FK_Purchase_Supplier">
             <End Role="Supplier" EntitySet="Suppliers" />
             <End Role="Purchase" EntitySet="Purchases" />
+          </AssociationSet>
+          <EntitySet Name="PurchaseItems" EntityType="PharmacyModel.PurchaseItem" />
+          <AssociationSet Name="FK_Purchase_Item" Association="PharmacyModel.FK_Purchase_Item">
+            <End Role="Item" EntitySet="Items" />
+            <End Role="PurchaseItem" EntitySet="PurchaseItems" />
           </AssociationSet>
           <AssociationSet Name="FK_PurchaseItems_Purchase" Association="PharmacyModel.FK_PurchaseItems_Purchase">
             <End Role="Purchase" EntitySet="Purchases" />
@@ -251,21 +254,10 @@
           <Property Name="SupplierID" Type="Int32" />
           <Property Name="DateOfSupply" Type="DateTime" Precision="3" />
           <Property Name="NetTotal" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="AmountPaid" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="Arears" Type="Decimal" Precision="18" Scale="0" />
           <NavigationProperty Name="Supplier" Relationship="PharmacyModel.FK_Purchase_Supplier" FromRole="Purchase" ToRole="Supplier" />
           <NavigationProperty Name="PurchaseItems" Relationship="PharmacyModel.FK_PurchaseItems_Purchase" FromRole="Purchase" ToRole="PurchaseItem" />
-        </EntityType>
-        <EntityType Name="PurchaseItem">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PurchaseID" Type="Int32" />
-          <Property Name="ItemID" Type="Int32" />
-          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="Percentage" Type="Int32" />
-          <Property Name="Quantity" Type="Int32" />
-          <NavigationProperty Name="Item" Relationship="PharmacyModel.FK_Purchase_Item" FromRole="PurchaseItem" ToRole="Item" />
-          <NavigationProperty Name="Purchase" Relationship="PharmacyModel.FK_PurchaseItems_Purchase" FromRole="PurchaseItem" ToRole="Purchase" />
         </EntityType>
         <EntityType Name="Supplier">
           <Key>
@@ -301,18 +293,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Purchase_Item">
-          <End Type="PharmacyModel.Item" Role="Item" Multiplicity="0..1" />
-          <End Type="PharmacyModel.PurchaseItem" Role="PurchaseItem" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Item">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="PurchaseItem">
-              <PropertyRef Name="ItemID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Purchase_Supplier">
           <End Type="PharmacyModel.Supplier" Role="Supplier" Multiplicity="0..1" />
           <End Type="PharmacyModel.Purchase" Role="Purchase" Multiplicity="*" />
@@ -322,6 +302,32 @@
             </Principal>
             <Dependent Role="Purchase">
               <PropertyRef Name="SupplierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PurchaseItem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PurchaseID" Type="Int32" />
+          <Property Name="ItemID" Type="Int32" />
+          <Property Name="PurchasePrice" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="SalePercentage" Type="Int32" />
+          <Property Name="PurchasePercentage" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <NavigationProperty Name="Item" Relationship="PharmacyModel.FK_Purchase_Item" FromRole="PurchaseItem" ToRole="Item" />
+          <NavigationProperty Name="Purchase" Relationship="PharmacyModel.FK_PurchaseItems_Purchase" FromRole="PurchaseItem" ToRole="Purchase" />
+        </EntityType>
+        <Association Name="FK_Purchase_Item">
+          <End Type="PharmacyModel.Item" Role="Item" Multiplicity="0..1" />
+          <End Type="PharmacyModel.PurchaseItem" Role="PurchaseItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Item">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PurchaseItem">
+              <PropertyRef Name="ItemID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -391,21 +397,11 @@
           <EntitySetMapping Name="Purchases">
             <EntityTypeMapping TypeName="PharmacyModel.Purchase">
               <MappingFragment StoreEntitySet="Purchase">
+                <ScalarProperty Name="Arears" ColumnName="Arears" />
+                <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
                 <ScalarProperty Name="NetTotal" ColumnName="NetTotal" />
                 <ScalarProperty Name="DateOfSupply" ColumnName="DateOfSupply" />
                 <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PurchaseItems">
-            <EntityTypeMapping TypeName="PharmacyModel.PurchaseItem">
-              <MappingFragment StoreEntitySet="PurchaseItems">
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="Percentage" ColumnName="Percentage" />
-                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-                <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -416,6 +412,19 @@
                 <ScalarProperty Name="isActive" ColumnName="isActive" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseItems">
+            <EntityTypeMapping TypeName="PharmacyModel.PurchaseItem">
+              <MappingFragment StoreEntitySet="PurchaseItems">
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
+                <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
+                <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+                <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+                <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
