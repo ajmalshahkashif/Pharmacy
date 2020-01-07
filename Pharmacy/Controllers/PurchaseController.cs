@@ -34,6 +34,12 @@ namespace Pharmacy.Controllers
             return Json(CityList, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult SupplierList(string Prefix)
+        {
+            var SupplierList = context.Suppliers.Where(x => x.Name.StartsWith(Prefix)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
+            return Json(SupplierList, JsonRequestBehavior.AllowGet);
+        }
+
         public JsonResult GetItemByID(int? itemID)
         {
             var item = context.Items.Where(x => x.ID == itemID).Select(x => new
@@ -56,6 +62,8 @@ namespace Pharmacy.Controllers
             newPurchase.NetTotal = purchase.Select(x => x.NetTotal).FirstOrDefault();
             newPurchase.AmountPaid = purchase.Select(x => x.AmountPaid).FirstOrDefault();
             newPurchase.Arears = purchase.Select(x => x.Arears).FirstOrDefault();
+            newPurchase.SupplierID = purchase.Select(x => x.SupplierID).FirstOrDefault();
+            newPurchase.DateOfSupply = purchase.Select(x => x.DateOfSupply).FirstOrDefault();
 
             context.Purchases.Add(newPurchase);
             context.SaveChanges();

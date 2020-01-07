@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pharmacy.DB;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -32,9 +33,6 @@ namespace Pharmacy.Models
         [Display(Name = "In Stock")]
         public int TotalStock { get; set; }
 
-
-        public Nullable<int> SupplierID { get; set; }
-
         public Nullable<System.DateTime> DateOfSupply { get; set; }
 
         public Nullable<int> Percentage { get; set; }
@@ -53,6 +51,10 @@ namespace Pharmacy.Models
 
 
         public Nullable<decimal> Arears { get; set; }
+
+
+        public Nullable<int> SupplierID { get; set; }
+        public virtual Supplier Supplier { get; set; }
 
     }
 }

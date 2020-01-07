@@ -39,7 +39,6 @@ namespace Pharmacy
             bundles.Add(new ScriptBundle("~/AdminLTE/js").Include(
                       "~/Scripts/AdminLTE/jquery-3.3.1.min.js",
                       "~/Scripts/AdminLTE/jquery-ui.min.js",
-                       //"~/Scripts/AdminLTE/jquery-ui.min.js",
                        "~/Scripts/Kendo/kendo.all.min.js",
                        "~/Scripts/Kendo/kendo.aspnetmvc.js",
                        "~/Scripts/Common/jquery.validate.js",
