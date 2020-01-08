@@ -227,6 +227,7 @@ E:\Ajmal\Pharmacy\Pharmacy\bin\EntityFramework.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\EntityFramework.SqlServer.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\Kendo.Mvc.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+E:\Ajmal\Pharmacy\Pharmacy\bin\Microsoft.ReportViewer.WebForms.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\Microsoft.Web.Infrastructure.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\Newtonsoft.Json.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\System.Net.Http.Formatting.dll
@@ -240,6 +241,9 @@ E:\Ajmal\Pharmacy\Pharmacy\bin\System.Web.WebPages.Deployment.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\System.Web.WebPages.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\System.Web.WebPages.Razor.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\WebGrease.dll
+E:\Ajmal\Pharmacy\Pharmacy\bin\Microsoft.ReportViewer.Common.dll
+E:\Ajmal\Pharmacy\Pharmacy\bin\Microsoft.ReportViewer.ProcessingObjectModel.dll
+E:\Ajmal\Pharmacy\Pharmacy\bin\Microsoft.SqlServer.Types.dll
 E:\Ajmal\Pharmacy\Pharmacy\bin\EntityFramework.xml
 E:\Ajmal\Pharmacy\Pharmacy\bin\EntityFramework.SqlServer.xml
 E:\Ajmal\Pharmacy\Pharmacy\bin\Newtonsoft.Json.xml
@@ -256,6 +260,8 @@ E:\Ajmal\Pharmacy\Pharmacy\bin\System.Web.WebPages.Razor.xml
 E:\Ajmal\Pharmacy\Pharmacy\bin\Antlr3.Runtime.pdb
 E:\Ajmal\Pharmacy\Pharmacy\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 E:\Ajmal\Pharmacy\Pharmacy\obj\Debug\Pharmacy.csprojAssemblyReference.cache
+E:\Ajmal\Pharmacy\Pharmacy\obj\Debug\RdlCompile.cache
+E:\Ajmal\Pharmacy\Pharmacy\obj\Debug\RdlCompile.compiled
 E:\Ajmal\Pharmacy\Pharmacy\obj\Debug\Pharmacy.csproj.CopyComplete
 E:\Ajmal\Pharmacy\Pharmacy\obj\Debug\Pharmacy.dll
 E:\Ajmal\Pharmacy\Pharmacy\obj\Debug\Pharmacy.pdb
