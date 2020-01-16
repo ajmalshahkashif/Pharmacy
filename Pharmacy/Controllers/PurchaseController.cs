@@ -73,40 +73,59 @@ namespace Pharmacy.Controllers
         public ActionResult Report(string id)
         {
             string sql = "select * from Purchase";
-            var dt = GetDataTable(sql);
+            SqlConnection con = new SqlConnection("data source=DESKTOP-04JEUL0\\AJMALINSTANCE;initial catalog=Pharmacy;user id=sa;password=50239;MultipleActiveResultSets=True;App=EntityFramework");
+            var dt = new DataTable();
+            var ds = new DataSet();
+
+            List<PurchaseItem> list = new List<PurchaseItem>();
+            list.Add(new PurchaseItem { PurchaseID = 1, ItemID = 1, Quantity = 3 });
+            list.Add(new PurchaseItem { PurchaseID = 2, ItemID = 1, Quantity = 4 });
+            list.Add(new PurchaseItem { PurchaseID = 3, ItemID = 2, Quantity = 5 });
+
+            var dt2 = new DataTable();
+            dt2.Columns.Add("PurchaseID");
+            dt2.Columns.Add("ItemID");
+            dt2.Columns.Add("Quantity");
+            foreach (var item in list)
+            {
+                var row = dt2.NewRow();
+                row["PurchaseID"] = item.PurchaseID;
+                row["ItemID"] = item.ItemID;
+                row["Quantity"] = item.Quantity;
+                dt2.Rows.Add(row);
+            }
+            con.Open();
+            SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
+            adpt.Fill(dt);
+            con.Close();
+
             LocalReport report = new LocalReport();
             string fullpath = Path.GetDirectoryName("Report/rdpProductMemo.rdlc");
-            //E:\Ajmal\Pharmacy\Pharmacy\~\Report
-            //E:\Ajmal\Pharmacy\Pharmacy\Report
-            //E:\Ajmal\Pharmacy\Pharmacy\dsProduct\rdpProductMemo.rdlc
 
             report.ReportPath = "Report/rdpProductMemo.rdlc";
-            report.DataSources.Add(new ReportDataSource("dsProduct", dt));
+            report.DataSources.Add(new ReportDataSource("dsName1", dt2));
 
             PrintToPrinter(report);
             return View();
         }
 
-        public DataTable GetDataTable(string sql)
-        {
-            try
-            {
-                //SqlConnection con = new SqlConnection("Data Source = DellPC; Initial Catalog = Account; user = sa; password = admin");
-                SqlConnection con = new SqlConnection("data source=DESKTOP-04JEUL0\\AJMALINSTANCE;initial catalog=Pharmacy;user id=sa;password=50239;MultipleActiveResultSets=True;App=EntityFramework");
-                //string constr = ConfigurationManager.ConnectionStrings["PharmacyEntities"].ConnectionString;
-                //SqlConnection con = new SqlConnection(constr);
-                var dt = new DataTable();
-                con.Open();
-                SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
-                adpt.Fill(dt);
-                con.Close();
-                return dt;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+        //public DataTable GetDataTable(string sql)
+        //{
+        //    try
+        //    {
+        //        SqlConnection con = new SqlConnection("data source=DESKTOP-04JEUL0\\AJMALINSTANCE;initial catalog=Pharmacy;user id=sa;password=50239;MultipleActiveResultSets=True;App=EntityFramework");
+        //        var dt = new DataTable();
+        //        con.Open();
+        //        SqlDataAdapter adpt = new SqlDataAdapter(sql, con);
+        //        adpt.Fill(dt);
+        //        con.Close();
+        //        return dt;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(ex.Message);
+        //    }
+        //}
 
         public static void PrintToPrinter(LocalReport report)
         {
@@ -119,11 +138,11 @@ namespace Pharmacy.Controllers
             string deviceInfo =
              @"<DeviceInfo>
                 <OutputFormat>EMF</OutputFormat>
-                <PageWidth>21cm</PageWidth>
+                <PageWidth>34cm</PageWidth>
                 <PageHeight>29.7cm</PageHeight>
                 <MarginTop>1cm</MarginTop>
-                <MarginLeft>1cm</MarginLeft>
-                <MarginRight>1cm</MarginRight>
+                <MarginLeft>0.4cm</MarginLeft>
+                <MarginRight>0.4cm</MarginRight>
                 <MarginBottom>1cm</MarginBottom>
             </DeviceInfo>";
             Warning[] warnings;
@@ -241,6 +260,7 @@ namespace Pharmacy.Controllers
                 Item.PurchasePercentage = n.PurchasePercentage;
                 Item.SalePercentage = n.SalePercentage;
                 Item.SalePrice = RetailPrice;
+                Item.SalePricePerPiece = RetailPrice / Item.PackSize;
                 Item.TotalStock += n.Quantity;
                 context.SaveChanges();
 

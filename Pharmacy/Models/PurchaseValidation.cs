@@ -18,14 +18,19 @@ namespace Pharmacy.Models
 
         [Display(Name = "Purchase %(u get)")]
         [Required(ErrorMessage = "Provide % you'll get")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Only Natural No")]
         public Nullable<int> PurchasePercentage { get; set; }
 
         [Display(Name = "Purchase %(u give)")]
         [Required(ErrorMessage = "Provide % you'll give")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Only Natural No")]
         public Nullable<int> SalePercentage { get; set; }
 
-
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "Only Natural No")]
+        // [0-9] : for integers which allows integers from 0 to 9
+        // d{0,9}: this will take up to 10 digits
+        // \. : for decimal
+        // d{1,3} : for decimal up to three digits
+        [RegularExpression(@"^[0-9]\d{0,9}(\.\d{1,2})?%?$", ErrorMessage = "Decimal No with 2 decimal places")]
         [Required(ErrorMessage = "Provide integer")]
         public Nullable<decimal> PurchasePrice { get; set; }
 

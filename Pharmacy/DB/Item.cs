@@ -18,6 +18,7 @@ namespace Pharmacy.DB
         public Item()
         {
             this.PurchaseItems = new HashSet<PurchaseItem>();
+            this.SaleItems = new HashSet<SaleItem>();
         }
     
         public int ID { get; set; }
@@ -42,5 +43,7 @@ namespace Pharmacy.DB
         public virtual ItemType ItemType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SaleItem> SaleItems { get; set; }
     }
 }

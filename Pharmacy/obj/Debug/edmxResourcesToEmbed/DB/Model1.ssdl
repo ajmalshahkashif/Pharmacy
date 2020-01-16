@@ -11,6 +11,16 @@
     <Property Name="Description" Type="nvarchar" MaxLength="200" />
     <Property Name="isActive" Type="bit" />
   </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Address" Type="nvarchar" MaxLength="200" />
+    <Property Name="Description" Type="nvarchar" MaxLength="200" />
+    <Property Name="isActive" Type="bit" />
+  </EntityType>
   <EntityType Name="Item">
     <Key>
       <PropertyRef Name="ID" />
@@ -19,10 +29,10 @@
     <Property Name="Name" Type="nvarchar" MaxLength="200" />
     <Property Name="Description" Type="nvarchar" MaxLength="400" />
     <Property Name="Shelf" Type="nvarchar" MaxLength="50" />
-    <Property Name="PurchasePrice" Type="decimal" Precision="18" Scale="0" />
-    <Property Name="SalePrice" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="PurchasePrice" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="SalePrice" Type="decimal" Precision="18" Scale="2" />
     <Property Name="PiecesPerPack" Type="int" />
-    <Property Name="SalePricePerPiece" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="SalePricePerPiece" Type="decimal" Precision="18" Scale="2" />
     <Property Name="OtherBonus" Type="decimal" Precision="18" Scale="0" />
     <Property Name="ManufacturerID" Type="int" />
     <Property Name="ItemTypeID" Type="int" />
@@ -63,6 +73,28 @@
     <Property Name="PurchasePrice" Type="decimal" Precision="18" Scale="0" />
     <Property Name="SalePercentage" Type="int" />
     <Property Name="PurchasePercentage" Type="int" />
+    <Property Name="Quantity" Type="int" />
+  </EntityType>
+  <EntityType Name="Sale">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CustomerID" Type="int" />
+    <Property Name="DateOfPurchase" Type="datetime" />
+    <Property Name="TotalBeforePercentage" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="TotalAfterPercentage" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="AmountPaid" Type="int" />
+    <Property Name="Arears" Type="decimal" Precision="18" Scale="2" />
+  </EntityType>
+  <EntityType Name="SaleItem">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SaleID" Type="int" />
+    <Property Name="ItemID" Type="int" />
+    <Property Name="SalePercentage" Type="int" />
     <Property Name="Quantity" Type="int" />
   </EntityType>
   <EntityType Name="Supplier">
@@ -134,12 +166,51 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Sale_Customer">
+    <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+    <End Role="Sale" Type="Self.Sale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Sale">
+        <PropertyRef Name="CustomerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleItem_Item">
+    <End Role="Item" Type="Self.Item" Multiplicity="0..1" />
+    <End Role="SaleItem" Type="Self.SaleItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Item">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleItem">
+        <PropertyRef Name="ItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleItem_Sale">
+    <End Role="Sale" Type="Self.Sale" Multiplicity="0..1" />
+    <End Role="SaleItem" Type="Self.SaleItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sale">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleItem">
+        <PropertyRef Name="SaleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="PharmacyModelStoreContainer">
     <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Item" EntityType="Self.Item" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ItemType" EntityType="Self.ItemType" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Purchase" EntityType="Self.Purchase" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PurchaseItems" EntityType="Self.PurchaseItems" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Sale" EntityType="Self.Sale" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SaleItem" EntityType="Self.SaleItem" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_Item_Company" Association="Self.FK_Item_Company">
       <End Role="Company" EntitySet="Company" />
@@ -160,6 +231,18 @@
     <AssociationSet Name="FK_PurchaseItems_Purchase" Association="Self.FK_PurchaseItems_Purchase">
       <End Role="Purchase" EntitySet="Purchase" />
       <End Role="PurchaseItems" EntitySet="PurchaseItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Sale_Customer" Association="Self.FK_Sale_Customer">
+      <End Role="Customer" EntitySet="Customer" />
+      <End Role="Sale" EntitySet="Sale" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleItem_Item" Association="Self.FK_SaleItem_Item">
+      <End Role="Item" EntitySet="Item" />
+      <End Role="SaleItem" EntitySet="SaleItem" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleItem_Sale" Association="Self.FK_SaleItem_Sale">
+      <End Role="Sale" EntitySet="Sale" />
+      <End Role="SaleItem" EntitySet="SaleItem" />
     </AssociationSet>
   </EntityContainer>
 </Schema>

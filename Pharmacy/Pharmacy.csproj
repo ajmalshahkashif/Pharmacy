@@ -182,6 +182,9 @@
     <Compile Include="DB\Company.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="DB\Customer.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="DB\Item.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -209,6 +212,12 @@
     <Compile Include="DB\PurchaseItem.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="DB\Sale.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DB\SaleItem.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="DB\Supplier.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -220,12 +229,13 @@
     <Compile Include="Models\ItemTypeValidation.cs" />
     <Compile Include="Models\ItemValidation.cs" />
     <Compile Include="Models\PurchaseValidation.cs" />
+    <Compile Include="Models\SaleValidation.cs" />
     <Compile Include="Models\SupplierValidation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportDataset\dsProduct.Designer.cs">
+    <Compile Include="ReportDataset\SaleDS.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>dsProduct.xsd</DependentUpon>
+      <DependentUpon>SaleDS.xsd</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -318,16 +328,16 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="ReportDataset\dsProduct.xsc">
-      <DependentUpon>dsProduct.xsd</DependentUpon>
+    <Content Include="ReportDataset\SaleDS.xsc">
+      <DependentUpon>SaleDS.xsd</DependentUpon>
     </Content>
-    <None Include="ReportDataset\dsProduct.xsd">
-      <SubType>Designer</SubType>
+    <None Include="ReportDataset\SaleDS.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>dsProduct.Designer.cs</LastGenOutput>
+      <LastGenOutput>SaleDS.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
-    <Content Include="ReportDataset\dsProduct.xss">
-      <DependentUpon>dsProduct.xsd</DependentUpon>
+    <Content Include="ReportDataset\SaleDS.xss">
+      <DependentUpon>SaleDS.xsd</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery.dataTables.min.js" />
@@ -409,7 +419,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Report\rdpProductMemo.rdlc" />
+    <EmbeddedResource Include="Report\SaleReport.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

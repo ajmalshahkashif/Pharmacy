@@ -21,11 +21,23 @@ namespace Pharmacy.Models
         public string Shelf { get; set; }
 
 
+
+        // [0-9] : for integers which allows integers from 0 to 9
+        // d{0,9}: this will take up to 10 digits
+        // \. : for decimal
+        // d{1,3} : for decimal up to three digits
         [Required(ErrorMessage = "provide purchase price")]
+        [RegularExpression(@"^[1-9]\d{0,9}(\.\d{1,2})?%?$", ErrorMessage = "Decimal No with 2 decimal places")]
         public Nullable<decimal> PurchasePrice { get; set; }
 
 
+
+        // [0-9] : for integers which allows integers from 0 to 9
+        // d{0,9}: this will take up to 10 digits
+        // \. : for decimal
+        // d{1,3} : for decimal up to three digits
         [Required(ErrorMessage = "provide sale price")]
+        [RegularExpression(@"^[1-9]\d{0,9}(\.\d{1,2})?%?$", ErrorMessage = "Decimal No with 2 decimal places")]
         public Nullable<decimal> SalePrice { get; set; }
 
 

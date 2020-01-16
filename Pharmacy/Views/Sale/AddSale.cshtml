@@ -1,12 +1,12 @@
 ﻿
-@model Pharmacy.Models.ItemValidation
+@model Pharmacy.Models.SaleValidation
 
 @{
     ViewBag.Title = "AddSale";
     Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
 }
-<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
-<script src="~/Scripts/jquery.dataTables.min.js"></script>
+@*<link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>*@
 
 <style type="text/css">
 
@@ -58,17 +58,17 @@
         @Html.HiddenFor(model => model.ID)
         @Html.Hidden("EditItemRowToBRemoved")
 
-        <div class="col-md-5 col-lg-5 col-md-5 col-xs-5">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
             <span>Item name</span>
             <span>
                 @Html.TextBoxFor(model => model.Name, new { @class = "form-control", onblur = "return EnabledisableControl(this.value, 1)" })
             </span>
         </div>
 
-        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <div class="divvvv" style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap">Pack Size</div>
-            <span>@Html.TextBoxFor(model => model.PackSize, new { @class = "form-control" })</span>
-        </div>
+        @*<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                <div class="divvvv" style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap">Pack Size</div>
+                <span>@Html.TextBoxFor(model => model.PackSize, new { @class = "form-control" })</span>
+            </div>*@
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>P/L</span>
@@ -91,12 +91,12 @@
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Total</span>
-            <span>@Html.TextBox("TotalAmount", null, new { @class = "form-control" })</span>
+            <span>@Html.TextBox("TotalAmount", null, new { @class = "form-control", disabled = "true" })</span>
         </div>
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Stock</span>
-            <span>@Html.TextBoxFor(model => model.TotalStock, null, new { @class = "form-control" })</span>
+            <span>@Html.TextBoxFor(model => model.TotalStock, null, new { @class = "form-control", disabled = "true" })</span>
         </div>
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
@@ -136,7 +136,7 @@
     <div class="row">
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-            <input type="button" class="btn btn-primary" value="Save" style="margin:10px;" />
+            <input type="button" id="btnSave" class="btn btn-primary" value="Save" onclick="saveSale()" disabled="disabled" style="margin:10px;" />
             <input type="button" class="btn btn-primary" value="Print" style="margin:10px;" />
             <input type="button" class="btn btn-primary" value="Save & Print" style="margin:10px;" />
             <input type="button" class="btn btn-primary" value="Cancel" style="margin:10px;" />
@@ -161,6 +161,7 @@
                     dataType: "json",
                     data: { Prefix: request.term },
                     success: function (data) {
+                        $("#btnAddItem").prop("disabled", true);
                         response($.map(data, function (item) {
                             return { label: item.Name, value: item.Name, id: item.ID };
                         }))
@@ -183,7 +184,6 @@
                         $("#SalePercentage").val(data.SalePercentage);
                         $("#TotalStock").val(data.TotalStock);
                         $("#ID").val(itemID);
-                        debugger;
                         EnabledisableControl(false);
                         $('#btnAddItem').prop("disabled", true);
                         $("#Quantity").val('');
@@ -265,15 +265,16 @@
         $('#SalePrice').val('');
         $('#Quantity').val('');
         $('#TotalAmount').val('');
-        $('#TotalStock').val(''); debugger;
+        $('#TotalStock').val('');
+
         EnabledisableControl(true);
         $('#btnAddItem').prop("disabled", true);
+        $("#btnSave").prop("disabled", false);
     }
 
     function EnabledisableControl(value, no) {
-        debugger;
         if (no == 1) {
-            if (value != "") {
+            if (value != "" && $("#ID").val() != "") {
                 value = false;
                 no = 0;
             }
@@ -286,7 +287,7 @@
         $('#SalePrice').prop("disabled", value);
         $('#Quantity').prop("disabled", value);
         $('#TotalAmount').prop("disabled", value);
-        $('#TotalStock').prop("disabled", value);
+        //$('#TotalStock').prop("disabled", value);
         if (no == 1)
             $('#btnAddItem').prop("disabled", true);
     }
@@ -306,9 +307,9 @@
                 $("#ID").val(this.id);
                 $("#EditItemRowToBRemoved").val(this.id);
                 //$("#EditItemRowToBRemoved").prop('id', this.id);
-                debugger;
-                EnabledisableControl(false);
+
                 $('#btnAddItem').prop("disabled", false);
+                EnabledisableControl(false);
                 $("#Name").focus();
             }
             else {
@@ -317,7 +318,9 @@
                 $("#Quantity").val('');
                 $("#TotalAmount").val('');
                 $("#TotalStock").val('');
-                debugger;
+                $("#EditItemRowToBRemoved").val("");
+                $("#ID").val("");
+
                 EnabledisableControl(true);
                 $('#btnAddItem').prop("disabled", true);
             }
@@ -354,6 +357,40 @@
         $("#Name").focus();
     }
 
+    function saveSale() {
+        var saleArray = [];
+
+        $('#tblItem tbody tr').each(function (i, row) {
+            var salePercentage = parseInt($(row).find('td').eq(2).text());
+            saleArray.push({
+                Name: $(row).find('td').eq(0).text(),
+                TotalBeforePercentage: $("#sumTotalAmtBeforeDiscount").text(),
+                TotalAfterPercentage: $("#sumTotalAmtAfterDiscount").text(),
+                AmountPaid: $("#AmountPaid").val(),
+                Arears: $("#Arears").text(),
+                SalePercentage: salePercentage,
+                Quantity: $(row).find('td').eq(4).text()
+            });
+        });
+
+        
+        $.ajax({
+            type: "POST",
+            data: { sale: saleArray },
+            //data: JSON.stringify(saleArray),
+            //data: JSON.stringify({ purchase: saleArray }),
+            //data: { 'purchase': saleArray },
+            url: "/Sale/SaveSaleItems",
+            //datatype: 'json',
+            //contentType: "application/json",
+            success: function (result) {
+                window.location=  '@Url.Action("AllPurchases", "Purchase"@*, new { orderNo = 1 }*@)';
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        })
+    }
 </script>
 
 
