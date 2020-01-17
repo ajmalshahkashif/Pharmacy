@@ -125,9 +125,9 @@
 
                 <div>Total Amount:<label id="sumTotalAmtBeforeDiscount" style="margin-left:10px;"> 0</label></div><br />
                 <div>After Discount:<label id="sumTotalAmtAfterDiscount" title="Total Amount - Percentage - Special Discount" style="margin-left:10px;">0</label></div><br />
-                <div>Special Discount:<input type="text" id="sumTotalAmt" style="float:right;width:130px" /></div><br />
-                <div>Amount Paid:<input type="text" id="AmtPaid" style="float:right;width:130px;"></div><br />
-                <div>Arears:<label id="sumTotalAmtAfterDiscount" style="margin-left:10px;">0</label></div>
+                <div>Special Discount: <input type="number" id="specialDiscount" value="0" pattern="[0-9]{10}" style="ffloat:right;width:130px" /></div><br />
+                <div>Amount Paid: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="number" id="AmtPaid" name="AmountPaid" value="0" pattern="[0-9]{10}" style="width:130px" onblur="return OnPayment()"></div><br />
+                <div>Arears:<label id="Arears" style="margin-left:10px;">0</label></div>
             </div>
         </div>
 
@@ -137,9 +137,9 @@
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
             <input type="button" id="btnSave" class="btn btn-primary" value="Save" onclick="saveSale()" disabled="disabled" style="margin:10px;" />
-            <input type="button" class="btn btn-primary" value="Print" style="margin:10px;" />
-            <input type="button" class="btn btn-primary" value="Save & Print" style="margin:10px;" />
-            <input type="button" class="btn btn-primary" value="Cancel" style="margin:10px;" />
+            <input type="button" id="btnPrint" class="btn btn-primary" value="Print" style="margin:10px;" disabled="disabled" />
+            <input type="button" id="btnSavePrint" onclick="saveAndPrint()" class="btn btn-primary" value="Save & Print" style="margin:10px;" disabled="disabled" />
+            <input type="button" class="btn btn-primary" value="Cancel" onclick="location.href='@Url.Action("AddSale", "Sale")'" style="margin:10px;" />
             <input type="button" class="btn btn-primary" value="New Item" style="margin:10px;" />
         </div>
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
@@ -218,6 +218,14 @@
         }
     }
 
+      function OnPayment() {
+        var totalAmount = $("#sumTotalAmtAfterDiscount").text();
+        var amountPaid = $("#AmtPaid").val();
+        var arears = totalAmount - amountPaid;
+        $("#Arears").text(arears);
+
+    }
+
     function updateItemTable() {
 
         var checkHeaderRow = $("#tblItem").find("tr:gt(0)");
@@ -270,6 +278,8 @@
         EnabledisableControl(true);
         $('#btnAddItem').prop("disabled", true);
         $("#btnSave").prop("disabled", false);
+        $("#btnPrint").prop("disabled", false);
+        $("#btnSavePrint").prop("disabled", false);
     }
 
     function EnabledisableControl(value, no) {
@@ -354,6 +364,7 @@
         });
         $("#sumTotalAmtBeforeDiscount").text(TotalBillAmtBeforePercentage);
         $("#sumTotalAmtAfterDiscount").text(TotalBillAmtAfterPercentage);
+        OnPayment();
         $("#Name").focus();
     }
 
@@ -366,14 +377,13 @@
                 Name: $(row).find('td').eq(0).text(),
                 TotalBeforePercentage: $("#sumTotalAmtBeforeDiscount").text(),
                 TotalAfterPercentage: $("#sumTotalAmtAfterDiscount").text(),
-                AmountPaid: $("#AmountPaid").val(),
+                AmountPaid: $("#AmtPaid").val(),
                 Arears: $("#Arears").text(),
                 SalePercentage: salePercentage,
-                Quantity: $(row).find('td').eq(4).text()
+                Quantity: $(row).find('td').eq(3).text()
             });
         });
 
-        
         $.ajax({
             type: "POST",
             data: { sale: saleArray },
@@ -384,13 +394,44 @@
             //datatype: 'json',
             //contentType: "application/json",
             success: function (result) {
-                window.location=  '@Url.Action("AllPurchases", "Purchase"@*, new { orderNo = 1 }*@)';
+                window.location=  '@Url.Action("AllSales", "Sale"@*, new { orderNo = 1 }*@)';
             },
             error: function (jqXhr, textStatus, errorThrown) {
                 console.log(errorThrown);
             }
         })
     }
+
+    function saveAndPrint() {
+        var saleArray = [];
+        $('#tblItem tbody tr').each(function (i, row) {
+            var salePercentage = parseInt($(row).find('td').eq(2).text());
+            saleArray.push({
+                Name: $(row).find('td').eq(0).text(),
+                SalePrice: $(row).find('td').eq(1).text(),
+                Quantity: $(row).find('td').eq(3).text(),
+                PerItemTotal: $(row).find('td').eq(4).text(),
+                TotalBeforePercentage: $("#sumTotalAmtBeforeDiscount").text(),
+                TotalAfterPercentage: $("#sumTotalAmtAfterDiscount").text(),
+                AmountPaid: $("#AmtPaid").val(),
+                Arears: $("#Arears").text(),
+                SalePercentage: salePercentage
+            });
+        });
+
+         $.ajax({
+            type: "POST",
+            data: { sale: saleArray },
+            url: "/Sale/Report",
+            success: function (result) {
+                window.location=  '@Url.Action("AllSales", "Sale"@*, new { orderNo = 1 }*@)';
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        })
+    }
+
 </script>
 
 

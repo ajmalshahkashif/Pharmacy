@@ -7,11 +7,16 @@
     <EntitySet Name="ItemTypes" EntityType="PharmacyModel.ItemType" />
     <EntitySet Name="Purchases" EntityType="PharmacyModel.Purchase" />
     <EntitySet Name="PurchaseItems" EntityType="PharmacyModel.PurchaseItem" />
+    <EntitySet Name="Sales" EntityType="PharmacyModel.Sale" />
     <EntitySet Name="SaleItems" EntityType="PharmacyModel.SaleItem" />
     <EntitySet Name="Suppliers" EntityType="PharmacyModel.Supplier" />
     <AssociationSet Name="FK_Item_Company" Association="PharmacyModel.FK_Item_Company">
       <End Role="Company" EntitySet="Companies" />
       <End Role="Item" EntitySet="Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Sale_Customer" Association="PharmacyModel.FK_Sale_Customer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="Sale" EntitySet="Sales" />
     </AssociationSet>
     <AssociationSet Name="FK_Item_ItemType" Association="PharmacyModel.FK_Item_ItemType">
       <End Role="ItemType" EntitySet="ItemTypes" />
@@ -33,15 +38,11 @@
       <End Role="Purchase" EntitySet="Purchases" />
       <End Role="PurchaseItem" EntitySet="PurchaseItems" />
     </AssociationSet>
-    <EntitySet Name="Sales" EntityType="PharmacyModel.Sale" />
-    <AssociationSet Name="FK_Sale_Customer" Association="PharmacyModel.FK_Sale_Customer">
-      <End Role="Customer" EntitySet="Customers" />
-      <End Role="Sale" EntitySet="Sales" />
-    </AssociationSet>
     <AssociationSet Name="FK_SaleItem_Sale" Association="PharmacyModel.FK_SaleItem_Sale">
       <End Role="Sale" EntitySet="Sales" />
       <End Role="SaleItem" EntitySet="SaleItems" />
     </AssociationSet>
+    <EntitySet Name="ItemSaleItemSales" EntityType="PharmacyModel.ItemSaleItemSale" />
   </EntityContainer>
   <EntityType Name="Company">
     <Key>
@@ -129,6 +130,20 @@
     <NavigationProperty Name="Item" Relationship="PharmacyModel.FK_Purchase_Item" FromRole="PurchaseItem" ToRole="Item" />
     <NavigationProperty Name="Purchase" Relationship="PharmacyModel.FK_PurchaseItems_Purchase" FromRole="PurchaseItem" ToRole="Purchase" />
   </EntityType>
+  <EntityType Name="Sale">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerID" Type="Int32" />
+    <Property Name="DateOfSale" Type="DateTime" Precision="3" />
+    <Property Name="TotalBeforePercentage" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="TotalAfterPercentage" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="AmountPaid" Type="Int32" />
+    <Property Name="Arears" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="Customer" Relationship="PharmacyModel.FK_Sale_Customer" FromRole="Sale" ToRole="Customer" />
+    <NavigationProperty Name="SaleItems" Relationship="PharmacyModel.FK_SaleItem_Sale" FromRole="Sale" ToRole="SaleItem" />
+  </EntityType>
   <EntityType Name="SaleItem">
     <Key>
       <PropertyRef Name="ID" />
@@ -160,6 +175,18 @@
       </Principal>
       <Dependent Role="Item">
         <PropertyRef Name="ManufacturerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Sale_Customer">
+    <End Type="PharmacyModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="PharmacyModel.Sale" Role="Sale" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Sale">
+        <PropertyRef Name="CustomerID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -223,32 +250,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="Sale">
-    <Key>
-      <PropertyRef Name="ID" />
-    </Key>
-    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="CustomerID" Type="Int32" />
-    <Property Name="DateOfPurchase" Type="DateTime" Precision="3" />
-    <Property Name="TotalBeforePercentage" Type="Decimal" Precision="18" Scale="2" />
-    <Property Name="TotalAfterPercentage" Type="Decimal" Precision="18" Scale="2" />
-    <Property Name="AmountPaid" Type="Int32" />
-    <Property Name="Arears" Type="Decimal" Precision="18" Scale="2" />
-    <NavigationProperty Name="Customer" Relationship="PharmacyModel.FK_Sale_Customer" FromRole="Sale" ToRole="Customer" />
-    <NavigationProperty Name="SaleItems" Relationship="PharmacyModel.FK_SaleItem_Sale" FromRole="Sale" ToRole="SaleItem" />
-  </EntityType>
-  <Association Name="FK_Sale_Customer">
-    <End Type="PharmacyModel.Customer" Role="Customer" Multiplicity="0..1" />
-    <End Type="PharmacyModel.Sale" Role="Sale" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Customer">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="Sale">
-        <PropertyRef Name="CustomerID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_SaleItem_Sale">
     <End Type="PharmacyModel.Sale" Role="Sale" Multiplicity="0..1" />
     <End Type="PharmacyModel.SaleItem" Role="SaleItem" Multiplicity="*" />
@@ -261,4 +262,24 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="ItemSaleItemSale">
+    <Key>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="Expr1" />
+      <PropertyRef Name="Expr2" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Expr1" Type="Int32" Nullable="false" />
+    <Property Name="Expr2" Type="Int32" Nullable="false" />
+    <Property Name="DateOfSale" Type="DateTime" Precision="3" />
+    <Property Name="TotalBeforePercentage" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="TotalAfterPercentage" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="AmountPaid" Type="Int32" />
+    <Property Name="Arears" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="SalePercentage" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="ItemID" Type="Int32" />
+    <Property Name="SalePrice" Type="Decimal" Precision="18" Scale="2" />
+  </EntityType>
 </Schema>

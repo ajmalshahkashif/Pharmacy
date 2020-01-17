@@ -12,24 +12,20 @@ namespace Pharmacy.DB
     using System;
     using System.Collections.Generic;
     
-    public partial class Sale
+    public partial class ItemSaleItemSale
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Sale()
-        {
-            this.SaleItems = new HashSet<SaleItem>();
-        }
-    
         public int ID { get; set; }
-        public Nullable<int> CustomerID { get; set; }
+        public string Name { get; set; }
+        public int Expr1 { get; set; }
+        public int Expr2 { get; set; }
         public Nullable<System.DateTime> DateOfSale { get; set; }
         public Nullable<decimal> TotalBeforePercentage { get; set; }
         public Nullable<decimal> TotalAfterPercentage { get; set; }
         public Nullable<int> AmountPaid { get; set; }
         public Nullable<decimal> Arears { get; set; }
-    
-        public virtual Customer Customer { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SaleItem> SaleItems { get; set; }
+        public Nullable<int> SalePercentage { get; set; }
+        public Nullable<int> Quantity { get; set; }
+        public Nullable<int> ItemID { get; set; }
+        public Nullable<decimal> SalePrice { get; set; }
     }
 }

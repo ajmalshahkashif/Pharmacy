@@ -81,7 +81,7 @@
     </Key>
     <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="CustomerID" Type="int" />
-    <Property Name="DateOfPurchase" Type="datetime" />
+    <Property Name="DateOfSale" Type="datetime" />
     <Property Name="TotalBeforePercentage" Type="decimal" Precision="18" Scale="2" />
     <Property Name="TotalAfterPercentage" Type="decimal" Precision="18" Scale="2" />
     <Property Name="AmountPaid" Type="int" />
@@ -105,6 +105,28 @@
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="Description" Type="nvarchar" MaxLength="200" />
     <Property Name="isActive" Type="bit" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Pharmacy.dbo.ItemSaleItemSale' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="ItemSaleItemSale">
+    <Key>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="Expr1" />
+      <PropertyRef Name="Expr2" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="200" />
+    <Property Name="Expr1" Type="int" Nullable="false" />
+    <Property Name="Expr2" Type="int" Nullable="false" />
+    <Property Name="DateOfSale" Type="datetime" />
+    <Property Name="TotalBeforePercentage" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="TotalAfterPercentage" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="AmountPaid" Type="int" />
+    <Property Name="Arears" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="SalePercentage" Type="int" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="ItemID" Type="int" />
+    <Property Name="SalePrice" Type="decimal" Precision="18" Scale="2" />
   </EntityType>
   <Association Name="FK_Item_Company">
     <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
@@ -212,6 +234,23 @@
     <EntitySet Name="Sale" EntityType="Self.Sale" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SaleItem" EntityType="Self.SaleItem" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ItemSaleItemSale" EntityType="Self.ItemSaleItemSale" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [ItemSaleItemSale].[ID] AS [ID], 
+    [ItemSaleItemSale].[Name] AS [Name], 
+    [ItemSaleItemSale].[Expr1] AS [Expr1], 
+    [ItemSaleItemSale].[Expr2] AS [Expr2], 
+    [ItemSaleItemSale].[DateOfSale] AS [DateOfSale], 
+    [ItemSaleItemSale].[TotalBeforePercentage] AS [TotalBeforePercentage], 
+    [ItemSaleItemSale].[TotalAfterPercentage] AS [TotalAfterPercentage], 
+    [ItemSaleItemSale].[AmountPaid] AS [AmountPaid], 
+    [ItemSaleItemSale].[Arears] AS [Arears], 
+    [ItemSaleItemSale].[SalePercentage] AS [SalePercentage], 
+    [ItemSaleItemSale].[Quantity] AS [Quantity], 
+    [ItemSaleItemSale].[ItemID] AS [ItemID], 
+    [ItemSaleItemSale].[SalePrice] AS [SalePrice]
+    FROM [dbo].[ItemSaleItemSale] AS [ItemSaleItemSale]</DefiningQuery>
+    </EntitySet>
     <AssociationSet Name="FK_Item_Company" Association="Self.FK_Item_Company">
       <End Role="Company" EntitySet="Company" />
       <End Role="Item" EntitySet="Item" />

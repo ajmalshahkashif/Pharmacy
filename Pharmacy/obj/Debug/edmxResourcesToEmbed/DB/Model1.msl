@@ -82,6 +82,19 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Sales">
+      <EntityTypeMapping TypeName="PharmacyModel.Sale">
+        <MappingFragment StoreEntitySet="Sale">
+          <ScalarProperty Name="Arears" ColumnName="Arears" />
+          <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+          <ScalarProperty Name="TotalAfterPercentage" ColumnName="TotalAfterPercentage" />
+          <ScalarProperty Name="TotalBeforePercentage" ColumnName="TotalBeforePercentage" />
+          <ScalarProperty Name="DateOfSale" ColumnName="DateOfSale" />
+          <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="SaleItems">
       <EntityTypeMapping TypeName="PharmacyModel.SaleItem">
         <MappingFragment StoreEntitySet="SaleItem">
@@ -103,15 +116,21 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Sales">
-      <EntityTypeMapping TypeName="PharmacyModel.Sale">
-        <MappingFragment StoreEntitySet="Sale">
+    <EntitySetMapping Name="ItemSaleItemSales">
+      <EntityTypeMapping TypeName="PharmacyModel.ItemSaleItemSale">
+        <MappingFragment StoreEntitySet="ItemSaleItemSale">
+          <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
           <ScalarProperty Name="Arears" ColumnName="Arears" />
           <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
           <ScalarProperty Name="TotalAfterPercentage" ColumnName="TotalAfterPercentage" />
           <ScalarProperty Name="TotalBeforePercentage" ColumnName="TotalBeforePercentage" />
-          <ScalarProperty Name="DateOfPurchase" ColumnName="DateOfPurchase" />
-          <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+          <ScalarProperty Name="DateOfSale" ColumnName="DateOfSale" />
+          <ScalarProperty Name="Expr2" ColumnName="Expr2" />
+          <ScalarProperty Name="Expr1" ColumnName="Expr1" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>

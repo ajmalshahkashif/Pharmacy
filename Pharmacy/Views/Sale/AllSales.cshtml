@@ -1,0 +1,31 @@
+﻿
+@using Pharmacy.DB
+@using Kendo.Mvc.UI
+
+@{
+    ViewBag.Title = "AllSales";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+
+@(Html.Kendo().Grid<Sale>
+    ().Name("SaleListGrid").Columns(c =>
+    {
+        c.Bound(p => p.ID).Title("Id").Width(30);
+        //c.Bound(p => p.Supplier.Name).Title("Name").Width(150);
+        c.Bound(p => p.DateOfSale).Title("Supply Date").Width(150);
+        c.Bound(p => p.TotalAfterPercentage).Title("Total Amt After %").Width(150);
+    })
+    .DataSource(d => d
+    .Ajax()
+    .Read(r => r.Action("GetPurchaseList", "Purchase"))
+    .PageSize(10)
+    )
+    .Pageable()
+    .Sortable()
+    .Filterable()
+    .Groupable()
+    .Scrollable()
+    .Resizable(resize => resize.Columns(true))
+)
+
+

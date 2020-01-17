@@ -37,7 +37,9 @@ namespace Pharmacy.Models
 
         [Display(Name = "In Stock")]
         public int TotalStock { get; set; }
-
+        
         public Nullable<decimal> SalePrice { get; set; }
+
+        public Nullable<decimal> PerItemTotal { get; set; }
     }
 }
