@@ -24,29 +24,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Items">
-      <EntityTypeMapping TypeName="PharmacyModel.Item">
-        <MappingFragment StoreEntitySet="Item">
-          <ScalarProperty Name="TotalStock" ColumnName="TotalStock" />
-          <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
-          <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
-          <ScalarProperty Name="GenericName" ColumnName="GenericName" />
-          <ScalarProperty Name="PackSize" ColumnName="PackSize" />
-          <ScalarProperty Name="Packing" ColumnName="Packing" />
-          <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
-          <ScalarProperty Name="ManufacturerID" ColumnName="ManufacturerID" />
-          <ScalarProperty Name="OtherBonus" ColumnName="OtherBonus" />
-          <ScalarProperty Name="SalePricePerPiece" ColumnName="SalePricePerPiece" />
-          <ScalarProperty Name="PiecesPerPack" ColumnName="PiecesPerPack" />
-          <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
-          <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-          <ScalarProperty Name="Shelf" ColumnName="Shelf" />
-          <ScalarProperty Name="Description" ColumnName="Description" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="ItemTypes">
       <EntityTypeMapping TypeName="PharmacyModel.ItemType">
         <MappingFragment StoreEntitySet="ItemType">
@@ -69,9 +46,20 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Suppliers">
+      <EntityTypeMapping TypeName="PharmacyModel.Supplier">
+        <MappingFragment StoreEntitySet="Supplier">
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="PurchaseItems">
       <EntityTypeMapping TypeName="PharmacyModel.PurchaseItem">
         <MappingFragment StoreEntitySet="PurchaseItems">
+          <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
           <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
           <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
@@ -85,6 +73,7 @@
     <EntitySetMapping Name="Sales">
       <EntityTypeMapping TypeName="PharmacyModel.Sale">
         <MappingFragment StoreEntitySet="Sale">
+          <ScalarProperty Name="SpecialDiscount" ColumnName="SpecialDiscount" />
           <ScalarProperty Name="Arears" ColumnName="Arears" />
           <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
           <ScalarProperty Name="TotalAfterPercentage" ColumnName="TotalAfterPercentage" />
@@ -95,30 +84,10 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="SaleItems">
-      <EntityTypeMapping TypeName="PharmacyModel.SaleItem">
-        <MappingFragment StoreEntitySet="SaleItem">
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
-          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-          <ScalarProperty Name="SaleID" ColumnName="SaleID" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Suppliers">
-      <EntityTypeMapping TypeName="PharmacyModel.Supplier">
-        <MappingFragment StoreEntitySet="Supplier">
-          <ScalarProperty Name="isActive" ColumnName="isActive" />
-          <ScalarProperty Name="Description" ColumnName="Description" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="ItemSaleItemSales">
       <EntityTypeMapping TypeName="PharmacyModel.ItemSaleItemSale">
         <MappingFragment StoreEntitySet="ItemSaleItemSale">
+          <ScalarProperty Name="SpecialDiscount" ColumnName="SpecialDiscount" />
           <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
           <ScalarProperty Name="ItemID" ColumnName="ItemID" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
@@ -131,6 +100,46 @@
           <ScalarProperty Name="Expr2" ColumnName="Expr2" />
           <ScalarProperty Name="Expr1" ColumnName="Expr1" />
           <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Items">
+      <EntityTypeMapping TypeName="PharmacyModel.Item">
+        <MappingFragment StoreEntitySet="Item">
+          <ScalarProperty Name="LooseQuantitySold" ColumnName="LooseQuantitySold" />
+          <ScalarProperty Name="TotalItemPerPack" ColumnName="TotalItemPerPack" />
+          <ScalarProperty Name="TabPerStrip" ColumnName="TabPerStrip" />
+          <ScalarProperty Name="StripPerPack" ColumnName="StripPerPack" />
+          <ScalarProperty Name="SpecialDiscount" ColumnName="SpecialDiscount" />
+          <ScalarProperty Name="TotalStock" ColumnName="TotalStock" />
+          <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
+          <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
+          <ScalarProperty Name="GenericName" ColumnName="GenericName" />
+          <ScalarProperty Name="PackSize" ColumnName="PackSize" />
+          <ScalarProperty Name="Packing" ColumnName="Packing" />
+          <ScalarProperty Name="ItemTypeID" ColumnName="ItemTypeID" />
+          <ScalarProperty Name="ManufacturerID" ColumnName="ManufacturerID" />
+          <ScalarProperty Name="OtherBonus" ColumnName="OtherBonus" />
+          <ScalarProperty Name="SalePricePerPiece" ColumnName="SalePricePerPiece" />
+          <ScalarProperty Name="PiecesPerPack" ColumnName="PiecesPerPack" />
+          <ScalarProperty Name="SalePrice" ColumnName="SalePrice" />
+          <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+          <ScalarProperty Name="Shelf" ColumnName="Shelf" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SaleItems">
+      <EntityTypeMapping TypeName="PharmacyModel.SaleItem">
+        <MappingFragment StoreEntitySet="SaleItem">
+          <ScalarProperty Name="LoosePack" ColumnName="LoosePack" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="SaleID" ColumnName="SaleID" />
           <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>

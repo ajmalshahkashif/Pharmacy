@@ -16,7 +16,7 @@ namespace Pharmacy
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Item", action = "AllItems", id = UrlParameter.Optional }
+                defaults: new { controller = "Sale", action = "AddSale", id = UrlParameter.Optional }
             );
         }
     }

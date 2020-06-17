@@ -27,6 +27,7 @@ namespace Pharmacy.DB
         public Nullable<decimal> TotalAfterPercentage { get; set; }
         public Nullable<int> AmountPaid { get; set; }
         public Nullable<decimal> Arears { get; set; }
+        public Nullable<int> SpecialDiscount { get; set; }
     
         public virtual Customer Customer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

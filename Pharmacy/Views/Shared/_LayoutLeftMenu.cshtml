@@ -42,7 +42,7 @@
                         <li class="dropdown notifications-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning">10</span>
+                                <span class="label label-warning" id="notificationLogo">10</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="header">You have 10 notifications</li>
@@ -162,7 +162,7 @@
                         </ul>
                     </li>
 
-                    <li class="active treeview">
+                    <li class="treeview">
                         <a href="#">
                             <i class="fa fa-folder"></i> <span>Items</span>
                             <span class="pull-right-container">
@@ -175,7 +175,7 @@
                         </ul>
                     </li>
 
-                    <li class="treeview">
+                    <li class="active treeview">
                         <a href="#">
                             <i class="fa fa-folder"></i> <span>Sale</span>
                             <span class="pull-right-container">
@@ -183,8 +183,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="@Url.Action("AddSale","Sale")"><i class="fa fa-circle-o"></i> New bill</a></li>
-                            <li><a href="@Url.Action("","Sale")"><i class="fa fa-circle-o"></i></a></li>
+                            <li><a href="@Url.Action("AllSales","Sale")"><i class="fa fa-circle-o"></i> All Sales</a></li>
+                            <li><a href="@Url.Action("AddSale","Sale")"><i class="fa fa-circle-o"></i> New Sale</a></li>
                         </ul>
                     </li>
 
@@ -200,6 +200,33 @@
                             <li><a href="@Url.Action("AddPurchase","Purchase")"><i class="fa fa-circle-o"></i> New Purchase</a></li>
                         </ul>
                     </li>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-folder"></i> <span>Return</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("AddSaleReturn","SaleReturn")"><i class="fa fa-circle-o"></i> Sale Return</a></li>
+                            <li><a href="@Url.Action("","")"><i class="fa fa-circle-o"></i> Purchase Return</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-folder"></i> <span>Report</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("AddSaleReturn","SaleReturn")"><i class="fa fa-circle-o"></i> Sale Report</a></li>
+                            <li><a href="@Url.Action("","")"><i class="fa fa-circle-o"></i> Purchase Report</a></li>
+                        </ul>
+                    </li>
+
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-folder"></i> <span>Companies/Brands</span>

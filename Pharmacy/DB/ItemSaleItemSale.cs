@@ -18,14 +18,15 @@ namespace Pharmacy.DB
         public string Name { get; set; }
         public int Expr1 { get; set; }
         public int Expr2 { get; set; }
-        public Nullable<System.DateTime> DateOfSale { get; set; }
-        public Nullable<decimal> TotalBeforePercentage { get; set; }
-        public Nullable<decimal> TotalAfterPercentage { get; set; }
-        public Nullable<int> AmountPaid { get; set; }
-        public Nullable<decimal> Arears { get; set; }
-        public Nullable<int> SalePercentage { get; set; }
-        public Nullable<int> Quantity { get; set; }
-        public Nullable<int> ItemID { get; set; }
-        public Nullable<decimal> SalePrice { get; set; }
+        public System.DateTime DateOfSale { get; set; }
+        public decimal TotalBeforePercentage { get; set; }
+        public decimal TotalAfterPercentage { get; set; }
+        public int AmountPaid { get; set; }
+        public decimal Arears { get; set; }
+        public int SalePercentage { get; set; }
+        public int Quantity { get; set; }
+        public int ItemID { get; set; }
+        public decimal SalePrice { get; set; }
+        public int SpecialDiscount { get; set; }
     }
 }

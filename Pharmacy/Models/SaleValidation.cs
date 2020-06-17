@@ -22,8 +22,9 @@ namespace Pharmacy.Models
         
         public Nullable<decimal> TotalBeforePercentage { get; set; }
 
-
         public Nullable<decimal> TotalAfterPercentage { get; set; }
+
+        public Nullable<int> SpecialDiscount { get; set; }
 
         public Nullable<int> AmountPaid { get; set; }
         
@@ -41,5 +42,9 @@ namespace Pharmacy.Models
         public Nullable<decimal> SalePrice { get; set; }
 
         public Nullable<decimal> PerItemTotal { get; set; }
+
+        public Nullable<int> TotalItemPerPack { get; set; }
+
+        public string LoosePack { get; set; }
     }
 }

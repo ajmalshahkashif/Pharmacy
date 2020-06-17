@@ -47,7 +47,6 @@
     }
 </style>
 
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -97,9 +96,9 @@
         </div>
 
         @*<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                <span>P/L</span>
-                <span>@Html.TextBox("PackLoose", null, new { @class = "form-control" })</span>
-            </div>*@
+            <span>P/L</span>
+            <span>@Html.TextBox("PackLoose", null, new { @class = "form-control" })</span>
+        </div>*@
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Pur Price</span>
@@ -108,6 +107,15 @@
                 @Html.ValidationMessageFor(model => model.PurchasePrice, "", new { @class = "text-danger" })
             </span>
             @Html.HiddenFor(model => model.PurchasePrice)
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            <span>Sale Price</span>
+            <span>
+                @Html.TextBoxFor(model => model.SalePrice, new { @class = "form-control", onblur = "return TotalAmt(this.value)" })
+                @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })
+            </span>
+            @Html.HiddenFor(model => model.SalePrice)
         </div>
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
@@ -258,7 +266,9 @@
                     dataType: "json",
                     data: { itemID: itemID },
                     success: function (data) {
+                        debugger;
                         $("#PurchasePrice").val(data.PurchasePrice);
+                        $("#SalePrice").val(data.SalePrice);
                         $("#SalePercentage").val(data.SalePercentage);
                         $("#PurchasePercentage").val(data.PurchasePercentage);
                         $("#TotalStock").val(data.TotalStock);
@@ -328,7 +338,8 @@
         var EditItemRowToBRemoved = $("#EditItemRowToBRemoved").val();
 
         var itemName = $("#Name").val();
-        var price = $("#PurchasePrice").val();
+        var purchasePrice = $("#PurchasePrice").val();
+        var salePrice = $("#SalePrice").val();
         var salePercentage = $("#SalePercentage").val();
         var purchasePercentage = $("#PurchasePercentage").val();
         var quantity = $("#Quantity").val();
@@ -338,7 +349,8 @@
         var tr = '';
         if (checkHeaderRow.length == 0) {
             tr = '<tr><th>Item Name </th>';
-            tr = tr + '<th> Price </th>';
+            tr = tr + '<th> Pur Price </th>';
+            tr = tr + '<th> Sale Price </th>';
             tr = tr + '<th> S Percentage(%)</th>';
              tr = tr + '<th> P Percentage(%)</th>';
             tr = tr + '<th> Quantity </th>';
@@ -351,7 +363,8 @@
         $("#" + EditItemRowToBRemoved).remove();
 
         tr = '<tr id = "' + ItemID + '"><td>' + itemName + '</td>';
-        tr = tr + '<td>' + price + '</td>';
+        tr = tr + '<td>' + purchasePrice + '</td>';
+        tr = tr + '<td>' + salePrice + '</td>';
         tr = tr + '<td>' + salePercentage + '</td>';
         tr = tr + '<td>' + purchasePercentage + '</td>';
         tr = tr + '<td>' + quantity + '</td>';
@@ -362,6 +375,7 @@
 
         $('#Name').val('');
         $('#PurchasePrice').val('');
+        $('#SalePrice').val('');
         $('#SalePercentage').val('');
         $('#PurchasePercentage').val('');
         $('#Quantity').val('');
@@ -387,6 +401,7 @@
         }
 
         $('#PurchasePrice').prop("disabled", value);
+        $('#SalePrice').prop("disabled", value);
         $('#SalePercentage').prop("disabled", value);
         $('#PurchasePercentage').prop("disabled", value);
         $('#Quantity').prop("disabled", value);
@@ -403,11 +418,12 @@
                 $(this).addClass("highlight")/*.siblings().removeClass('    highlight')*/;
                 $("#Name").val(this.cells[0].textContent);
                 $("#PurchasePrice").val(this.cells[1].textContent);
-                $("#SalePercentage").val(this.cells[2].textContent);
-                 $("#PurchasePercentage").val(this.cells[3].textContent);
-                $("#Quantity").val(this.cells[4].textContent);
-                $("#TotalAmount").val(this.cells[5].textContent);
-                $("#TotalStock").val(this.cells[6].textContent);
+                $("#SalePrice").val(this.cells[2].textContent);
+                $("#SalePercentage").val(this.cells[3].textContent);
+                $("#PurchasePercentage").val(this.cells[4].textContent);
+                $("#Quantity").val(this.cells[5].textContent);
+                $("#TotalAmount").val(this.cells[6].textContent);
+                $("#TotalStock").val(this.cells[7].textContent);
 
                 $("#ID").val(this.id);
                 $("#EditItemRowToBRemoved").val(this.id);
@@ -420,6 +436,7 @@
             else {
                 $("#Name").val('');
                 $("#PurchasePrice").val('');
+                $("#SalePrice").val('');
                 $("#SalePercentage").val('');
                 $("#PurchasePercentage").val('');
                 $("#Quantity").val('');
@@ -450,7 +467,7 @@
 
         var TotalBillAmtBeforePercentage = 0;
         $('#tblItem tbody tr').each(function (i, row) {
-            var itemTotalBeforePerc = parseFloat(row.cells[5].textContent);
+            var itemTotalBeforePerc = parseFloat(row.cells[6].textContent);
 
             //itemTotalBeforePerc = itemTotalBeforePerc.toFixed(2);
             //itemTotalBeforePerc = parseFloat(itemTotalBeforePerc);
@@ -469,13 +486,14 @@
         var purchaseArray = [];
 
         $('#tblItem tbody tr').each(function (i, row) {
-            var salePercentage = parseInt($(row).find('td').eq(2).text());
+            var salePercentage = parseInt($(row).find('td').eq(3).text()); debugger;
             purchaseArray.push({
                 Name: $(row).find('td').eq(0).text(),
-                SalePrice: $(row).find('td').eq(1).text(),
+                PurchasePrice: $(row).find('td').eq(1).text(),
+                SalePrice: $(row).find('td').eq(2).text(),
                 SalePercentage: salePercentage,
-                PurchasePercentage: $(row).find('td').eq(3).text(),
-                Quantity: $(row).find('td').eq(4).text(),
+                PurchasePercentage: $(row).find('td').eq(4).text(),
+                Quantity: $(row).find('td').eq(5).text(),
                 NetTotal: $("#sumTotalAmtBeforeDiscount").text(),
                 AmountPaid: $("#AmountPaid").val(),
                 Arears: $("#Arears").text(),

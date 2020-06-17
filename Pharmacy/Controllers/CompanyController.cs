@@ -20,6 +20,7 @@ namespace Pharmacy.Controllers
 
         public JsonResult Get([DataSourceRequest]DataSourceRequest request)
         {
+            var ldsf = context.Companies.ToList();
             var companies = context.Companies.Select(x => new
             {
                 ID = x.ID,

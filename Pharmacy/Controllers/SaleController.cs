@@ -12,17 +12,22 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using CrystalDecisions.Shared;
+using CrystalDecisions.CrystalReports.Engine;
+using Pharmacy.Report;
+using System.Windows.Forms;
+using Kendo.Mvc.UI;
+using Kendo.Mvc.Extensions;
 
 namespace Pharmacy.Controllers
 {
     public class SaleController : BaseController
     {
-        private static List<Stream> m_streams;
-        private static int m_currentPageIndex = 0;
 
         public ActionResult AllSales()
         {
             var saleList = context.Sales.ToList();
+            
             return View(saleList);
         }
 
@@ -41,12 +46,13 @@ namespace Pharmacy.Controllers
 
         public JsonResult MedicineList(string Prefix)
         {
-            var ItemList = context.Items.Select(x => new { ID = x.ID, Name = x.Name }).ToList();
+            var AllItems = context.Items.Select(x => new { ID = x.ID, Name = x.Name }).ToList();
+            var ItemList = AllItems.Where(x => x.Name.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
+            //var ItemList = AllItems.Where(x => x.Name.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
 
+            //var ItemList = context.Items.Where(x => x.Name.Contains(Prefix)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
 
-            var CityList = ItemList.Where(x => x.Name.StartsWith(Prefix)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
-
-            return Json(CityList, JsonRequestBehavior.AllowGet);
+            return Json(ItemList, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetItemByID(int? itemID)
@@ -57,7 +63,9 @@ namespace Pharmacy.Controllers
                 Name = x.Name,
                 SalePrice = x.SalePrice,
                 SalePercentage = x.SalePercentage,
-                TotalStock = x.TotalStock
+                TotalStock = x.TotalStock,
+                ItemTypeID = x.ItemTypeID,
+                TotalItemPerPack = x.TotalItemPerPack
             }).FirstOrDefault();
             return Json(item, JsonRequestBehavior.AllowGet);
         }
@@ -68,9 +76,14 @@ namespace Pharmacy.Controllers
             Sale newSale = new Sale();
 
             newSale.TotalBeforePercentage = sale.Select(x => x.TotalBeforePercentage).FirstOrDefault();
+
+            decimal? totalAfterPercentage = sale.Select(x => x.TotalAfterPercentage).FirstOrDefault();
+            //if(totalAfterPercentage > )
             newSale.TotalAfterPercentage = sale.Select(x => x.TotalAfterPercentage).FirstOrDefault();
+            newSale.SpecialDiscount = sale.Select(x => x.SpecialDiscount).FirstOrDefault();
             newSale.AmountPaid = sale.Select(x => x.AmountPaid).FirstOrDefault();
             newSale.Arears = sale.Select(x => x.Arears).FirstOrDefault();
+            newSale.DateOfSale = DateTime.Now;
 
             context.Sales.Add(newSale);
             context.SaveChanges();
@@ -85,144 +98,145 @@ namespace Pharmacy.Controllers
                 saleItem.ItemID = itemID;
                 saleItem.SalePercentage = n.SalePercentage;
                 saleItem.Quantity = n.Quantity;
+                saleItem.LoosePack = n.LoosePack;
 
                 context.SaleItems.Add(saleItem);
                 context.SaveChanges();
 
                 var Item = context.Items.Where(x => x.ID == itemID).FirstOrDefault();
 
-                Item.TotalStock -= n.Quantity;
+                if (n.LoosePack == "P")
+                    Item.TotalStock -= n.Quantity;
+                else if (n.LoosePack == "L")
+                {
+                    Item.LooseQuantitySold += n.Quantity;
+                    if (Item.LooseQuantitySold >= n.TotalItemPerPack)
+                    {
+                        int? packSold = Item.LooseQuantitySold / n.TotalItemPerPack;
+                        int? looseQuantityleftAfterPackomission = Item.LooseQuantitySold % n.TotalItemPerPack;
+                        Item.TotalStock -= packSold;
+                        Item.LooseQuantitySold = looseQuantityleftAfterPackomission;
+
+                    }
+                }
+                //TODO: remove last line. just to save saleprice at run time
+                //Item.SalePrice = n.SalePrice;
                 context.SaveChanges();
             }
 
             return Json(true);
         }
 
+        public JsonResult GetSaleList([DataSourceRequest]DataSourceRequest request)
+        {
+            var saleList = context.Sales.Select(x => new
+            {
+                ID = x.ID,
+                SpecialDiscount = x.SpecialDiscount,
+                TotalAfterPercentage = x.TotalAfterPercentage,
+                TotalBeforePercentage = x.TotalBeforePercentage,
+                AmountPaid = x.AmountPaid,
+                DateOfSale = x.DateOfSale,
+                Arears = x.Arears
+            }).ToList();
+            return this.Json(saleList.ToDataSourceResult(request));
+        }
+
+        [HttpPost]
+        public JsonResult GetItemTypeName(int? ItemTypeID)
+        {
+            var item = context.ItemTypes.Where(x => x.ID == ItemTypeID).Select(x => new
+            {
+                ID = x.ID,
+                Name = x.Name,
+                isActive = x.isActive
+
+            }).FirstOrDefault();
+            return Json(item, JsonRequestBehavior.AllowGet);
+        }
 
         #region Print Code
-        public ActionResult Report(List<SaleValidation> sale)
+
+        public ActionResult Report(List<ItemSaleItemSale> sale)
         {
-            SaveSaleItems(sale);
-
-            var dt2 = new DataTable();
-            dt2.Columns.Add("Name");
-            dt2.Columns.Add("Quantity");
-            dt2.Columns.Add("SalePrice");
-            //dt2.Columns.Add("PerItemTotal");
-
-            //dt2.Columns.Add("TotalAfterPercentage");
-            //dt2.Columns.Add("AmountPaid");
-            //dt2.Columns.Add("Arears");
-            foreach (var item in sale)
+            List<SaleValidation> saleValidation = new List<SaleValidation>();
+            foreach (var s in sale) /*SpecialDiscount = 0*/
             {
-                var row = dt2.NewRow();
-                row["Name"] = item.Name;
-                row["Quantity"] = item.Quantity;
-                row["SalePrice"] = item.SalePrice;
-                //row["Textbox40"] = 2;
-                //row["PerItemTotal"] = item.PerItemTotal;
-                //row["PerItemTotal"] = item.PerItemTotal;
-                //row["TotalAfterPercentage"] = item.TotalAfterPercentage;
-                //row["AmountPaid"] = item.AmountPaid;
-                //row["Arears"] = item.Arears;
-                dt2.Rows.Add(row);
+                SaleValidation sv = new SaleValidation();
+
+                sv.Name = s.Name;
+                sv.Quantity = s.Quantity;
+                sv.SalePrice = s.SalePrice;
+                sv.TotalBeforePercentage = s.TotalBeforePercentage;
+
+                sv.TotalAfterPercentage = s.TotalAfterPercentage;
+                sv.SpecialDiscount = s.SpecialDiscount;
+                sv.AmountPaid = s.AmountPaid;
+                sv.Arears = s.Arears;
+                saleValidation.Add(sv);
             }
-            
-            LocalReport report = new LocalReport();
+            SaveSaleItems(saleValidation);
 
-            report.ReportPath = "Report/SaleReport.rdlc";
-
-            report.DataSources.Add(new ReportDataSource("DataSet1", dt2));
-
-            PrintToPrinter(report);
-            return View();
-        }
-
-        public static void PrintToPrinter(LocalReport report)
-        {
-            Export(report);
-
-        }
-
-        public static void Export(LocalReport report, bool print = true)
-        {
-            string deviceInfo =
-             @"<DeviceInfo>
-                <OutputFormat>EMF</OutputFormat>
-                <PageWidth>34cm</PageWidth>
-                <PageHeight>29.7cm</PageHeight>
-                <MarginTop>1cm</MarginTop>
-                <MarginLeft>0.4cm</MarginLeft>
-                <MarginRight>0.4cm</MarginRight>
-                <MarginBottom>1cm</MarginBottom>
-            </DeviceInfo>";
-            Warning[] warnings;
-            m_streams = new List<Stream>();
-            report.Render("Image", deviceInfo, CreateStream, out warnings);
-            foreach (Stream stream in m_streams)
-                stream.Position = 0;
-
-            if (print)
+            PrintDialog printDialog = new PrintDialog();
+            //if (printDialog.ShowDialog() == DialogResult.OK)
             {
-                Print();
+                ReportDocument reportDocument = new ReportDocument();
+                //reportDocument.Load(Application.StartupPath + "\\CustomerList.rpt");
+                reportDocument.Load(Path.Combine(Server.MapPath("~/Report"), "CustomerList.rpt"));
+                reportDocument.SetDataSource(sale);
+                reportDocument.PrintOptions.PrinterName = printDialog.PrinterSettings.PrinterName;
+
+                //reportDocument.PrintToPrinter(printDialog.PrinterSettings.Copies, printDialog.PrinterSettings.Collate,
+                //    printDialog.PrinterSettings.FromPage, printDialog.PrinterSettings.ToPage);
+
+                reportDocument.PrintToPrinter(1, true, 0, 0);
+
             }
+
+            return Content("hello");
+
         }
 
-        public static void Print()
+        public ActionResult Report2(List<ItemSaleItemSale> sale)
         {
-            if (m_streams == null || m_streams.Count == 0)
-                throw new Exception("Error: no stream to print.");
-            PrintDocument printDoc = new PrintDocument();
-            if (!printDoc.PrinterSettings.IsValid)
-            {
-                throw new Exception("Error: cannot find the default printer.");
-            }
-            else
-            {
-                printDoc.PrintPage += new PrintPageEventHandler(PrintPage);
-                m_currentPageIndex = 0;
-                printDoc.Print();
-            }
+            //SaveSaleItems(sale);
+
+            ReportDocument rd = new ReportDocument();
+            rd.Load(Path.Combine(Server.MapPath("~/Report"), "CustomerList.rpt"));
+            rd.SetDataSource(sale);
+
+            var stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            var pdfbytearray = new byte[stream.Length - 1];
+
+            stream.Position = 0;
+            stream.Read(pdfbytearray, 0, Convert.ToInt32(stream.Length - 1));
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.AddHeader("content-disposition", "filename=Test.pdf");
+
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("content-length", pdfbytearray.Length.ToString());
+            Response.BinaryWrite(pdfbytearray);
+
+            PrintDocument pd = new PrintDocument();
+
+            pd.Print();
+
+
+            return Content("hello");
+
         }
 
-        public static Stream CreateStream(string name, string fileNameExtension, Encoding encoding, string mimeType, bool willSeek)
+        public ActionResult Report3(List<ItemSaleItemSale> sale)
         {
-            Stream stream = new MemoryStream();
-            m_streams.Add(stream);
-            return stream;
-        }
+            CustomerList rpt = new CustomerList();
+            rpt.SetDataSource(sale);
 
-        public static void PrintPage(object sender, PrintPageEventArgs ev)
-        {
-            Metafile pageImage = new
-               Metafile(m_streams[m_currentPageIndex]);
+            Stream s = rpt.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
 
-            // Adjust rectangular area with printer margins.
-            Rectangle adjustedRect = new Rectangle(
-                ev.PageBounds.Left - (int)ev.PageSettings.HardMarginX,
-                ev.PageBounds.Top - (int)ev.PageSettings.HardMarginY,
-                ev.PageBounds.Width,
-                ev.PageBounds.Height);
+            return File(s, "application/pdf");
 
-            // Draw a white background for the report
-            ev.Graphics.FillRectangle(Brushes.White, adjustedRect);
 
-            // Draw the report content
-            ev.Graphics.DrawImage(pageImage, adjustedRect);
-
-            // Prepare for the next page. Make sure we haven't hit the end.
-            m_currentPageIndex++;
-            ev.HasMorePages = (m_currentPageIndex < m_streams.Count);
-        }
-
-        public static void DisposePrint()
-        {
-            if (m_streams != null)
-            {
-                foreach (Stream stream in m_streams)
-                    stream.Close();
-                m_streams = null;
-            }
         }
 
         #endregion

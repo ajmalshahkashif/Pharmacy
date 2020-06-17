@@ -109,7 +109,10 @@ namespace Pharmacy.Controllers
             obj.OtherBonus = item.OtherBonus;
             obj.ManufacturerID = item.ManufacturerID;
             obj.ItemTypeID = item.ItemTypeID;
-
+            obj.PurchasePercentage = item.PurchasePercentage;
+            obj.SalePercentage = item.SalePercentage;
+            obj.TotalStock = 0;
+            
             context.Items.Add(obj);
             context.SaveChanges();
             ModelState.Clear();

@@ -54,9 +54,24 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.PurchasePercentage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.TextBoxFor(model => model.PurchasePercentage, new { @class = "form-control", onblur = "return calculatePurchasePrice()", @Value = "15" })
+                @Html.ValidationMessageFor(model => model.PurchasePercentage, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.SalePercentage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.SalePercentage, new { htmlAttributes = new { @class = "form-control", @Value = "10" } })
+                @Html.ValidationMessageFor(model => model.SalePercentage, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.SalePrice, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                @Html.EditorFor(model => model.SalePrice, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.SalePrice, new { htmlAttributes = new { @class = "form-control", onblur = "return calculatePurchasePrice()" } })
                 @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })
             </div>
 
@@ -98,21 +113,6 @@
                 @Html.ValidationMessageFor(model => model.GenericName, "", new { @class = "text-danger" })
             </div>
 
-            <div class="col-md-6">
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PurchasePercentage, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-3">
-                @Html.TextBoxFor(model => model.PurchasePercentage, new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.PurchasePercentage, "", new { @class = "text-danger" })
-            </div>
-            @Html.LabelFor(model => model.SalePercentage, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-3">
-                @Html.EditorFor(model => model.SalePercentage, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SalePercentage, "", new { @class = "text-danger" })
-            </div>
             <div class="col-md-6">
             </div>
         </div>
@@ -191,4 +191,12 @@
         });
     });
 
+    function calculatePurchasePrice() {
+        debugger;
+        var salePrice = $("#SalePrice").val();
+        var purchasePercentage = $("#PurchasePercentage").val();
+        var purchasePrice = salePrice - (salePrice * purchasePercentage / 100);
+        $("#PurchasePrice").val(purchasePrice);
+
+    }
 </script>

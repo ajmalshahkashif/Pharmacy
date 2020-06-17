@@ -11,13 +11,18 @@
     ().Name("SaleListGrid").Columns(c =>
     {
         c.Bound(p => p.ID).Title("Id").Width(30);
+        c.Bound(p => p.DateOfSale).Format("{0:dd/MM/yyyy HH:mm}").Title("Date of sale").Width(150);
+        c.Bound(p => p.TotalBeforePercentage).Title("Total before perc").Width(150);
+        c.Bound(p => p.TotalAfterPercentage).Title("Total after perc").Width(150);
+        c.Bound(p => p.SpecialDiscount).Title("Special discount").Width(150);
+        c.Bound(p => p.AmountPaid).Title("Amt paid").Width(150);
+        c.Bound(p => p.Arears).Title("Arears").Width(150);
         //c.Bound(p => p.Supplier.Name).Title("Name").Width(150);
-        c.Bound(p => p.DateOfSale).Title("Supply Date").Width(150);
-        c.Bound(p => p.TotalAfterPercentage).Title("Total Amt After %").Width(150);
+        //c.Bound(p => p.SaleItems).Title("sale item").Width(150);
     })
     .DataSource(d => d
     .Ajax()
-    .Read(r => r.Action("GetPurchaseList", "Purchase"))
+    .Read(r => r.Action("GetSaleList", "Sale"))
     .PageSize(10)
     )
     .Pageable()

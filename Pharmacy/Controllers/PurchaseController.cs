@@ -38,12 +38,14 @@ namespace Pharmacy.Controllers
 
         public JsonResult MedicineList(string Prefix)
         {
-            var ItemList = context.Items.Select(x => new { ID = x.ID, Name = x.Name }).ToList();
+            var AllItems = context.Items.Select(x => new { ID = x.ID, Name = x.Name }).ToList();
+            var ItemList = AllItems.Where(x => x.Name.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
+            //var ItemList = AllItems.Where(x => x.Name.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
 
+            //var ItemList = context.Items.Where(x => x.Name.Contains(Prefix)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
 
-            var CityList = ItemList.Where(x => x.Name.StartsWith(Prefix)).Select(x => new { Name = x.Name, ID = x.ID }).ToList();
+            return Json(ItemList, JsonRequestBehavior.AllowGet);
 
-            return Json(CityList, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult SupplierList(string Prefix)
@@ -59,6 +61,7 @@ namespace Pharmacy.Controllers
                 ID = x.ID,
                 Name = x.Name,
                 PurchasePrice = x.PurchasePrice,
+                SalePrice = x.SalePrice,
                 SalePercentage = x.SalePercentage,
                 PurchasePercentage = x.PurchasePercentage,
                 TotalStock = x.TotalStock
@@ -245,6 +248,7 @@ namespace Pharmacy.Controllers
                 purchaseItem.PurchaseID = newPurchase.ID;
                 purchaseItem.ItemID = itemID;
                 purchaseItem.PurchasePrice = n.PurchasePrice;
+                purchaseItem.SalePrice = n.SalePrice;
                 purchaseItem.PurchasePercentage = n.PurchasePercentage;
                 purchaseItem.SalePercentage = n.SalePercentage;
                 purchaseItem.Quantity = n.Quantity;
@@ -257,11 +261,13 @@ namespace Pharmacy.Controllers
                 var RetailPrice = n.PurchasePrice + (n.PurchasePercentage * n.PurchasePrice / 100);
 
                 Item.PurchasePrice = n.PurchasePrice;
+                Item.SalePrice = n.SalePrice;
                 Item.PurchasePercentage = n.PurchasePercentage;
                 Item.SalePercentage = n.SalePercentage;
-                Item.SalePrice = RetailPrice;
+                //Item.SalePrice = RetailPrice;
                 Item.SalePricePerPiece = RetailPrice / Item.PackSize;
-                Item.TotalStock += n.Quantity;
+                Item.TotalStock = Item.TotalStock + n.Quantity;
+                //Item.TotalStock += n.Quantity;
                 context.SaveChanges();
 
             }

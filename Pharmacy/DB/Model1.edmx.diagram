@@ -4,25 +4,25 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="b317437d7c37443994e2dd7adceb794a" Name="Diagram1">
-        <EntityTypeShape EntityType="PharmacyModel.Company" Width="1.5" PointX="0.75" PointY="3.5" />
-        <EntityTypeShape EntityType="PharmacyModel.Customer" Width="1.5" PointX="3.75" PointY="13.625" />
-        <EntityTypeShape EntityType="PharmacyModel.Item" Width="1.5" PointX="3" PointY="2.25" />
-        <EntityTypeShape EntityType="PharmacyModel.ItemType" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="PharmacyModel.Purchase" Width="1.5" PointX="3" PointY="9.5" />
-        <EntityTypeShape EntityType="PharmacyModel.PurchaseItem" Width="1.5" PointX="5.25" PointY="3.375" />
-        <EntityTypeShape EntityType="PharmacyModel.Sale" Width="1.5" PointX="6" PointY="13.375" />
-        <EntityTypeShape EntityType="PharmacyModel.SaleItem" Width="1.5" PointX="8.25" PointY="3.5" />
-        <EntityTypeShape EntityType="PharmacyModel.Supplier" Width="1.5" PointX="0.75" PointY="9.75" />
-        <AssociationConnector Association="PharmacyModel.FK_Item_Company" />
+      <Diagram DiagramId="9eabf71066ab4fb68f71b444b278da93" Name="Diagram1">
+        <EntityTypeShape EntityType="PharmacyModel.Company" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="PharmacyModel.Customer" Width="1.5" PointX="0.75" PointY="13.875" />
+        <EntityTypeShape EntityType="PharmacyModel.ItemType" Width="1.5" PointX="0.75" PointY="4" />
+        <EntityTypeShape EntityType="PharmacyModel.Purchase" Width="1.5" PointX="6" PointY="9.625" />
+        <EntityTypeShape EntityType="PharmacyModel.Supplier" Width="1.5" PointX="3.75" PointY="10" />
+        <AssociationConnector Association="PharmacyModel.FK_Purchase_Supplier" />
+        <EntityTypeShape EntityType="PharmacyModel.PurchaseItem" Width="1.5" PointX="8.25" PointY="5" />
+        <AssociationConnector Association="PharmacyModel.FK_PurchaseItems_Purchase" />
+        <EntityTypeShape EntityType="PharmacyModel.Sale" Width="1.5" PointX="3" PointY="13.5" />
         <AssociationConnector Association="PharmacyModel.FK_Sale_Customer" />
+        <EntityTypeShape EntityType="PharmacyModel.ItemSaleItemSale" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="PharmacyModel.Item" Width="1.5" PointX="3" PointY="0.75" />
+        <AssociationConnector Association="PharmacyModel.FK_Item_Company" />
         <AssociationConnector Association="PharmacyModel.FK_Item_ItemType" />
         <AssociationConnector Association="PharmacyModel.FK_Purchase_Item" />
+        <EntityTypeShape EntityType="PharmacyModel.SaleItem" Width="1.5" PointX="5.25" PointY="6.375" />
         <AssociationConnector Association="PharmacyModel.FK_SaleItem_Item" />
-        <AssociationConnector Association="PharmacyModel.FK_Purchase_Supplier" />
-        <AssociationConnector Association="PharmacyModel.FK_PurchaseItems_Purchase" />
         <AssociationConnector Association="PharmacyModel.FK_SaleItem_Sale" />
-        <EntityTypeShape EntityType="PharmacyModel.ItemSaleItemSale" Width="1.5" PointX="5.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

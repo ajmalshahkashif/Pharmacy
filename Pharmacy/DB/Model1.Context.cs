@@ -27,13 +27,13 @@ namespace Pharmacy.DB
     
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
-        public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<ItemType> ItemTypes { get; set; }
         public virtual DbSet<Purchase> Purchases { get; set; }
+        public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<PurchaseItem> PurchaseItems { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
-        public virtual DbSet<SaleItem> SaleItems { get; set; }
-        public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<ItemSaleItemSale> ItemSaleItemSales { get; set; }
+        public virtual DbSet<Item> Items { get; set; }
+        public virtual DbSet<SaleItem> SaleItems { get; set; }
     }
 }
