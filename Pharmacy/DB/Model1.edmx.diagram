@@ -16,14 +16,16 @@
         <EntityTypeShape EntityType="PharmacyModel.Sale" Width="1.5" PointX="3" PointY="13.5" />
         <AssociationConnector Association="PharmacyModel.FK_Sale_Customer" />
         <EntityTypeShape EntityType="PharmacyModel.ItemSaleItemSale" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="PharmacyModel.SaleItem" Width="1.5" PointX="5.25" PointY="6.375" />
+        <AssociationConnector Association="PharmacyModel.FK_SaleItem_Sale" />
+        <EntityTypeShape EntityType="PharmacyModel.SaleReturn" Width="1.5" PointX="3" PointY="17.625" />
+        <EntityTypeShape EntityType="PharmacyModel.SaleReturnItem" Width="1.5" PointX="8.25" PointY="9.375" />
+        <AssociationConnector Association="PharmacyModel.FK_SaleReturn_Customer" />
+        <AssociationConnector Association="PharmacyModel.FK_SaleReturnItem_SaleReturn" />
         <EntityTypeShape EntityType="PharmacyModel.Item" Width="1.5" PointX="3" PointY="0.75" />
         <AssociationConnector Association="PharmacyModel.FK_Item_Company" />
         <AssociationConnector Association="PharmacyModel.FK_Item_ItemType" />
-        <AssociationConnector Association="PharmacyModel.FK_Purchase_Item" />
-        <EntityTypeShape EntityType="PharmacyModel.SaleItem" Width="1.5" PointX="5.25" PointY="6.375" />
-        <AssociationConnector Association="PharmacyModel.FK_SaleItem_Item" />
-        <AssociationConnector Association="PharmacyModel.FK_SaleItem_Sale" />
-      </Diagram>
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

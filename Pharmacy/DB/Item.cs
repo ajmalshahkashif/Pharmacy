@@ -14,14 +14,8 @@ namespace Pharmacy.DB
     
     public partial class Item
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Item()
-        {
-            this.PurchaseItems = new HashSet<PurchaseItem>();
-            this.SaleItems = new HashSet<SaleItem>();
-        }
-    
         public int ID { get; set; }
+        public string Barcode { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Shelf { get; set; }
@@ -38,17 +32,15 @@ namespace Pharmacy.DB
         public Nullable<int> PurchasePercentage { get; set; }
         public Nullable<int> SalePercentage { get; set; }
         public Nullable<int> TotalStock { get; set; }
+        public Nullable<int> LooseQuantitySold { get; set; }
         public Nullable<int> SpecialDiscount { get; set; }
         public Nullable<int> StripPerPack { get; set; }
         public Nullable<int> TabPerStrip { get; set; }
         public Nullable<int> TotalItemPerPack { get; set; }
-        public Nullable<int> LooseQuantitySold { get; set; }
+        public Nullable<int> LowStockQuantity { get; set; }
+        public Nullable<int> CriticalLowStockQuantity { get; set; }
     
         public virtual Company Company { get; set; }
         public virtual ItemType ItemType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SaleItem> SaleItems { get; set; }
     }
 }

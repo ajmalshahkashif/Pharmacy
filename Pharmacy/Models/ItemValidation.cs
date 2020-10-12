@@ -1,6 +1,7 @@
 ﻿using Pharmacy.DB;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
@@ -12,14 +13,18 @@ namespace Pharmacy.Models
         public int ID { get; set; }
 
 
+        [Required(ErrorMessage = "provide BarCode")]
+        public string Barcode { get; set; }
+
+
         [Required(ErrorMessage = "provide name")]
         public string Name { get; set; }
 
 
         public string Description { get; set; }
 
-        public string Shelf { get; set; }
 
+        public string Shelf { get; set; }
 
 
         // [0-9] : for integers which allows integers from 0 to 9
@@ -29,7 +34,6 @@ namespace Pharmacy.Models
         [Required(ErrorMessage = "provide purchase price")]
         [RegularExpression(@"^[1-9]\d{0,9}(\.\d{1,2})?%?$", ErrorMessage = "Decimal No with 2 decimal places")]
         public Nullable<decimal> PurchasePrice { get; set; }
-
 
 
         // [0-9] : for integers which allows integers from 0 to 9
@@ -51,7 +55,6 @@ namespace Pharmacy.Models
 
 
         [Display(Name = "Manufacturer")]
-        [Required(ErrorMessage = "provide Company name")]
         public Nullable<int> ManufacturerID { get; set; }
 
 
@@ -59,7 +62,12 @@ namespace Pharmacy.Models
         [Required(ErrorMessage = "provide Item Type")]
         public Nullable<int> ItemTypeID { get; set; }
 
-        public string Packing { get; set; }
+
+        public ItemTypeValidation ItemTypeValidation { get; set; }
+
+        //Just for the grid to show Item type 
+        public string ItemTypeName { get; set; }
+
         public Nullable<int> PackSize { get; set; }
 
 
@@ -84,7 +92,20 @@ namespace Pharmacy.Models
         public string GenericName { get; set; }
 
 
+        [Display(Name = "Strip/Pack")]
+        [Required(ErrorMessage = "Provide Strip Per Pack")]
+        public int StripPerPack { get; set; }
 
+
+        //TODO: below line is not working
+        [DefaultValue(0)]
+        [Display(Name = "Tab/Strip")]
+        [Required(ErrorMessage = "Provide Tab Per Strip")]
+        public int TabPerStrip { get; set; }
+
+        public Nullable<int> TotalItemPerPack { get; set; }
+
+        public Nullable<int> LooseQuantitySold { get; set; }
 
         #region Not related to DB just for Specific UI
 
@@ -93,10 +114,9 @@ namespace Pharmacy.Models
         [Required(ErrorMessage = "Provide integer")]
         public int Quantity { get; set; }
 
-
+        public Nullable<int> LowStockQuantity { get; set; }
+        public Nullable<int> CriticalLowStockQuantity { get; set; }
         #endregion
-
-
 
     }
 }

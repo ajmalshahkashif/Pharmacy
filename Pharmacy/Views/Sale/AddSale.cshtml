@@ -34,6 +34,13 @@
         .table-responsive table tbody tr td {
             border-left: 1px solid #d8d4d4;
         }
+    .table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+        border-top: 1px solid #d8d4d4;
+    }
+
+    .table > thead > tr > th {
+        border-bottom: 1px solid #d8d4d4;
+    }
 
     .myTable > thead > tr > th,
     .myTable > tbody > tr > td {
@@ -56,10 +63,17 @@
     <div class="row" id="divItemAdd">
 
         @Html.HiddenFor(model => model.ID)
-        @Html.HiddenFor(model => model.TotalItemPerPack)
+        @Html.HiddenFor(model => model.PiecesPerPack)
         @Html.Hidden("EditItemRowToBRemoved")
 
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            <span>Barcode</span>
+            <span>
+                @Html.TextBoxFor(model => model.Barcode, new { @class = "form-control", onblur = "searchItemByBarcode(this.value)" })
+            </span>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
             <span>Item name</span>
             <span>
                 @Html.TextBoxFor(model => model.Name, new { @class = "form-control", onblur = "return EnabledisableControl(this.value, 1)" })
@@ -80,7 +94,10 @@
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Price</span>
-            <span>@Html.TextBoxFor(model => model.SalePrice, new { @class = "form-control" }) @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })</span>
+            <span>
+                @Html.TextBoxFor(model => model.SalePrice, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SalePrice, "", new { @class = "text-danger" })
+            </span>
             @*@Html.HiddenFor(model => model.SalePercentage)*@
         </div>
 
@@ -95,7 +112,7 @@
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="display:none">
             <span>LooseOrPack</span>
             <span>@Html.TextBoxFor(model => model.LoosePack, null, new { @class = "form-control", disabled = "true" })</span>
-        </div>s
+        </div>
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Total</span>
@@ -162,12 +179,40 @@
 
 <script type="text/javascript">
 
+    function searchItemByBarcode(value) {
+        var barCode = $("#Barcode").val();
+        $.ajax({
+            url: "/Sale/GetItemByBarCode",
+            type: "POST",
+            dataType: "json",
+            data: { barCode: barCode },
+            success: function (data) {
+                $("#Name").val(data.Name);
+                $("#PackSize").val(data.PackSize);
+                $("#SalePrice").val(data.SalePrice);
+                $("#SalePercentage").val(data.SalePercentage);
+                $("#TotalStock").val(data.TotalStock);
+                $("#ID").val(data.ID);
+                EnabledisableControlForBarCode();
+                $('#btnAddItem').prop("disabled", true);
+                $("#Quantity").val('');
+                $("#PiecesPerPack").val(data.PiecesPerPack);
+                LoosePack(data.ItemTypeID);
+                $("#LoosePack").focus();
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        })
+    }
+
     $(document).ready(function () {
+
         EnabledisableControl(true);
 
         $('#notificationLogo').text(345);
         $('#btnAddItem').prop("disabled", true);
-        $("#Name").focus();
+        $("#Barcode").focus();
 
         $("#Name").autocomplete({
             source: function (request, response) {
@@ -204,7 +249,8 @@
                         EnabledisableControl(false);
                         $('#btnAddItem').prop("disabled", true);
                         $("#Quantity").val('');
-                        $("#TotalItemPerPack").val(data.TotalItemPerPack);
+
+                        $("#PiecesPerPack").val(data.PiecesPerPack);
                         LoosePack(data.ItemTypeID );
                     },
                     error: function (jqXhr, textStatus, errorThrown) {
@@ -221,14 +267,15 @@
         var ddltest = 333;
         if (selectedVal == 'L') {
             var salePrice = $("#SalePrice").val();
-            var totalItemPerPack = $("#TotalItemPerPack").val();
-            salePrice = salePrice / totalItemPerPack;
+
+            var PiecesPerPack = $("#PiecesPerPack").val();
+            salePrice = salePrice / PiecesPerPack;
             $("#SalePrice").val(salePrice);
         }
         else if (selectedVal == 'P') {
             var salePrice = $("#SalePrice").val();
-            var totalItemPerPack = $("#TotalItemPerPack").val();
-            salePrice = salePrice * totalItemPerPack;
+            var PiecesPerPack = $("#PiecesPerPack").val();
+            salePrice = salePrice * PiecesPerPack;
             $("#SalePrice").val(salePrice);
         }
 
@@ -240,7 +287,8 @@
             data: { ItemTypeID: ItemTypeID },
             url: "/Sale/GetItemTypeName",
             success: function (ItemType) {
-                if (ItemType.Name.toUpperCase() == 'TABLET' || ItemType.Name.toUpperCase() == 'SACHET' || ItemType.Name.toUpperCase() == 'DIAPER') {
+                debugger;
+                if (ItemType.Name.toUpperCase() == 'TABLET' || ItemType.Name.toUpperCase() == 'SACHET' || ItemType.Name.toUpperCase() == 'DIAPER' || ItemType.Name.toUpperCase() == 'INJECTION') {
                     $("#LoosePack").prop("disabled", false);
                 }
                 else {
@@ -294,8 +342,9 @@
         //In such case our hidden ID got updated with the new one. So we have to find the old item id to get removed before adding a new one
         //Summary: A whole new item is added => old item is not edited => so intentions are to replace old with the new
         // => delete old one
+        debugger;
         var EditItemRowToBRemoved = $("#EditItemRowToBRemoved").val();
-
+        var barCode = $("#Barcode").val();
         var itemName = $("#Name").val();
         var price = $("#SalePrice").val();
         var Percentage = $("#SalePercentage").val();
@@ -305,29 +354,35 @@
         var looseOrPack = $("#LoosePack").val();
         var tr = '';
         if (checkHeaderRow.length == 0) {
-            tr = '<tr><th>Item Name </th>';
+
+            tr = '<tr><th style="display:none">BarCode</th>';
+            tr = tr + '<th> Item Name </th>';
             tr = tr + '<th> Price </th>';
             tr = tr + '<th> Percentage(%)</th>';
             tr = tr + '<th> Quantity </th>';
             tr = tr + '<th> Net Total </th>';
             tr = tr + '<th> Loose/Pack </th>';
             //tr = tr + '<th> Stock </th></tr>';
+            tr = tr + '<th> Delete </th>';
             $("#tblItem thead").append(tr);
         }
 
         $("#" + ItemID).remove();
         $("#" + EditItemRowToBRemoved).remove();
 
-        tr = '<tr id = "' + ItemID + '"><td>' + itemName + '</td>';
+        tr = '<tr id = "' + ItemID + '"><td style="display:none">' + barCode + '</td>';
+        tr = tr + '<td>' + itemName + '</td>';
         tr = tr + '<td>' + price + '</td>';
         tr = tr + '<td>' + Percentage + '</td>';
         tr = tr + '<td>' + quantity + '</td>';
         tr = tr + '<td>' + totalAmt + '</td>';
         tr = tr + '<td>' + looseOrPack + '</td>';
         //tr = tr + '<td>' + inStock + '</td></tr>';
+        tr = tr + '<td><a href="#" class="fa fa-trash-o"></a></td>';
         $("#tblItem").append(tr);
         updateBillCalculations();
 
+        $('#Barcode').val('');
         $('#Name').val('');
         $('#PackSize').val('');
         $('#PackLoose').val('');
@@ -348,6 +403,16 @@
 
     }
 
+    function EnabledisableControlForBarCode() {
+        debugger;
+        $('#Name').prop("disabled", false);
+        $('#LoosePack').prop("disabled", false);
+        $('#SalePrice').prop("disabled", false);
+        $('#Quantity').prop("disabled", false);
+        $('#TotalAmount').prop("disabled", false);
+        $('#SalePercentage').prop("disabled", false);
+    }
+
     function EnabledisableControl(value, no) {
         if (no == 1) {
             if (value != "" && $("#ID").val() != "") {
@@ -359,7 +424,7 @@
         }
 
         $('#PackSize').prop("disabled", value);
-        $('#PackLoose').prop("disabled", value);
+        $('#LoosePack').prop("disabled", value);
         $('#SalePrice').prop("disabled", value);
         $('#Quantity').prop("disabled", value);
         $('#TotalAmount').prop("disabled", value);
@@ -372,40 +437,58 @@
     $(function () {
 
         $('#tblItem').on('click', 'tbody tr', function (event) {
-            var selected = $(this).hasClass("highlight");
-            $("#tblItem tr").removeClass("highlight");
 
-            if (!selected) {
-                $(this).addClass("highlight")/*.siblings().removeClass('    highlight')*/;
-                $("#Name").val(this.cells[0].textContent);
-                $("#SalePrice").val(this.cells[1].textContent);
-                $("#SalePercentage").val(this.cells[2].textContent);
-                $("#Quantity").val(this.cells[3].textContent);
-                $("#TotalAmount").val(this.cells[4].textContent);
-                $("#TotalStock").val(this.cells[5].textContent);
-
-                $("#ID").val(this.id);
-                $("#EditItemRowToBRemoved").val(this.id);
-                //$("#EditItemRowToBRemoved").prop('id', this.id);
-
-                $('#btnAddItem').prop("disabled", false);
-                EnabledisableControl(false);
-                $("#Name").focus();
+            if (event.target.className === 'fa fa-trash-o') {
+                $(this.remove());
+                updateBillCalculations();
+                var tr = $("#tblItem tbody tr");
+                if (tr.length == 0) {
+                    var theadToBRemoved = $("#tblItem thead tr");
+                    $(theadToBRemoved.remove());
+                    EnabledisableControl(true);
+                    $("#btnSave").prop("disabled", true);
+                    $("#btnPrint").prop("disabled", true);
+                    $("#btnSavePrint").prop("disabled", true);
+                }
             }
             else {
-                $("#Name").val('');
-                $("#SalePrice").val('');
-                $("#SalePercentage").val('');
-                $("#Quantity").val('');
-                $("#TotalAmount").val('');
-                $("#TotalStock").val('');
-                $("#EditItemRowToBRemoved").val("");
-                $("#ID").val("");
+                var selected = $(this).hasClass("highlight");
+                $("#tblItem tr").removeClass("highlight");
 
-                EnabledisableControl(true);
-                $('#btnAddItem').prop("disabled", true);
+                if (!selected) {
+                    $(this).addClass("highlight")/*.siblings().removeClass('    highlight')*/;
+                    $("#Barcode").val(this.cells[0].textContent);
+                    $("#Name").val(this.cells[1].textContent);
+                    $("#SalePrice").val(this.cells[2].textContent);
+                    $("#SalePercentage").val(this.cells[3].textContent);
+                    $("#Quantity").val(this.cells[4].textContent);
+                    $("#TotalAmount").val(this.cells[5].textContent);
+                    $("#TotalStock").val(this.cells[6].textContent);
+
+                    $("#ID").val(this.id);
+                    $("#EditItemRowToBRemoved").val(this.id);
+                    //$("#EditItemRowToBRemoved").prop('id', this.id);
+
+                    $('#btnAddItem').prop("disabled", false);
+                    EnabledisableControl(false);
+                    $("#Barcode").focus();
+                }
+                else {
+                    debugger;
+                    $("#Barcode").val('');
+                    $("#Name").val('');
+                    $("#SalePrice").val('');
+                    $("#SalePercentage").val('');
+                    $("#Quantity").val('');
+                    $("#TotalAmount").val('');
+                    $("#TotalStock").val('');
+                    $("#EditItemRowToBRemoved").val("");
+                    $("#ID").val("");
+
+                    EnabledisableControl(true);
+                    $('#btnAddItem').prop("disabled", true);
+                }
             }
-
         });
 
         $('#btnRowClick').click(function (e) {
@@ -424,8 +507,8 @@
         var TotalBillAmtBeforePercentage = 0;
         var TotalBillAmtAfterPercentage = 0;
         $('#tblItem tbody tr').each(function (i, row) {
-            var itemTotalBeforePerc = parseInt(row.cells[4].textContent);
-            var itemPercentage = parseInt(row.cells[2].textContent);
+            var itemTotalBeforePerc = parseFloat(row.cells[5].textContent);
+            var itemPercentage = parseInt(row.cells[3].textContent);
             var itemTotalAfterPerc = itemTotalBeforePerc - (itemPercentage / 100 * itemTotalBeforePerc);
 
             TotalBillAmtBeforePercentage = TotalBillAmtBeforePercentage + itemTotalBeforePerc;
@@ -435,14 +518,14 @@
         $("#sumTotalAmtBeforeDiscount").text(TotalBillAmtBeforePercentage);
         $("#sumTotalAmtAfterDiscount").text(Math.ceil(TotalBillAmtAfterPercentage));
         OnPayment();
-        $("#Name").focus();
+        $("#Barcode").focus();
     }
 
     function saveSale() {
         var saleArray = [];
         $('#tblItem tbody tr').each(function (i, row) {
-            var salePercentage = parseInt($(row).find('td').eq(2).text());
-            debugger;
+            var salePercentage = parseInt($(row).find('td').eq(3).text());
+
             var sumTotalAmtAfterDiscount = $("#sumTotalAmtAfterDiscount").text();
             var arears = $("#Arears").text();
             if (sumTotalAmtAfterDiscount >= 100) {
@@ -468,13 +551,13 @@
             }
             $("#sumTotalAmtAfterDiscount").text(sumTotalAmtAfterDiscount);
             $("#Arears").text(arears);
-            
+
             saleArray.push({
-                Name: $(row).find('td').eq(0).text(),
-                SalePrice: $(row).find('td').eq(1).text(),
-                Quantity: $(row).find('td').eq(3).text(),
-                LoosePack: $(row).find('td').eq(5).text(),
-                TotalItemPerPack: $("#TotalItemPerPack").val(),
+                Name: $(row).find('td').eq(1).text(),
+                SalePrice: $(row).find('td').eq(2).text(),
+                Quantity: $(row).find('td').eq(4).text(),
+                LoosePack: $(row).find('td').eq(6).text(),
+                PiecesPerPack: $("#PiecesPerPack").val(),
                 TotalBeforePercentage: $("#sumTotalAmtBeforeDiscount").text(),
                 TotalAfterPercentage: $("#sumTotalAmtAfterDiscount").text(),
                 SpecialDiscount: $("#specialDiscount").val(),
@@ -483,7 +566,7 @@
                 SalePercentage: salePercentage
             });
         });
-        
+
         $.ajax({
             type: "POST",
             data: { sale: saleArray },
@@ -494,7 +577,8 @@
             //datatype: 'json',
             //contentType: "application/json",
             success: function (result) {
-                window.location=  '@Url.Action("AddSale", "Sale"@*, new { orderNo = 1 }*@)';
+                window.location = '@Url.Action("AddSale", "Sale"@*, new { orderNo = 1 }*@)';
+                $("#todayTotalSale").text(dfdf);
             },
             error: function (jqXhr, textStatus, errorThrown) {
                 console.log(errorThrown);
@@ -506,7 +590,7 @@
         var saleArray = [];
         $('#tblItem tbody tr').each(function (i, row) {
             var salePercentage = parseInt($(row).find('td').eq(2).text());
-            debugger;
+
             var sumTotalAmtAfterDiscount = $("#sumTotalAmtAfterDiscount").text();
             var arears = $("#Arears").text();
            if (sumTotalAmtAfterDiscount >= 100) {
@@ -538,7 +622,7 @@
                 SalePrice: $(row).find('td').eq(1).text(),
                 Quantity: $(row).find('td').eq(3).text(),
                 LoosePack: $(row).find('td').eq(5).text(),
-                TotalItemPerPack: $("#TotalItemPerPack").val(),
+                PiecesPerPack: $("#PiecesPerPack").val(),
                 TotalBeforePercentage: $("#sumTotalAmtBeforeDiscount").text(),
                 TotalAfterPercentage: $("#sumTotalAmtAfterDiscount").text(),
                 SpecialDiscount: $("#specialDiscount").val(),
@@ -547,7 +631,6 @@
                 SalePercentage: salePercentage
             });
         });
-
          $.ajax({
             type: "POST",
             data: { sale: saleArray },
@@ -560,5 +643,6 @@
             }
         })
     }
+
 
 </script>

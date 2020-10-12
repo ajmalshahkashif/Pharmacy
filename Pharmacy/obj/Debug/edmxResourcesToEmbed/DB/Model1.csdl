@@ -21,6 +21,21 @@
       <End Role="Sale" EntitySet="Sales" />
     </AssociationSet>
     <EntitySet Name="ItemSaleItemSales" EntityType="PharmacyModel.ItemSaleItemSale" />
+    <EntitySet Name="SaleItems" EntityType="PharmacyModel.SaleItem" />
+    <AssociationSet Name="FK_SaleItem_Sale" Association="PharmacyModel.FK_SaleItem_Sale">
+      <End Role="Sale" EntitySet="Sales" />
+      <End Role="SaleItem" EntitySet="SaleItems" />
+    </AssociationSet>
+    <EntitySet Name="SaleReturns" EntityType="PharmacyModel.SaleReturn" />
+    <EntitySet Name="SaleReturnItems" EntityType="PharmacyModel.SaleReturnItem" />
+    <AssociationSet Name="FK_SaleReturn_Customer" Association="PharmacyModel.FK_SaleReturn_Customer">
+      <End Role="Customer" EntitySet="Customers" />
+      <End Role="SaleReturn" EntitySet="SaleReturns" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleReturnItem_SaleReturn" Association="PharmacyModel.FK_SaleReturnItem_SaleReturn">
+      <End Role="SaleReturn" EntitySet="SaleReturns" />
+      <End Role="SaleReturnItem" EntitySet="SaleReturnItems" />
+    </AssociationSet>
     <EntitySet Name="Items" EntityType="PharmacyModel.Item" />
     <AssociationSet Name="FK_Item_Company" Association="PharmacyModel.FK_Item_Company">
       <End Role="Company" EntitySet="Companies" />
@@ -29,19 +44,6 @@
     <AssociationSet Name="FK_Item_ItemType" Association="PharmacyModel.FK_Item_ItemType">
       <End Role="ItemType" EntitySet="ItemTypes" />
       <End Role="Item" EntitySet="Items" />
-    </AssociationSet>
-    <AssociationSet Name="FK_Purchase_Item" Association="PharmacyModel.FK_Purchase_Item">
-      <End Role="Item" EntitySet="Items" />
-      <End Role="PurchaseItem" EntitySet="PurchaseItems" />
-    </AssociationSet>
-    <EntitySet Name="SaleItems" EntityType="PharmacyModel.SaleItem" />
-    <AssociationSet Name="FK_SaleItem_Item" Association="PharmacyModel.FK_SaleItem_Item">
-      <End Role="Item" EntitySet="Items" />
-      <End Role="SaleItem" EntitySet="SaleItems" />
-    </AssociationSet>
-    <AssociationSet Name="FK_SaleItem_Sale" Association="PharmacyModel.FK_SaleItem_Sale">
-      <End Role="Sale" EntitySet="Sales" />
-      <End Role="SaleItem" EntitySet="SaleItems" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Company">
@@ -66,6 +68,7 @@
     <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="isActive" Type="Boolean" />
     <NavigationProperty Name="Sales" Relationship="PharmacyModel.FK_Sale_Customer" FromRole="Customer" ToRole="Sale" />
+    <NavigationProperty Name="SaleReturns" Relationship="PharmacyModel.FK_SaleReturn_Customer" FromRole="Customer" ToRole="SaleReturn" />
   </EntityType>
   <EntityType Name="ItemType">
     <Key>
@@ -125,7 +128,6 @@
     <Property Name="Quantity" Type="Int32" />
     <Property Name="SalePrice" Type="Decimal" Precision="18" Scale="0" />
     <NavigationProperty Name="Purchase" Relationship="PharmacyModel.FK_PurchaseItems_Purchase" FromRole="PurchaseItem" ToRole="Purchase" />
-    <NavigationProperty Name="Item" Relationship="PharmacyModel.FK_Purchase_Item" FromRole="PurchaseItem" ToRole="Item" />
   </EntityType>
   <Association Name="FK_PurchaseItems_Purchase">
     <End Type="PharmacyModel.Purchase" Role="Purchase" Multiplicity="0..1" />
@@ -187,11 +189,87 @@
     <Property Name="SalePrice" Type="Decimal" Precision="18" Scale="2" />
     <Property Name="SpecialDiscount" Type="Int32" />
   </EntityType>
+  <EntityType Name="SaleItem">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SaleID" Type="Int32" />
+    <Property Name="ItemID" Type="Int32" />
+    <Property Name="SalePercentage" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="LoosePack" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+    <NavigationProperty Name="Sale" Relationship="PharmacyModel.FK_SaleItem_Sale" FromRole="SaleItem" ToRole="Sale" />
+  </EntityType>
+  <Association Name="FK_SaleItem_Sale">
+    <End Type="PharmacyModel.Sale" Role="Sale" Multiplicity="0..1" />
+    <End Type="PharmacyModel.SaleItem" Role="SaleItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sale">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleItem">
+        <PropertyRef Name="SaleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="SaleReturn">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CustomerID" Type="Int32" />
+    <Property Name="DateOfSaleReturn" Type="DateTime" Precision="3" />
+    <Property Name="TotalBeforePercentage" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="TotalAfterPercentage" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="AmountPaid" Type="Int32" />
+    <Property Name="Arears" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="SpecialDiscount" Type="Int32" />
+    <NavigationProperty Name="Customer" Relationship="PharmacyModel.FK_SaleReturn_Customer" FromRole="SaleReturn" ToRole="Customer" />
+    <NavigationProperty Name="SaleReturnItems" Relationship="PharmacyModel.FK_SaleReturnItem_SaleReturn" FromRole="SaleReturn" ToRole="SaleReturnItem" />
+  </EntityType>
+  <EntityType Name="SaleReturnItem">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SaleReturnID" Type="Int32" />
+    <Property Name="ItemID" Type="Int32" />
+    <Property Name="SalePercentage" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="LoosePack" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+    <NavigationProperty Name="SaleReturn" Relationship="PharmacyModel.FK_SaleReturnItem_SaleReturn" FromRole="SaleReturnItem" ToRole="SaleReturn" />
+  </EntityType>
+  <Association Name="FK_SaleReturn_Customer">
+    <End Type="PharmacyModel.Customer" Role="Customer" Multiplicity="0..1" />
+    <End Type="PharmacyModel.SaleReturn" Role="SaleReturn" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Customer">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleReturn">
+        <PropertyRef Name="CustomerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleReturnItem_SaleReturn">
+    <End Type="PharmacyModel.SaleReturn" Role="SaleReturn" Multiplicity="0..1" />
+    <End Type="PharmacyModel.SaleReturnItem" Role="SaleReturnItem" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SaleReturn">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleReturnItem">
+        <PropertyRef Name="SaleReturnID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityType Name="Item">
     <Key>
       <PropertyRef Name="ID" />
     </Key>
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Barcode" Type="String" Nullable="false" MaxLength="16" FixedLength="true" Unicode="false" />
     <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="Description" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
     <Property Name="Shelf" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -208,15 +286,15 @@
     <Property Name="PurchasePercentage" Type="Int32" />
     <Property Name="SalePercentage" Type="Int32" />
     <Property Name="TotalStock" Type="Int32" />
+    <Property Name="LooseQuantitySold" Type="Int32" />
     <Property Name="SpecialDiscount" Type="Int32" />
     <Property Name="StripPerPack" Type="Int32" />
     <Property Name="TabPerStrip" Type="Int32" />
     <Property Name="TotalItemPerPack" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="LowStockQuantity" Type="Int32" />
+    <Property Name="CriticalLowStockQuantity" Type="Int32" />
     <NavigationProperty Name="Company" Relationship="PharmacyModel.FK_Item_Company" FromRole="Item" ToRole="Company" />
     <NavigationProperty Name="ItemType" Relationship="PharmacyModel.FK_Item_ItemType" FromRole="Item" ToRole="ItemType" />
-    <NavigationProperty Name="PurchaseItems" Relationship="PharmacyModel.FK_Purchase_Item" FromRole="Item" ToRole="PurchaseItem" />
-    <Property Name="LooseQuantitySold" Type="Int32" />
-    <NavigationProperty Name="SaleItems" Relationship="PharmacyModel.FK_SaleItem_Item" FromRole="Item" ToRole="SaleItem" />
   </EntityType>
   <Association Name="FK_Item_Company">
     <End Type="PharmacyModel.Company" Role="Company" Multiplicity="0..1" />
@@ -239,55 +317,6 @@
       </Principal>
       <Dependent Role="Item">
         <PropertyRef Name="ItemTypeID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Purchase_Item">
-    <End Type="PharmacyModel.Item" Role="Item" Multiplicity="0..1" />
-    <End Type="PharmacyModel.PurchaseItem" Role="PurchaseItem" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Item">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="PurchaseItem">
-        <PropertyRef Name="ItemID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <EntityType Name="SaleItem">
-    <Key>
-      <PropertyRef Name="ID" />
-    </Key>
-    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="SaleID" Type="Int32" />
-    <Property Name="ItemID" Type="Int32" />
-    <Property Name="SalePercentage" Type="Int32" />
-    <Property Name="Quantity" Type="Int32" />
-    <Property Name="LoosePack" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
-    <NavigationProperty Name="Item" Relationship="PharmacyModel.FK_SaleItem_Item" FromRole="SaleItem" ToRole="Item" />
-    <NavigationProperty Name="Sale" Relationship="PharmacyModel.FK_SaleItem_Sale" FromRole="SaleItem" ToRole="Sale" />
-  </EntityType>
-  <Association Name="FK_SaleItem_Item">
-    <End Type="PharmacyModel.Item" Role="Item" Multiplicity="0..1" />
-    <End Type="PharmacyModel.SaleItem" Role="SaleItem" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Item">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="SaleItem">
-        <PropertyRef Name="ItemID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_SaleItem_Sale">
-    <End Type="PharmacyModel.Sale" Role="Sale" Multiplicity="0..1" />
-    <End Type="PharmacyModel.SaleItem" Role="SaleItem" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Sale">
-        <PropertyRef Name="ID" />
-      </Principal>
-      <Dependent Role="SaleItem">
-        <PropertyRef Name="SaleID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

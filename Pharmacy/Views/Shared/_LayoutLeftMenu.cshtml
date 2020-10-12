@@ -25,9 +25,9 @@
             <!-- Logo -->
             <a href="index2.html" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>P/C</b></span>
+                <span class="logo-mini"><b>L/C</b></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">PharmaCare</span>
+                <span class="logo-lg">LifeCare</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -42,37 +42,36 @@
                         <li class="dropdown notifications-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning" id="notificationLogo">10</span>
+                                <span class="label label-warning" id="notificationLogo">14</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="header">You have 10 notifications</li>
+                                <li class="header"></li>
                                 <li>
                                     <!-- inner menu: contains the actual data -->
                                     <ul class="menu">
                                         <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                            <a href="#" class="text-green">
+                                                <i class="fa fa-dollar"></i> Today's Sale: <span class="badge" id="todayTotalSale">@ViewBag.totalSales</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("AlarmingStockItem","Item",new {ItemIntensity =  "LowStockItem"})" class="text-yellow">
+                                                <i class="fa fa-warning"></i> Low Stock Items: <span class="badge" id="totalLowStockItems">@ViewBag.TotalLowStockItems</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("AlarmingStockItem","Item",new { ItemIntensity = "CriticalLowStockItem"})" class="text-red">
+                                                <i class="fa fa-exclamation-triangle"></i> Critical Low Stock Items: <span class="badge" id="totalCriticalLowStockItems">@ViewBag.TotalCriticalLowStockItems</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="text-green">
+                                                <i class="fa fa-shopping-cart text-green"></i> Sales made are: <span class="badge">95</span>
                                             </a>
                                         </li>
                                         <li>
                                             <a href="#">
-                                                <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                                                page and may cause design problems
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-red"></i> 5 new members joined
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-user text-red"></i> You changed your username
+                                                @*<i class="fa fa-money text-blue"></i> You changed your username*@
                                             </a>
                                         </li>
                                     </ul>
@@ -89,13 +88,16 @@
 
                             <ul class="dropdown-menu">
 
-                                <li class="user-header">
+                                <li class="user-header" style="height:200px">
                                     <img src="~/Pharma image/pharma1.jpg" class="img-circle" alt="User Image" />
 
                                     <p>
-                                        Ajmal Shah Kashif - Microsoft Dynamics 365 Consultant
-                                        <small>Member since Nov. 2016</small>
+                                        Ajmal Shah Kashif
                                     </p>
+                                    <p>
+                                        Associate Software Engineer<small>Member since Nov. 2016</small>
+                                    </p>
+
                                 </li>
 
                                 <li class="user-footer">
@@ -211,6 +213,8 @@
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("AddSaleReturn","SaleReturn")"><i class="fa fa-circle-o"></i> Sale Return</a></li>
                             <li><a href="@Url.Action("","")"><i class="fa fa-circle-o"></i> Purchase Return</a></li>
+                            <li><a href="@Url.Action("","")"><i class="fa fa-circle-o"></i> All Sales Return</a></li>
+                            <li><a href="@Url.Action("","")"><i class="fa fa-circle-o"></i> All Purchases Return</a></li>
                         </ul>
                     </li>
 
@@ -266,6 +270,18 @@
                         </ul>
                     </li>
 
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-folder"></i> <span>Miscellaneous</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="@Url.Action("AlarmingStockItem","Item",new {ItemIntensity =  "LowStockItem"})"><i class="fa fa-circle-o"></i> Low Stock Items</a></li>
+                            <li><a href="@Url.Action("AlarmingStockItem","Item",new { ItemIntensity = "CriticalLowStockItem" })"><i class="fa fa-circle-o"></i> Critical Low Stock Items</a></li>
+                        </ul>
+                    </li>
                 </ul>
 
             </section>

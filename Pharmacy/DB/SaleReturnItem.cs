@@ -12,15 +12,15 @@ namespace Pharmacy.DB
     using System;
     using System.Collections.Generic;
     
-    public partial class SaleItem
+    public partial class SaleReturnItem
     {
         public int ID { get; set; }
-        public Nullable<int> SaleID { get; set; }
+        public Nullable<int> SaleReturnID { get; set; }
         public Nullable<int> ItemID { get; set; }
         public Nullable<int> SalePercentage { get; set; }
         public Nullable<int> Quantity { get; set; }
         public string LoosePack { get; set; }
     
-        public virtual Sale Sale { get; set; }
+        public virtual SaleReturn SaleReturn { get; set; }
     }
 }

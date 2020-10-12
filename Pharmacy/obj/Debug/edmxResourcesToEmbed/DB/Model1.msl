@@ -104,14 +104,54 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="SaleItems">
+      <EntityTypeMapping TypeName="PharmacyModel.SaleItem">
+        <MappingFragment StoreEntitySet="SaleItem">
+          <ScalarProperty Name="LoosePack" ColumnName="LoosePack" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="SaleID" ColumnName="SaleID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SaleReturns">
+      <EntityTypeMapping TypeName="PharmacyModel.SaleReturn">
+        <MappingFragment StoreEntitySet="SaleReturn">
+          <ScalarProperty Name="SpecialDiscount" ColumnName="SpecialDiscount" />
+          <ScalarProperty Name="Arears" ColumnName="Arears" />
+          <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+          <ScalarProperty Name="TotalAfterPercentage" ColumnName="TotalAfterPercentage" />
+          <ScalarProperty Name="TotalBeforePercentage" ColumnName="TotalBeforePercentage" />
+          <ScalarProperty Name="DateOfSaleReturn" ColumnName="DateOfSaleReturn" />
+          <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SaleReturnItems">
+      <EntityTypeMapping TypeName="PharmacyModel.SaleReturnItem">
+        <MappingFragment StoreEntitySet="SaleReturnItem">
+          <ScalarProperty Name="LoosePack" ColumnName="LoosePack" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
+          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
+          <ScalarProperty Name="SaleReturnID" ColumnName="SaleReturnID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Items">
       <EntityTypeMapping TypeName="PharmacyModel.Item">
         <MappingFragment StoreEntitySet="Item">
-          <ScalarProperty Name="LooseQuantitySold" ColumnName="LooseQuantitySold" />
+          <ScalarProperty Name="CriticalLowStockQuantity" ColumnName="CriticalLowStockQuantity" />
+          <ScalarProperty Name="LowStockQuantity" ColumnName="LowStockQuantity" />
           <ScalarProperty Name="TotalItemPerPack" ColumnName="TotalItemPerPack" />
           <ScalarProperty Name="TabPerStrip" ColumnName="TabPerStrip" />
           <ScalarProperty Name="StripPerPack" ColumnName="StripPerPack" />
           <ScalarProperty Name="SpecialDiscount" ColumnName="SpecialDiscount" />
+          <ScalarProperty Name="LooseQuantitySold" ColumnName="LooseQuantitySold" />
           <ScalarProperty Name="TotalStock" ColumnName="TotalStock" />
           <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
           <ScalarProperty Name="PurchasePercentage" ColumnName="PurchasePercentage" />
@@ -128,18 +168,7 @@
           <ScalarProperty Name="Shelf" ColumnName="Shelf" />
           <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="SaleItems">
-      <EntityTypeMapping TypeName="PharmacyModel.SaleItem">
-        <MappingFragment StoreEntitySet="SaleItem">
-          <ScalarProperty Name="LoosePack" ColumnName="LoosePack" />
-          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-          <ScalarProperty Name="SalePercentage" ColumnName="SalePercentage" />
-          <ScalarProperty Name="ItemID" ColumnName="ItemID" />
-          <ScalarProperty Name="SaleID" ColumnName="SaleID" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
           <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>

@@ -69,9 +69,6 @@ namespace Pharmacy.Controllers
             return Json(item, JsonRequestBehavior.AllowGet);
         }
 
-
-
-
         #region Print Code
         public ActionResult Report(string id)
         {
@@ -219,10 +216,21 @@ namespace Pharmacy.Controllers
 
         #endregion
 
-
-
-
-
+        public JsonResult GetItemByBarCode(string barCode)
+        {
+            var item = context.Items.Where(x => x.Barcode == barCode).Select(x => new
+            {
+                ID = x.ID,
+                Barcode = x.Barcode,
+                Name = x.Name,
+                PurchasePrice = x.PurchasePrice,
+                SalePrice = x.SalePrice,
+                SalePercentage = x.SalePercentage,
+                PurchasePercentage = x.PurchasePercentage,
+                TotalStock = x.TotalStock
+            }).FirstOrDefault();
+            return Json(item, JsonRequestBehavior.AllowGet);
+        }
 
 
         [HttpPost]

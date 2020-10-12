@@ -6,15 +6,12 @@ using System.Web;
 
 namespace Pharmacy.Models
 {
-    public class SaleValidation
+    public class SaleReturnValidation
     {
         //[Display(Name = "Purchase %(u get)")]
         //[Required(ErrorMessage = "Provide % you'll get")]
         //[RegularExpression("([1-9][0-9]*)", ErrorMessage = "Only Natural No")]
         public int ID { get; set; }
-
-        public string Barcode { get; set; }
-
 
         [Required(ErrorMessage = "provide name")]
         public string Name { get; set; }

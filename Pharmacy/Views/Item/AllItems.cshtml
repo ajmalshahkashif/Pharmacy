@@ -13,50 +13,65 @@
         color: #000000;
     }
 </style>
+
 @using Pharmacy.Models
 @*TODO: Two options (1)Take Model Class  (2)Take original Class i.e. from DB Which approach is best*@
 @*@(Html.Kendo().Grid<Item>*@
-@(Html.Kendo().Grid<ItemValidation>().Name("GridName").Columns(c =>
-{
-    //c.Bound(p => p.ID).Visible(false);
-    c.Bound(p => p.Name).Title("Name").Width(150);
-    c.Bound(p => p.PurchasePrice).Title("Purchase Price").Width(135);
-    c.Bound(p => p.SalePrice).Title("Sale Price").Width(135);
-    c.Bound(p => p.SalePercentage).Title("Sale %age").Width(135);
-    c.Bound(p => p.PurchasePercentage).Title("Purchase %age").Width(135);
-    c.Bound(p => p.Shelf).Title("Shelf").Width(70);
-    c.Bound(p => p.TotalStock).Title("Stock").Width(70);
-    //c.Bound(p => p.Description).Title("Description").Width(100);
-    //c.Command(commands => commands.Custom("Edit")).Width(150);
-    c.Command(command => { command.Edit(); command.Destroy(); }).Width(182);
-    //c.Bound(p => p.ItemTypeID).Title("Item Category").Width(130).ClientTemplate(@"<button>hi</button>");
+@(Html.Kendo().Grid<ItemValidation>
+    ().Name("grdItems").Columns(c =>
+    {
+        //c.Bound(p => p.ID).Visible(false);
+        c.Bound(p => p.Barcode).Title("Barcode").Width(125);
+        c.Bound(p => p.Name).Title("Name").Width(150);
+        c.Bound(p => p.ItemTypeName).Title("Item Type").Width(85);
+        c.Bound(p => p.PurchasePrice).Title("Pur Price").Width(75);
+        c.Bound(p => p.SalePrice).Title("Sale Price").Width(80);
+        c.Bound(p => p.SalePercentage).Title("Sale %age").Width(80);
+        c.Bound(p => p.PurchasePercentage).Title("Pur %age").Width(80);
+        c.Bound(p => p.PiecesPerPack).Title("Pieces/Pack").Width(90);
+        c.Bound(p => p.TotalStock).Title("Stock").Width(55);
+        c.Bound(p => p.LowStockQuantity).Title("Low Quantity").Width(97);
+        c.Bound(p => p.CriticalLowStockQuantity).Title("Critical Low").Width(90);
+        //c.Bound(p => p.LooseQuantitySold).Title("Loose Quantity Sold").Width(155);
+        //c.Bound(p => p.Description).Title("Description").Width(100);
+        //c.Command(commands => commands.Custom("Edit")).Width(150);
+        c.Command(command => { command.Edit(); command.Destroy(); /*command.Custom("Update").Click("RedirectItemUpdate");*/ }).Width(210);
+        //c.Bound(p => p.ItemTypeID).Title("Item Category").Width(130).ClientTemplate(@"<button>hi</button>");
 
-})
-.DataSource(d => d
-.Ajax()
-
-.Read(r => r.Action("GetItemList", "Item"))
-.Update(r => r.Action("UpdateItem", "Item"))
-.Destroy(r => r.Action("DeleteItem", "Item"))
-
-.PageSize(10)
-//.Events(events => events.Error("error_handler"))
-.Model(model => model.Id(p => p.ID))
-)
-.Pageable()
-.Sortable()
-.Filterable()
-.Groupable()
-.Scrollable()
-.Selectable()
-.Resizable(resize => resize.Columns(true))
-
+    })
+    .DataSource(d => d
+    .Ajax()
+    .Read(r => r.Action("GetItemList", "Item"))
+    .Update(r => r.Action("UpdateItem", "Item"))
+    .Destroy(r => r.Action("DeleteItem", "Item"))
+    .PageSize(20)
+    //.Events(events => events.Error("error_handler"))
+    .Model(model => model.Id(p => p.ID))
+    .Model(model => model.Field(p => p.ItemTypeName).Editable(false))
+    )
+    .Pageable()
+    .Sortable()
+    .Filterable()
+    .Groupable()
+    .Scrollable()
+    .Selectable()
+    .Resizable(resize => resize.Columns(true))
 )
 
 <script type="text/javascript">
+    //Below is for the custom button in the grid, which will be used to call AddItem function. That function will be used to update the clicked item in the New Item window
+    @*function RedirectItemUpdate(e) {
+        debugger;
+        //e.preventDefault();
+        var dataItem1 = this.dataItem($(e.target).closest("tr"));
+        //var dataItem2 = this.dataItem($(e.currentTarget).closest("tr"));
+        var id = dataItem1.ID;
+        //location.href = "@Url.Action("", "Item/AddItem")?id="+id;
+        window.location.href = "@Url.Action("AddItem", "Item")?id=" + id;
+    }*@
 
     $(document).ready(function () {
-        $('GridName').dblclick(function () {
+        $('grdItems').dblclick(function () {
             alert('dblclick');
         });
     });

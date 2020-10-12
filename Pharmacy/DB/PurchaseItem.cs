@@ -24,6 +24,5 @@ namespace Pharmacy.DB
         public Nullable<decimal> SalePrice { get; set; }
     
         public virtual Purchase Purchase { get; set; }
-        public virtual Item Item { get; set; }
     }
 }

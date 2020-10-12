@@ -33,7 +33,9 @@ namespace Pharmacy.DB
         public virtual DbSet<PurchaseItem> PurchaseItems { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<ItemSaleItemSale> ItemSaleItemSales { get; set; }
-        public virtual DbSet<Item> Items { get; set; }
         public virtual DbSet<SaleItem> SaleItems { get; set; }
+        public virtual DbSet<SaleReturn> SaleReturns { get; set; }
+        public virtual DbSet<SaleReturnItem> SaleReturnItems { get; set; }
+        public virtual DbSet<Item> Items { get; set; }
     }
 }

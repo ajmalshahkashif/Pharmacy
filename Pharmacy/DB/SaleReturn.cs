@@ -12,24 +12,25 @@ namespace Pharmacy.DB
     using System;
     using System.Collections.Generic;
     
-    public partial class Customer
+    public partial class SaleReturn
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Customer()
+        public SaleReturn()
         {
-            this.Sales = new HashSet<Sale>();
-            this.SaleReturns = new HashSet<SaleReturn>();
+            this.SaleReturnItems = new HashSet<SaleReturnItem>();
         }
     
         public int ID { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string Description { get; set; }
-        public Nullable<bool> isActive { get; set; }
+        public Nullable<int> CustomerID { get; set; }
+        public Nullable<System.DateTime> DateOfSaleReturn { get; set; }
+        public Nullable<decimal> TotalBeforePercentage { get; set; }
+        public Nullable<decimal> TotalAfterPercentage { get; set; }
+        public Nullable<int> AmountPaid { get; set; }
+        public Nullable<decimal> Arears { get; set; }
+        public Nullable<int> SpecialDiscount { get; set; }
     
+        public virtual Customer Customer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Sale> Sales { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SaleReturn> SaleReturns { get; set; }
+        public virtual ICollection<SaleReturnItem> SaleReturnItems { get; set; }
     }
 }

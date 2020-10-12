@@ -1,0 +1,51 @@
+﻿@using Kendo.Mvc.UI
+@using Pharmacy.Models
+
+@{
+    ViewBag.Title = "AlarmingStockItem";
+    Layout = "~/Views/Shared/_LayoutLeftMenu.cshtml";
+}
+
+<style>
+    .k-grid .k-state-selected {
+        background-color: #77a496 !important;
+        border: #000000;
+        color: #000000;
+    }
+</style>
+
+@(Html.Kendo().Grid<ItemValidation>
+    ().Name("grdItems").Columns(c =>
+    {
+        //c.Bound(p => p.ID).Visible(false);
+        c.Bound(p => p.Name).Title("Name").Width(150);
+        c.Bound(p => p.TotalStock).Title("Total Stock").Width(53);
+        c.Bound(p => p.LooseQuantitySold).Title("Loose Quantity Sold").Width(85);
+        c.Bound(p => p.LowStockQuantity).Title("Low Stock Quantity").Width(82);
+        c.Bound(p => p.CriticalLowStockQuantity).Title("Critical Low Stock Quantity").Width(108);
+        c.Command(command => { command.Edit(); }).Width(102);
+
+        //c.Bound(p => p.LooseQuantitySold).Title("Loose Quantity Sold").Width(155);
+
+    })
+    .DataSource(d => d
+    .Ajax()
+    .Read(r => r.Action("GetAlarmingItemList", "Item", new { ItemIntensity = @ViewBag.ItemIntensity }))
+    .Update(r => r.Action("AlarmingItemUpdate", "Item"))
+    .PageSize(10)
+    //.Events(events => events.Error("error_handler"))
+    .Model(model => model.Id(p => p.ID))
+    .Model(model => model.Field(p => p.Name).Editable(false))
+    .Model(model => model.Field(p => p.TotalStock).Editable(false))
+    .Model(model => model.Field(p => p.LooseQuantitySold).Editable(false))
+    .Model(model => model.Field(p => p.StripPerPack).Editable(false))
+    .Model(model => model.Field(p => p.TabPerStrip).Editable(false))
+    )
+    .Pageable()
+    .Sortable()
+    .Filterable()
+    .Groupable()
+    .Scrollable()
+    .Selectable()
+    .Resizable(resize => resize.Columns(true))
+)

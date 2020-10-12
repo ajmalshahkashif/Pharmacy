@@ -11,6 +11,8 @@ namespace Pharmacy.Models
     {
         public int ID { get; set; }
 
+        public string Barcode { get; set; }
+
 
         [Required(ErrorMessage = "provide name")]
         public string Name { get; set; }

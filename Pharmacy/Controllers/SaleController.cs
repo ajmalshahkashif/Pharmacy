@@ -65,10 +65,27 @@ namespace Pharmacy.Controllers
                 SalePercentage = x.SalePercentage,
                 TotalStock = x.TotalStock,
                 ItemTypeID = x.ItemTypeID,
-                TotalItemPerPack = x.TotalItemPerPack
+                PiecesPerPack = x.PiecesPerPack
             }).FirstOrDefault();
             return Json(item, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult GetItemByBarCode(string barCode)
+        {
+            var item = context.Items.Where(x => x.Barcode == barCode).Select(x => new
+            {
+                ID = x.ID,
+                Barcode = x.Barcode,
+                Name = x.Name,
+                SalePrice = x.SalePrice,
+                SalePercentage = x.SalePercentage,
+                TotalStock = x.TotalStock,
+                ItemTypeID = x.ItemTypeID,
+                PiecesPerPack = x.PiecesPerPack
+            }).FirstOrDefault();
+            return Json(item, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpPost]
         public JsonResult SaveSaleItems(List<SaleValidation> sale)
@@ -110,17 +127,17 @@ namespace Pharmacy.Controllers
                 else if (n.LoosePack == "L")
                 {
                     Item.LooseQuantitySold += n.Quantity;
-                    if (Item.LooseQuantitySold >= n.TotalItemPerPack)
+                    if (Item.LooseQuantitySold >= n.PiecesPerPack)
                     {
-                        int? packSold = Item.LooseQuantitySold / n.TotalItemPerPack;
-                        int? looseQuantityleftAfterPackomission = Item.LooseQuantitySold % n.TotalItemPerPack;
+                        int? packSold = Item.LooseQuantitySold / n.PiecesPerPack;
+                        int? looseQuantityleftAfterPackomission = Item.LooseQuantitySold % n.PiecesPerPack;
                         Item.TotalStock -= packSold;
                         Item.LooseQuantitySold = looseQuantityleftAfterPackomission;
 
                     }
                 }
                 //TODO: remove last line. just to save saleprice at run time
-                //Item.SalePrice = n.SalePrice;
+                Item.SalePrice = n.SalePrice;
                 context.SaveChanges();
             }
 
@@ -157,7 +174,7 @@ namespace Pharmacy.Controllers
 
         #region Print Code
 
-        public ActionResult Report(List<ItemSaleItemSale> sale)
+        public ActionResult Report(List<ItemSaleItemSaleValidation> sale)
         {
             List<SaleValidation> saleValidation = new List<SaleValidation>();
             foreach (var s in sale) /*SpecialDiscount = 0*/
@@ -168,7 +185,7 @@ namespace Pharmacy.Controllers
                 sv.Quantity = s.Quantity;
                 sv.SalePrice = s.SalePrice;
                 sv.TotalBeforePercentage = s.TotalBeforePercentage;
-
+                sv.LoosePack = s.LoosePack;
                 sv.TotalAfterPercentage = s.TotalAfterPercentage;
                 sv.SpecialDiscount = s.SpecialDiscount;
                 sv.AmountPaid = s.AmountPaid;

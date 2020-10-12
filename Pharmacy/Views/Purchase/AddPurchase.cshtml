@@ -88,7 +88,16 @@
         @Html.HiddenFor(model => model.ID)
         @Html.Hidden("EditItemRowToBRemoved")
 
-        <div class="col-md-4 col-lg-4 col-md-4 col-xs-4">
+
+
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            <span>Barcode</span>
+            <span>
+                @Html.TextBoxFor(model => model.Barcode, new { @class = "form-control", onblur = "searchItemByBarcode(this.value)" })
+            </span>
+        </div>
+
+        <div class="col-md-2 col-lg-2 col-md-2 col-xs-2">
             <span>Item name</span>
             <span>
                 @Html.TextBoxFor(model => model.Name, new { @class = "form-control", onblur = "return EnabledisableControl(this.value, 1)" })
@@ -96,9 +105,9 @@
         </div>
 
         @*<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-            <span>P/L</span>
-            <span>@Html.TextBox("PackLoose", null, new { @class = "form-control" })</span>
-        </div>*@
+                <span>P/L</span>
+                <span>@Html.TextBox("PackLoose", null, new { @class = "form-control" })</span>
+            </div>*@
 
         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
             <span>Pur Price</span>
@@ -206,6 +215,36 @@
 
 <script type="text/javascript">
 
+    function searchItemByBarcode(value) {
+        debugger;
+        var barCode = $("#Barcode").val();
+        $.ajax({
+            url: "/Purchase/GetItemByBarCode",
+            type: "POST",
+            dataType: "json",
+            data: { barCode: barCode },
+            success: function (data) {
+                $("#ID").val(data.ID);
+                $("#Name").val(data.Name);
+                $("#PurchasePrice").val(data.PurchasePrice);
+                $("#SalePrice").val(data.SalePrice);
+                $("#PurchasePercentage").val(data.PurchasePercentage);
+                $("#SalePercentage").val(data.SalePercentage);
+                $("#TotalStock").val(data.TotalStock);
+
+                EnabledisableControlForBarCode();
+                $('#btnAddItem').prop("disabled", true);
+                $("#Quantity").val('');
+                $("#PiecesPerPack").val(data.PiecesPerPack);
+                $("#PurchasePrice").focus();
+
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        })
+    }
+
     $(document).ready(function () {
         $('#DateOfSupply').datepicker({
             autoclose: true,
@@ -215,7 +254,7 @@
 
         EnabledisableControl(true);
         $('#btnAddItem').prop("disabled", true);
-        $("#Name").focus();
+        $("#Barcode").focus();
 
           $("#SupplierID").autocomplete({
             source: function (request, response) {
@@ -373,6 +412,7 @@
         $("#tblItem").append(tr);
         updateBillCalculations();
 
+        $('#Barcode').val('');
         $('#Name').val('');
         $('#PurchasePrice').val('');
         $('#SalePrice').val('');
@@ -390,6 +430,17 @@
         $("#btnSavePrint").prop("disabled", false);
     }
 
+    function EnabledisableControlForBarCode() {
+
+        $('#Name').prop("disabled", false);
+        $('#PurchasePrice').prop("disabled", false);
+        $('#SalePrice').prop("disabled", false);
+        $('#PurchasePercentage').prop("disabled", false);
+        $('#Quantity').prop("disabled", false);
+        $('#TotalAmount').prop("disabled", false);
+        $('#SalePercentage').prop("disabled", false);
+    }
+
     function EnabledisableControl(value, no) {
         if (no == 1) {
             if (value != "" && $("#ID").val() != "") {
@@ -404,6 +455,7 @@
         $('#SalePrice').prop("disabled", value);
         $('#SalePercentage').prop("disabled", value);
         $('#PurchasePercentage').prop("disabled", value);
+        $('#TotalAmount').prop("disabled", value);
         $('#Quantity').prop("disabled", value);
         //$('#TotalAmount').prop("disabled", value);
         if (no == 1)
@@ -431,7 +483,7 @@
 
                 $('#btnAddItem').prop("disabled", false);
                 EnabledisableControl(false);
-                $("#Name").focus();
+                $("#Barcode").focus();
             }
             else {
                 $("#Name").val('');
@@ -479,7 +531,7 @@
         });
         $("#sumTotalAmtBeforeDiscount").text(TotalBillAmtBeforePercentage);
         OnPayment();
-        $("#Name").focus();
+        $("#Barcode").focus();
     }
 
     function savePurchase() {
